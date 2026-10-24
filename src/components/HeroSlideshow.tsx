@@ -8,7 +8,6 @@ import {
   MapPin,
   Pause,
   Play,
-  Video as VideoIcon,
 } from 'lucide-react';
 
 interface HeroSlideshowProps {
@@ -38,17 +37,27 @@ export default function HeroSlideshow({
   const isCurrentVideo =
     currentSlide?.mediaType === 'VIDEO' && Boolean(currentSlide?.videoUrl);
 
-  // Automatic slideshow rotation (pauses when user clicks Harvard-style Pause button)
+  // Automatic rotation for IMAGE slides only.
+  // For VIDEO slides, rotation happens via the <video onEnded> event after the full video finishes playing.
   useEffect(() => {
-    if (activeSlides.length <= 1 || !isPlaying) return;
-    const duration = isCurrentVideo ? 14000 : 7500;
+    if (activeSlides.length <= 1 || !isPlaying || isCurrentVideo) return;
     const timer = setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % activeSlides.length);
-    }, duration);
+    }, 7500);
     return () => clearTimeout(timer);
   }, [activeSlides.length, isPlaying, safeIndex, isCurrentVideo]);
 
-  // Synchronize HTML5 <video> playback with active slide & Play/Pause toggle
+  // Reset video to 0:00 whenever a slide becomes the newly active slide
+  useEffect(() => {
+    const activeSlide = activeSlides[safeIndex];
+    if (!activeSlide) return;
+    const activeVid = videoRefs.current[activeSlide.id];
+    if (activeVid) {
+      activeVid.currentTime = 0;
+    }
+  }, [safeIndex, activeSlides]);
+
+  // Synchronize HTML5 <video> play/pause state with active slide & Play/Pause toggle
   useEffect(() => {
     activeSlides.forEach((slide, idx) => {
       const vid = videoRefs.current[slide.id];
@@ -116,10 +125,20 @@ export default function HeroSlideshow({
                 }}
                 src={slide.videoUrl}
                 poster={slide.imageUrl}
-                autoPlay
+                autoPlay={idx === safeIndex}
                 muted
-                loop
+                loop={activeSlides.length <= 1}
                 playsInline
+                onEnded={() => {
+                  if (idx === safeIndex && isPlaying && activeSlides.length > 1) {
+                    setCurrentIndex((prev) => (prev + 1) % activeSlides.length);
+                  }
+                }}
+                onError={() => {
+                  if (idx === safeIndex && isPlaying && activeSlides.length > 1) {
+                    setCurrentIndex((prev) => (prev + 1) % activeSlides.length);
+                  }
+                }}
                 className="w-full h-full object-cover object-center"
               />
             ) : (
@@ -175,89 +194,53 @@ export default function HeroSlideshow({
         </div>
       </div>
 
-      {/* Bottom Fullscreen Control Bar (Slide Tabs + Harvard-Style Play/Pause + Prev/Next) */}
+      {/* Bottom Right Control Bar (Harvard-Style Play/Pause + Prev/Next) */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8 shrink-0">
-        <div className="pt-4 border-t border-white/20 flex flex-wrap items-center justify-between gap-4">
-          {/* Slide Selector Tabs */}
-          <div
-            className="flex flex-wrap items-center gap-2"
-            role="tablist"
-            aria-label="Pilih slide utama"
+        <div className="flex items-center justify-end gap-2.5">
+          <button
+            type="button"
+            onClick={togglePlayPause}
+            aria-pressed={!isPlaying}
+            aria-label={
+              isPlaying
+                ? 'Jeda pemutaran video dan slideshow latar'
+                : 'Putar kembali video dan slideshow latar'
+            }
+            className="min-h-[44px] px-4 inline-flex items-center gap-2 rounded-full bg-[#1E1B18]/85 border-2 border-[#E8CFA0] text-[#FAF7F2] text-xs font-bold hover:bg-[#E8CFA0] hover:text-[#1E1B18] transition-colors cursor-pointer"
           >
-            {activeSlides.map((slide, idx) => {
-              const isSelected = idx === safeIndex;
-              const isVid = slide.mediaType === 'VIDEO' && Boolean(slide.videoUrl);
-              return (
-                <button
-                  key={slide.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isSelected}
-                  aria-label={`Tampilkan slide ${idx + 1}: ${slide.title}`}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`min-h-[44px] px-3.5 inline-flex items-center gap-2 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
-                    isSelected
-                      ? 'bg-[#A84A2E] text-white'
-                      : 'bg-[#1E1B18]/80 text-[#E8CFA0] border border-white/25 hover:bg-white/15'
-                  }`}
-                >
-                  <span>0{idx + 1}</span>
-                  {isVid && <VideoIcon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
-                  <span className="hidden md:inline max-w-[150px] truncate">
-                    {slide.title}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right Controls: Harvard-Style Play/Pause Button + Prev/Next */}
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={togglePlayPause}
-              aria-pressed={!isPlaying}
-              aria-label={
-                isPlaying
-                  ? 'Jeda pemutaran video dan slideshow latar'
-                  : 'Putar kembali video dan slideshow latar'
-              }
-              className="min-h-[44px] px-4 inline-flex items-center gap-2 rounded-full bg-[#1E1B18]/85 border-2 border-[#E8CFA0] text-[#FAF7F2] text-xs font-bold hover:bg-[#E8CFA0] hover:text-[#1E1B18] transition-colors cursor-pointer"
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="w-4 h-4 fill-current" aria-hidden="true" />
-                  <span>{isCurrentVideo ? 'Pause Video' : 'Pause Slide'}</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4 fill-current" aria-hidden="true" />
-                  <span>{isCurrentVideo ? 'Play Video' : 'Play Slide'}</span>
-                </>
-              )}
-            </button>
-
-            {activeSlides.length > 1 && (
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  aria-label="Slide sebelumnya"
-                  className="min-h-[44px] min-w-[44px] px-3 inline-flex items-center justify-center rounded-md bg-[#1E1B18]/80 border border-white/30 text-[#FAF7F2] hover:bg-white/20 transition-colors cursor-pointer"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  aria-label="Slide berikutnya"
-                  className="min-h-[44px] min-w-[44px] px-3 inline-flex items-center justify-center rounded-md bg-[#1E1B18]/80 border border-white/30 text-[#FAF7F2] hover:bg-white/20 transition-colors cursor-pointer"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
+            {isPlaying ? (
+              <>
+                <Pause className="w-4 h-4 fill-current" aria-hidden="true" />
+                <span>{isCurrentVideo ? 'Pause Video' : 'Pause Slide'}</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4 fill-current" aria-hidden="true" />
+                <span>{isCurrentVideo ? 'Play Video' : 'Play Slide'}</span>
+              </>
             )}
-          </div>
+          </button>
+
+          {activeSlides.length > 1 && (
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={handlePrev}
+                aria-label="Slide sebelumnya"
+                className="min-h-[44px] min-w-[44px] px-3 inline-flex items-center justify-center rounded-md bg-[#1E1B18]/80 border border-white/30 text-[#FAF7F2] hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-label="Slide berikutnya"
+                className="min-h-[44px] min-w-[44px] px-3 inline-flex items-center justify-center rounded-md bg-[#1E1B18]/80 border border-white/30 text-[#FAF7F2] hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>
