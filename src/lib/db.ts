@@ -23,8 +23,11 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       title: "Selamat Datang di Masjid Al Jami'ah IAIN Manado",
       subtitle:
         'Ruang sujud, pusat diskusi keilmuan Islam, dan pembinaan karakter mahasiswa serta sivitas akademika di Kota Manado.',
+      mediaType: 'VIDEO',
       imageUrl:
         'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1920&q=85',
+      videoUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/transcoded/2/28/201_Dome_Mosque%2C_Tangail_%2827%29.webm/201_Dome_Mosque%2C_Tangail_%2827%29.webm.480p.vp9.webm',
       ctaText: 'Lihat Jadwal Sholat & Kajian',
       ctaLink: '#jadwal-sholat',
       order: 1,
@@ -35,8 +38,10 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       title: 'Kajian Rutin Ba’da Maghrib & Halaqah Mahasiswa',
       subtitle:
         'Mengintegrasikan tradisi keilmuan turats, tafsir Al-Qur’an, dan wawasan keislaman moderat bagi mahasiswa dan masyarakat umum.',
+      mediaType: 'IMAGE',
       imageUrl:
         'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1920&q=85',
+      videoUrl: '',
       ctaText: 'Cek Agenda Kegiatan Hari Ini',
       ctaLink: '#kegiatan',
       order: 2,
@@ -47,8 +52,10 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       title: 'Transparansi Kas & Layanan Terpadu Masjid Kampus',
       subtitle:
         'Pengelolaan infaq operasional, pembangunan, serta layanan peminjaman fasilitas masjid yang terbuka dan dapat diakses secara daring.',
+      mediaType: 'IMAGE',
       imageUrl:
         'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1920&q=85',
+      videoUrl: '',
       ctaText: 'Lihat Laporan Kas Masjid',
       ctaLink: '#keuangan',
       order: 3,

@@ -11,7 +11,9 @@ export interface HeroSlide {
   id: string;
   title: string;
   subtitle: string;
+  mediaType?: 'IMAGE' | 'VIDEO';
   imageUrl: string;
+  videoUrl?: string;
   ctaText: string;
   ctaLink: string;
   order: number;

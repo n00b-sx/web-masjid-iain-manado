@@ -14,10 +14,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'image/svg+xml',
+      'video/mp4',
+      'video/webm',
+      'video/ogg',
+    ];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Format file harus berupa gambar (JPG, PNG, WEBP, GIF, atau SVG).' },
+        {
+          error:
+            'Format file harus berupa gambar (JPG, PNG, WEBP, GIF, SVG) atau video (MP4, WEBM, OGG).',
+        },
         { status: 400 }
       );
     }

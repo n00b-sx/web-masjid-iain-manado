@@ -82,10 +82,20 @@ export default function AdminDashboardPage() {
 
   // --- Form States for Adding/Editing Items ---
   // 1. New Hero Slide
-  const [newSlide, setNewSlide] = useState({
+  const [newSlide, setNewSlide] = useState<{
+    title: string;
+    subtitle: string;
+    mediaType: 'IMAGE' | 'VIDEO';
+    imageUrl: string;
+    videoUrl: string;
+    ctaText: string;
+    ctaLink: string;
+  }>({
     title: '',
     subtitle: '',
+    mediaType: 'IMAGE',
     imageUrl: '',
+    videoUrl: '',
     ctaText: 'Lihat Jadwal Sholat',
     ctaLink: '#jadwal-sholat',
   });
@@ -989,11 +999,30 @@ export default function AdminDashboardPage() {
             {/* Add New Hero Slide */}
             <section className="lg:col-span-5 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4 h-fit">
               <h2 className="font-serif-heading text-xl font-bold text-[#1E1B18]">
-                Tambah Slide Gambar Hero Baru
+                Tambah Slide Hero Baru (Foto / Video)
               </h2>
               <p className="text-xs text-[#524740]">
-                Unggah foto dari komputer/HP atau tempel tautan URL gambar untuk ditampilkan sebagai latar belakang berganti (slideshow) di halaman utama.
+                Pilih jenis media Foto atau Video Latar (seperti website Harvard). Anda dapat mengunggah file langsung dari perangkat maupun menempelkan tautan URL.
               </p>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                  Tipe Media Latar Belakang
+                </label>
+                <select
+                  value={newSlide.mediaType}
+                  onChange={(e) =>
+                    setNewSlide({
+                      ...newSlide,
+                      mediaType: e.target.value as 'IMAGE' | 'VIDEO',
+                    })
+                  }
+                  className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm font-bold"
+                >
+                  <option value="IMAGE">Foto / Gambar (IMAGE)</option>
+                  <option value="VIDEO">Video Latar Fullscreen (VIDEO)</option>
+                </select>
+              </div>
 
               <div>
                 <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
@@ -1023,8 +1052,22 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
+              {newSlide.mediaType === 'VIDEO' && (
+                <ImageUploaderField
+                  label="File Video Latar (.mp4 / .webm) atau URL Video *"
+                  mediaMode="VIDEO"
+                  value={newSlide.videoUrl}
+                  onChange={(url) => setNewSlide({ ...newSlide, videoUrl: url })}
+                />
+              )}
+
               <ImageUploaderField
-                label="Gambar Background Slide (Upload atau URL)"
+                label={
+                  newSlide.mediaType === 'VIDEO'
+                    ? 'Gambar Poster / Thumbnail Video (Opsional)'
+                    : 'Gambar Background Slide (Upload atau URL) *'
+                }
+                mediaMode="IMAGE"
                 value={newSlide.imageUrl}
                 onChange={(url) => setNewSlide({ ...newSlide, imageUrl: url })}
               />
@@ -1061,15 +1104,33 @@ export default function AdminDashboardPage() {
               <button
                 type="button"
                 onClick={() => {
-                  if (!newSlide.title.trim() || !newSlide.imageUrl.trim()) {
-                    setSaveError('Judul slide dan Gambar wajib diisi.');
+                  if (!newSlide.title.trim()) {
+                    setSaveError('Judul slide wajib diisi.');
+                    return;
+                  }
+                  if (
+                    newSlide.mediaType === 'VIDEO' &&
+                    !newSlide.videoUrl.trim()
+                  ) {
+                    setSaveError('Mohon unggah atau masukkan URL Video terlebih dahulu.');
+                    return;
+                  }
+                  if (
+                    newSlide.mediaType === 'IMAGE' &&
+                    !newSlide.imageUrl.trim()
+                  ) {
+                    setSaveError('Mohon unggah atau masukkan URL Gambar terlebih dahulu.');
                     return;
                   }
                   const created: HeroSlide = {
                     id: `slide-${Date.now()}`,
                     title: newSlide.title.trim(),
                     subtitle: newSlide.subtitle.trim(),
-                    imageUrl: newSlide.imageUrl.trim(),
+                    mediaType: newSlide.mediaType,
+                    imageUrl:
+                      newSlide.imageUrl.trim() ||
+                      'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1920&q=85',
+                    videoUrl: newSlide.videoUrl.trim(),
                     ctaText: newSlide.ctaText.trim() || 'Lihat Informasi',
                     ctaLink: newSlide.ctaLink.trim() || '#jadwal-sholat',
                     order: db.heroSlides.length + 1,
@@ -1082,7 +1143,9 @@ export default function AdminDashboardPage() {
                   setNewSlide({
                     title: '',
                     subtitle: '',
+                    mediaType: 'IMAGE',
                     imageUrl: '',
+                    videoUrl: '',
                     ctaText: 'Lihat Jadwal Sholat',
                     ctaLink: '#jadwal-sholat',
                   });
@@ -1101,119 +1164,185 @@ export default function AdminDashboardPage() {
                 Daftar Slide Hero Saat Ini ({db.heroSlides.length})
               </h2>
 
-              {db.heroSlides.map((slide, idx) => (
-                <div
-                  key={slide.id}
-                  className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 space-y-4"
-                >
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <img
-                      src={slide.imageUrl}
-                      alt={slide.title}
-                      className="w-full sm:w-44 h-28 object-cover rounded-lg border border-[#DFD5C5] bg-[#1E1B18] shrink-0"
-                    />
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold text-[#A84A2E]">
-                          Urutan Slide #{idx + 1}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <label className="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={slide.active}
-                              onChange={(e) => {
-                                const updated = {
+              {db.heroSlides.map((slide, idx) => {
+                const isVideoSlide = slide.mediaType === 'VIDEO';
+                return (
+                  <div
+                    key={slide.id}
+                    className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 space-y-4"
+                  >
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      {isVideoSlide && slide.videoUrl ? (
+                        <video
+                          src={slide.videoUrl}
+                          poster={slide.imageUrl}
+                          muted
+                          controls
+                          className="w-full sm:w-44 h-28 object-cover rounded-lg border border-[#DFD5C5] bg-[#1E1B18] shrink-0"
+                        />
+                      ) : (
+                        <img
+                          src={slide.imageUrl}
+                          alt={slide.title}
+                          className="w-full sm:w-44 h-28 object-cover rounded-lg border border-[#DFD5C5] bg-[#1E1B18] shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 space-y-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-[#A84A2E]">
+                              Urutan Slide #{idx + 1}
+                            </span>
+                            <select
+                              value={slide.mediaType || 'IMAGE'}
+                              onChange={(e) =>
+                                setDb({
                                   ...db,
                                   heroSlides: db.heroSlides.map((s) =>
                                     s.id === slide.id
-                                      ? { ...s, active: e.target.checked }
+                                      ? {
+                                          ...s,
+                                          mediaType: e.target.value as
+                                            | 'IMAGE'
+                                            | 'VIDEO',
+                                        }
                                       : s
                                   ),
+                                })
+                              }
+                              className="px-2 py-1 rounded bg-white border border-[#524740] text-xs font-bold"
+                            >
+                              <option value="IMAGE">Tipe: Foto</option>
+                              <option value="VIDEO">Tipe: Video</option>
+                            </select>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <label className="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={slide.active}
+                                onChange={(e) => {
+                                  const updated = {
+                                    ...db,
+                                    heroSlides: db.heroSlides.map((s) =>
+                                      s.id === slide.id
+                                        ? { ...s, active: e.target.checked }
+                                        : s
+                                    ),
+                                  };
+                                  persistDatabase(updated, 'Status slide diperbarui.');
+                                }}
+                              />
+                              <span>Tampilkan</span>
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = {
+                                  ...db,
+                                  heroSlides: db.heroSlides.filter(
+                                    (s) => s.id !== slide.id
+                                  ),
                                 };
-                                persistDatabase(updated, 'Status slide diperbarui.');
+                                persistDatabase(updated, 'Slide Hero dihapus.');
                               }}
-                            />
-                            <span>Tampilkan</span>
-                          </label>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const updated = {
-                                ...db,
-                                heroSlides: db.heroSlides.filter(
-                                  (s) => s.id !== slide.id
-                                ),
-                              };
-                              persistDatabase(updated, 'Slide Hero dihapus.');
-                            }}
-                            className="p-1.5 rounded text-[#A84A2E] hover:bg-[#FAF7F2] cursor-pointer"
-                            aria-label={`Hapus slide ${slide.title}`}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                              className="p-1.5 rounded text-[#A84A2E] hover:bg-[#FAF7F2] cursor-pointer"
+                              aria-label={`Hapus slide ${slide.title}`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
+
+                        <input
+                          type="text"
+                          value={slide.title}
+                          onChange={(e) =>
+                            setDb({
+                              ...db,
+                              heroSlides: db.heroSlides.map((s) =>
+                                s.id === slide.id
+                                  ? { ...s, title: e.target.value }
+                                  : s
+                              ),
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded bg-white border border-[#524740] text-sm font-bold"
+                        />
+
+                        <textarea
+                          rows={2}
+                          value={slide.subtitle}
+                          onChange={(e) =>
+                            setDb({
+                              ...db,
+                              heroSlides: db.heroSlides.map((s) =>
+                                s.id === slide.id
+                                  ? { ...s, subtitle: e.target.value }
+                                  : s
+                              ),
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded bg-white border border-[#524740] text-xs"
+                        />
                       </div>
+                    </div>
 
-                      <input
-                        type="text"
-                        value={slide.title}
-                        onChange={(e) =>
-                          setDb({
-                            ...db,
-                            heroSlides: db.heroSlides.map((s) =>
-                              s.id === slide.id ? { ...s, title: e.target.value } : s
-                            ),
-                          })
-                        }
-                        className="w-full px-3 py-1.5 rounded bg-white border border-[#524740] text-sm font-bold"
-                      />
-
-                      <textarea
-                        rows={2}
-                        value={slide.subtitle}
-                        onChange={(e) =>
+                    {isVideoSlide && (
+                      <ImageUploaderField
+                        label="File / URL Video Slide Ini (.mp4 / .webm)"
+                        mediaMode="VIDEO"
+                        value={slide.videoUrl || ''}
+                        onChange={(newVideoUrl) =>
                           setDb({
                             ...db,
                             heroSlides: db.heroSlides.map((s) =>
                               s.id === slide.id
-                                ? { ...s, subtitle: e.target.value }
+                                ? { ...s, videoUrl: newVideoUrl }
                                 : s
                             ),
                           })
                         }
-                        className="w-full px-3 py-1.5 rounded bg-white border border-[#524740] text-xs"
                       />
+                    )}
+
+                    <ImageUploaderField
+                      label={
+                        isVideoSlide
+                          ? 'Gambar Poster / Thumbnail Video Slide Ini'
+                          : 'Ubah Gambar Slide Ini (Upload File atau Ganti URL)'
+                      }
+                      mediaMode="IMAGE"
+                      value={slide.imageUrl}
+                      onChange={(newUrl) =>
+                        setDb({
+                          ...db,
+                          heroSlides: db.heroSlides.map((s) =>
+                            s.id === slide.id ? { ...s, imageUrl: newUrl } : s
+                          ),
+                        })
+                      }
+                    />
+
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          persistDatabase(
+                            db,
+                            'Perubahan slide Hero berhasil disimpan.'
+                          )
+                        }
+                        className="px-4 py-2 min-h-[40px] inline-flex items-center gap-1.5 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                      >
+                        <Save className="w-3.5 h-3.5" />
+                        <span>Simpan Perubahan Slide</span>
+                      </button>
                     </div>
                   </div>
-
-                  <ImageUploaderField
-                    label="Ubah Gambar Slide Ini (Upload File atau Ganti URL)"
-                    value={slide.imageUrl}
-                    onChange={(newUrl) =>
-                      setDb({
-                        ...db,
-                        heroSlides: db.heroSlides.map((s) =>
-                          s.id === slide.id ? { ...s, imageUrl: newUrl } : s
-                        ),
-                      })
-                    }
-                  />
-
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        persistDatabase(db, 'Perubahan slide Hero berhasil disimpan.')
-                      }
-                      className="px-4 py-2 min-h-[40px] inline-flex items-center gap-1.5 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
-                    >
-                      <Save className="w-3.5 h-3.5" />
-                      <span>Simpan Perubahan Slide</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </section>
           </div>
         )}
