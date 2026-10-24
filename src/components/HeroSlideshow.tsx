@@ -159,12 +159,6 @@ export default function HeroSlideshow({
             <span>
               {masehiDate} &bull; {hijriDate}
             </span>
-            {isCurrentVideo && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#1E1B18]/80 border border-[#E8CFA0]/40 text-xs font-semibold text-[#E8CFA0]">
-                <VideoIcon className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Video Latar</span>
-              </span>
-            )}
           </div>
 
           <h1
@@ -174,24 +168,9 @@ export default function HeroSlideshow({
             {currentSlide.title}
           </h1>
 
-          <p className="text-base sm:text-lg lg:text-xl text-[#F2ECE1] leading-relaxed mb-8 max-w-2xl">
+          <p className="text-base sm:text-lg lg:text-xl text-[#F2ECE1] leading-relaxed mb-6 max-w-2xl">
             {currentSlide.subtitle}
           </p>
-
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-6">
-            <Link
-              href={currentSlide.ctaLink || '#jadwal-sholat'}
-              className="px-6 py-3.5 min-h-[44px] inline-flex items-center justify-center rounded-md bg-[#A84A2E] text-white font-semibold text-sm sm:text-base hover:bg-[#8E3B22] transition-colors"
-            >
-              {currentSlide.ctaText || 'Lihat Jadwal Sholat'}
-            </Link>
-            <Link
-              href="#layanan"
-              className="px-6 py-3.5 min-h-[44px] inline-flex items-center justify-center rounded-md border border-[#E8CFA0] bg-[#1E1B18]/75 text-[#FAF7F2] font-semibold text-sm sm:text-base hover:bg-[#FAF7F2] hover:text-[#1E1B18] transition-colors"
-            >
-              Ajukan Layanan Masjid
-            </Link>
-          </div>
 
           <div className="flex items-start sm:items-center gap-2 text-xs sm:text-sm text-[#E8CFA0]">
             <MapPin
