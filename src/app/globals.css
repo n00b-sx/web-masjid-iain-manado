@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --font-serif: "Playfair Display", Georgia, Cambria, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-arabic: "Amiri", "Traditional Arabic", serif;
+  --bg-alabaster: #FAF7F2;
+  --bg-sandstone: #F2ECE1;
+  --text-espresso: #1E1B18;
+  --text-muted: #524740;
+  --accent-terracotta: #A84A2E;
+  --accent-terracotta-hover: #8E3B22;
+  --accent-champagne: #E8CFA0;
+  --accent-olive: #3D4D33;
+  --border-warm: #DFD5C5;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-alabaster);
+  color: var(--text-espresso);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-alabaster);
+  color: var(--text-espresso);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1, h2, h3, .font-serif-heading {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+.font-arabic {
+  font-family: var(--font-arabic), "Traditional Arabic", "Amiri", serif;
+  line-height: 2;
+}
+
+/* Accessible keyboard focus indicator (WCAG 2.4.7 & R-32) */
+*:focus-visible {
+  outline: 3px solid #A84A2E !important;
+  outline-offset: 2px !important;
+}
+
+.dark-surface *:focus-visible {
+  outline: 3px solid #E8CFA0 !important;
+  outline-offset: 2px !important;
+}
+
+/* Rich Text Article Content Formatting */
+.prose-masjid h2 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1E1B18;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.prose-masjid h3 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1E1B18;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-masjid p {
+  margin-bottom: 1.15rem;
+  color: #2C2520;
+  line-height: 1.8;
+}
+
+.prose-masjid ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: #2C2520;
+}
+
+.prose-masjid ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: #2C2520;
+}
+
+.prose-masjid li {
+  margin-bottom: 0.4rem;
+}
+
+.prose-masjid blockquote {
+  border-left: 4px solid #A84A2E;
+  background-color: #F2ECE1;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #1E1B18;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose-masjid img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.prose-masjid a {
+  color: #A84A2E;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-tv {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 42s linear infinite;
+}
