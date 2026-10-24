@@ -30,7 +30,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Asymmetric Editorial Header & Filter Controls */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 lg:sticky lg:top-28">
             <h2
               id="heading-kegiatan"
               style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)' }}
@@ -131,7 +131,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
             </div>
           </div>
 
-          {/* Right Column: Structured Event Timeline List */}
+          {/* Right Column: Chronological Vertical Timeline */}
           <div className="lg:col-span-8">
             {filteredEvents.length === 0 ? (
               <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-8 text-center">
@@ -153,61 +153,146 @@ export default function EventsSection({ events }: EventsSectionProps) {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
-                {filteredEvents.map((evt) => (
-                  <article
-                    key={evt.id}
-                    className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-5 sm:p-6 transition-colors hover:border-[#1E1B18]"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                      <div className="flex flex-wrap items-center gap-2">
-                        {evt.isToday ? (
-                          <span className="px-2.5 py-1 rounded text-xs font-bold bg-[#A84A2E] text-white">
-                            Agenda Hari Ini
-                          </span>
-                        ) : (
-                          <span className="px-2.5 py-1 rounded text-xs font-bold bg-[#1E1B18] text-[#E8CFA0]">
-                            Rutin Pekanan
-                          </span>
+              <ol
+                aria-label="Alur Waktu Kegiatan Masjid"
+                className="relative space-y-6"
+              >
+                {filteredEvents.map((evt, index) => {
+                  const isLast = index === filteredEvents.length - 1;
+
+                  return (
+                    <li
+                      key={evt.id}
+                      className="relative grid grid-cols-1 sm:grid-cols-[175px_36px_1fr] gap-0 sm:gap-2 items-start"
+                    >
+                      {/* Left Column of Timeline (Desktop/Tablet): Time & Day Label */}
+                      <div className="hidden sm:flex flex-col items-end text-right pr-3 pt-1">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold mb-1.5 ${
+                            evt.isToday
+                              ? 'bg-[#A84A2E] text-white'
+                              : 'bg-[#1E1B18] text-[#E8CFA0]'
+                          }`}
+                        >
+                          {evt.isToday ? 'Agenda Hari Ini' : 'Rutin Pekanan'}
+                        </span>
+                        <span className="font-bold text-xs sm:text-sm text-[#1E1B18] leading-snug">
+                          {evt.dayLabel}
+                        </span>
+                        <span className="inline-flex items-center gap-1 font-mono text-xs font-bold text-[#A84A2E] mt-0.5">
+                          <Clock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                          <span>{evt.time}</span>
+                        </span>
+                      </div>
+
+                      {/* Center Axis: Vertical Connector Line + Node Dot */}
+                      <div
+                        className="hidden sm:flex flex-col items-center h-full relative"
+                        aria-hidden="true"
+                      >
+                        {/* Vertical Connector Line */}
+                        {!isLast && (
+                          <div
+                            className="w-0.5 bg-[#1E1B18]/25 absolute top-5 bottom-[-28px] left-1/2 -translate-x-1/2"
+                          />
                         )}
-                        <span className="px-2.5 py-1 rounded text-xs font-semibold bg-[#F2ECE1] text-[#1E1B18] border border-[#DFD5C5]">
-                          {evt.category}
-                        </span>
+                        {/* Timeline Node Circle */}
+                        <div
+                          className={`relative z-10 mt-1.5 w-4 h-4 rounded-full border-2 transition-transform ${
+                            evt.isToday
+                              ? 'bg-[#A84A2E] border-[#FAF7F2] ring-4 ring-[#A84A2E]/25'
+                              : 'bg-[#1E1B18] border-[#FAF7F2] ring-4 ring-[#1E1B18]/15'
+                          }`}
+                        />
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#A84A2E]">
-                        <Clock className="w-4 h-4 shrink-0" aria-hidden="true" />
-                        <span>
-                          {evt.dayLabel} &bull; {evt.time}
-                        </span>
-                      </div>
-                    </div>
+                      {/* Right Column: Compact Event Card */}
+                      <div className="relative pl-6 sm:pl-0">
+                        {/* Mobile Vertical Line & Node */}
+                        <div
+                          className="sm:hidden absolute left-0 top-0 bottom-0 flex flex-col items-center"
+                          aria-hidden="true"
+                        >
+                          {!isLast && (
+                            <div className="w-0.5 bg-[#1E1B18]/25 absolute top-4 bottom-[-24px] left-1.5" />
+                          )}
+                          <div
+                            className={`relative z-10 mt-2 w-3.5 h-3.5 rounded-full border-2 ${
+                              evt.isToday
+                                ? 'bg-[#A84A2E] border-[#FAF7F2] ring-2 ring-[#A84A2E]/30'
+                                : 'bg-[#1E1B18] border-[#FAF7F2]'
+                            }`}
+                          />
+                        </div>
 
-                    <h3 className="font-serif-heading text-lg sm:text-xl font-bold text-[#1E1B18] mb-2">
-                      {evt.title}
-                    </h3>
+                        <article
+                          className={`bg-[#FAF7F2] rounded-xl p-4 sm:p-5 border transition-colors ${
+                            evt.isToday
+                              ? 'border-[#A84A2E] shadow-sm'
+                              : 'border-[#DFD5C5] hover:border-[#1E1B18]'
+                          }`}
+                        >
+                          {/* Mobile Time Header */}
+                          <div className="flex sm:hidden flex-wrap items-center justify-between gap-2 mb-2.5 pb-2 border-b border-[#DFD5C5]">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                                evt.isToday
+                                  ? 'bg-[#A84A2E] text-white'
+                                  : 'bg-[#1E1B18] text-[#E8CFA0]'
+                              }`}
+                            >
+                              {evt.isToday ? 'Agenda Hari Ini' : 'Rutin Pekanan'}
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-[#A84A2E]">
+                              <Clock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                              <span>
+                                {evt.dayLabel} &bull; {evt.time}
+                              </span>
+                            </span>
+                          </div>
 
-                    <p className="text-sm text-[#524740] leading-relaxed mb-4">
-                      {evt.description}
-                    </p>
+                          {/* Card Top Row: Title + Category Pill */}
+                          <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                            <h3 className="font-serif-heading text-base sm:text-lg font-bold text-[#1E1B18] leading-snug">
+                              {evt.title}
+                            </h3>
+                            <span className="px-2.5 py-0.5 rounded text-xs font-semibold bg-[#F2ECE1] text-[#1E1B18] border border-[#DFD5C5] shrink-0">
+                              {evt.category}
+                            </span>
+                          </div>
 
-                    <div className="pt-3 border-t border-[#DFD5C5] grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-[#1E1B18]">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-[#A84A2E] shrink-0" aria-hidden="true" />
-                        <span>
-                          <strong className="font-semibold">Pemateri:</strong> {evt.speaker}
-                        </span>
+                          <p className="text-xs sm:text-sm text-[#524740] leading-relaxed mb-3.5">
+                            {evt.description}
+                          </p>
+
+                          <div className="pt-2.5 border-t border-[#DFD5C5] grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1E1B18]">
+                            <div className="flex items-start gap-1.5">
+                              <User
+                                className="w-3.5 h-3.5 text-[#A84A2E] shrink-0 mt-0.5"
+                                aria-hidden="true"
+                              />
+                              <span>
+                                <strong className="font-semibold">Pemateri:</strong>{' '}
+                                {evt.speaker}
+                              </span>
+                            </div>
+                            <div className="flex items-start gap-1.5">
+                              <MapPin
+                                className="w-3.5 h-3.5 text-[#A84A2E] shrink-0 mt-0.5"
+                                aria-hidden="true"
+                              />
+                              <span>
+                                <strong className="font-semibold">Lokasi:</strong>{' '}
+                                {evt.location}
+                              </span>
+                            </div>
+                          </div>
+                        </article>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-[#A84A2E] shrink-0" aria-hidden="true" />
-                        <span>
-                          <strong className="font-semibold">Lokasi:</strong> {evt.location}
-                        </span>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
+                    </li>
+                  );
+                })}
+              </ol>
             )}
           </div>
         </div>
