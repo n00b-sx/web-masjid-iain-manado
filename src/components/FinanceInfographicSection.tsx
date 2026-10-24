@@ -25,18 +25,21 @@ interface FinanceInfographicSectionProps {
 
 const FUND_META: Record<
   FundCategory,
-  { title: string; subtitle: string }
+  { title: string; shortLabel: string; subtitle: string }
 > = {
   OPERASIONAL: {
     title: 'Kas Operasional & Kemakmuran',
+    shortLabel: 'Kas Operasional',
     subtitle: 'Kebersihan ruang sujud, air wudhu, listrik, dan kajian rutin harian',
   },
   PEMBANGUNAN: {
     title: 'Kas Pembangunan & Inventaris',
+    shortLabel: 'Kas Pembangunan',
     subtitle: 'Peremajaan tata suara, karpet shaf, AC, dan renovasi fisik masjid',
   },
   SOSIAL_ZISWAF: {
     title: 'Kas Sosial, ZISWAF & Santunan',
+    shortLabel: 'Kas Sosial & ZISWAF',
     subtitle: 'Bantuan pendidikan mahasiswa dhuafa, zakat, dan santunan umat',
   },
 };
@@ -79,6 +82,7 @@ export default function FinanceInfographicSection({
     return {
       category: cat,
       title: FUND_META[cat].title,
+      shortLabel: FUND_META[cat].shortLabel,
       subtitle: FUND_META[cat].subtitle,
       inAmount: catIn,
       outAmount: catOut,
@@ -147,23 +151,132 @@ export default function FinanceInfographicSection({
           </div>
         )}
 
-        {/* Primary Summary Banner + 3 Fund Breakdown */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
-          {/* Total Consolidated Balance Card (Focal Point) */}
-          <div className="lg:col-span-5 bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-6 sm:p-8 flex flex-col justify-between border border-[#1E1B18]">
-            <div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#E8CFA0] mb-2">
+        {/* 2-Column Desktop Layout with 3 : 1 Ratio (lg:col-span-9 vs lg:col-span-3) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          {/* LEFT COLUMN (3 Parts / 75% Width): Total Balance + Embedded Transaction Ledger + Summary Totals */}
+          <div className="lg:col-span-9 bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-5 sm:p-8 flex flex-col justify-between border border-[#1E1B18] dark-surface">
+            {/* Top: Consolidated Balance Header */}
+            <div className="pb-5 border-b border-white/15">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#E8CFA0] mb-1.5">
                 <Wallet className="w-4 h-4" aria-hidden="true" />
                 <span>Total Saldo Gabungan Seluruh Kas</span>
               </div>
               <div
                 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.75rem)' }}
-                className="font-serif-heading font-bold text-[#FAF7F2] tracking-tight mb-6"
+                className="font-serif-heading font-bold text-[#FAF7F2] tracking-tight"
               >
                 {formatRupiah(totalBalance)}
               </div>
             </div>
 
+            {/* Middle: Embedded Rincian Riwayat Mutasi Kas Masjid */}
+            <div className="my-5 flex-1 flex flex-col">
+              <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 mb-4">
+                <div>
+                  <h3 className="font-serif-heading text-base sm:text-lg font-bold text-[#FAF7F2]">
+                    Rincian Riwayat Mutasi Kas Masjid
+                  </h3>
+                  <p className="text-xs text-[#E8CFA0]">
+                    Pilih kategori pos kas untuk memfilter riwayat transaksi pemasukan dan pengeluaran.
+                  </p>
+                </div>
+
+                <div
+                  className="flex flex-wrap gap-1.5"
+                  role="tablist"
+                  aria-label="Filter kategori mutasi kas"
+                >
+                  {(
+                    [
+                      { id: 'ALL', label: 'Semua Kas' },
+                      { id: 'OPERASIONAL', label: 'Kas Operasional' },
+                      { id: 'PEMBANGUNAN', label: 'Kas Pembangunan' },
+                      { id: 'SOSIAL_ZISWAF', label: 'Kas Sosial & ZISWAF' },
+                    ] as const
+                  ).map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={selectedCategory === tab.id}
+                      onClick={() => setSelectedCategory(tab.id)}
+                      className={`px-3 py-1.5 min-h-[38px] rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                        selectedCategory === tab.id
+                          ? 'bg-[#A84A2E] text-white border-[#A84A2E]'
+                          : 'bg-[#2C2520] text-[#E8CFA0] border-white/20 hover:border-[#E8CFA0]'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {filteredTransactions.length === 0 ? (
+                <div className="bg-[#2C2520] border border-white/10 rounded-lg p-6 text-center my-auto">
+                  <p className="text-sm font-semibold text-[#FAF7F2] mb-1">
+                    Belum Ada Transaksi Tercatat pada Kategori Ini
+                  </p>
+                  <p className="text-xs text-[#E8CFA0]">
+                    Silakan pilih kategori kas lainnya untuk melihat riwayat mutasi.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-[#2C2520] border border-white/15 rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto max-h-[340px] overflow-y-auto">
+                    <table className="w-full text-left border-collapse table-fixed min-w-[540px]">
+                      <thead>
+                        <tr className="border-b border-white/15 bg-[#1E1B18]/60 text-xs font-bold text-[#E8CFA0]">
+                          <th className="py-3 px-4 w-[115px] sm:w-[125px]">Tanggal</th>
+                          <th className="py-3 px-4">Uraian Transaksi</th>
+                          <th className="py-3 px-4 w-[170px] sm:w-[195px] text-right">
+                            Jenis &amp; Nominal
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/10 text-xs sm:text-sm">
+                        {filteredTransactions.map((trx) => (
+                          <tr
+                            key={trx.id}
+                            className="hover:bg-white/5 transition-colors"
+                          >
+                            <td className="py-3 px-4 font-mono text-[#E8CFA0] whitespace-nowrap align-middle">
+                              {trx.date}
+                            </td>
+                            <td className="py-3 px-4 align-middle overflow-hidden">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-[#1E1B18] text-[#E8CFA0] border border-[#E8CFA0]/35 whitespace-nowrap shrink-0">
+                                  {FUND_META[trx.category]?.shortLabel || trx.category}
+                                </span>
+                                <span
+                                  title={trx.description}
+                                  className="font-medium text-[#FAF7F2] truncate block"
+                                >
+                                  {trx.description}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 text-right whitespace-nowrap font-bold align-middle">
+                              {trx.type === 'IN' ? (
+                                <span className="text-[#8CD975]">
+                                  + {formatRupiah(trx.amount)} (Masuk)
+                                </span>
+                              ) : (
+                                <span className="text-[#F29C85]">
+                                  - {formatRupiah(trx.amount)} (Keluar)
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom: Total Income & Total Expense Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-5 border-t border-white/15">
               <div className="bg-[#2C2520] p-3.5 rounded-lg border border-white/10">
                 <div className="flex items-center gap-1.5 text-xs text-[#E8CFA0] mb-1">
@@ -187,18 +300,18 @@ export default function FinanceInfographicSection({
             </div>
           </div>
 
-          {/* Comparative Chart Answering a Specific Question */}
-          <div className="lg:col-span-7 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 sm:p-8 flex flex-col justify-between">
+          {/* RIGHT COLUMN (1 Part / 25% Width): Comparative Chart per Fund Category */}
+          <div className="lg:col-span-3 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 sm:p-6 flex flex-col justify-between">
             <div>
-              <h3 className="font-serif-heading text-lg sm:text-xl font-bold text-[#1E1B18] mb-1">
-                Bagaimana Perbandingan Pemasukan dan Pengeluaran pada Tiap Pos Kas?
+              <h3 className="font-serif-heading text-base sm:text-lg font-bold text-[#1E1B18] leading-snug mb-1.5">
+                Perbandingan Pemasukan &amp; Pengeluaran Tiap Pos Kas
               </h3>
-              <p className="text-xs sm:text-sm text-[#524740] mb-6">
-                Diagram proporsi dana masuk, dana keluar, dan sisa saldo aktif untuk masing-masing kategori kas masjid.
+              <p className="text-xs text-[#524740] mb-4">
+                Proporsi dana masuk, dana keluar, dan sisa saldo aktif per pos kas.
               </p>
             </div>
 
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-3.5 my-auto">
               {categoryBreakdown.map((item) => {
                 const inPct = Math.round((item.inAmount / maxCategoryValue) * 100);
                 const outPct = Math.round((item.outAmount / maxCategoryValue) * 100);
@@ -206,31 +319,30 @@ export default function FinanceInfographicSection({
                 return (
                   <div
                     key={item.category}
-                    className="bg-[#FAF7F2] p-4 rounded-lg border border-[#DFD5C5]"
+                    className="bg-[#FAF7F2] p-3.5 rounded-lg border border-[#DFD5C5]"
                   >
-                    <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
-                      <div>
-                        <h4 className="font-bold text-sm sm:text-base text-[#1E1B18]">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-[#524740]">{item.subtitle}</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-xs text-[#524740] block">Saldo Aktif</span>
-                        <span className="font-serif-heading font-bold text-base sm:text-lg text-[#1E1B18]">
+                    <div className="mb-2">
+                      <h4 className="font-bold text-xs sm:text-sm text-[#1E1B18] leading-snug">
+                        {item.title}
+                      </h4>
+                      <div className="flex items-baseline justify-between gap-2 mt-1">
+                        <span className="text-[11px] font-medium text-[#524740]">
+                          Saldo Aktif
+                        </span>
+                        <span className="font-serif-heading font-bold text-sm sm:text-base text-[#1E1B18]">
                           {formatRupiah(item.balance)}
                         </span>
                       </div>
                     </div>
 
                     {/* Visual Bars with High-Contrast Borders and Labels */}
-                    <div className="space-y-2 mt-3">
+                    <div className="space-y-2 pt-2 border-t border-[#DFD5C5]/70">
                       <div>
-                        <div className="flex justify-between text-xs font-semibold text-[#3D4D33] mb-1">
-                          <span>Pemasukan (+)</span>
+                        <div className="flex justify-between text-[11px] font-semibold text-[#3D4D33] mb-1">
+                          <span>Masuk (+)</span>
                           <span>{formatRupiah(item.inAmount)}</span>
                         </div>
-                        <div className="w-full h-3 bg-[#F2ECE1] rounded-sm overflow-hidden border border-[#1E1B18]/20">
+                        <div className="w-full h-2.5 bg-[#F2ECE1] rounded-sm overflow-hidden border border-[#1E1B18]/20">
                           <div
                             style={{ width: `${Math.max(4, inPct)}%` }}
                             className="h-full bg-[#3D4D33]"
@@ -244,11 +356,11 @@ export default function FinanceInfographicSection({
                       </div>
 
                       <div>
-                        <div className="flex justify-between text-xs font-semibold text-[#A84A2E] mb-1">
-                          <span>Pengeluaran (-)</span>
+                        <div className="flex justify-between text-[11px] font-semibold text-[#A84A2E] mb-1">
+                          <span>Keluar (-)</span>
                           <span>{formatRupiah(item.outAmount)}</span>
                         </div>
-                        <div className="w-full h-3 bg-[#F2ECE1] rounded-sm overflow-hidden border border-[#1E1B18]/20">
+                        <div className="w-full h-2.5 bg-[#F2ECE1] rounded-sm overflow-hidden border border-[#1E1B18]/20">
                           <div
                             style={{ width: `${item.outAmount > 0 ? Math.max(4, outPct) : 0}%` }}
                             className="h-full bg-[#A84A2E]"
@@ -266,101 +378,6 @@ export default function FinanceInfographicSection({
               })}
             </div>
           </div>
-        </div>
-
-        {/* Detailed Ledger Table with Category Filter */}
-        <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl overflow-hidden">
-          <div className="p-5 sm:p-6 bg-[#F2ECE1] border-b border-[#DFD5C5] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18]">
-                Rincian Riwayat Mutasi Kas Masjid
-              </h3>
-              <p className="text-xs sm:text-sm text-[#524740]">
-                Pilih kategori kas untuk memeriksa rincian pemasukan dan pengeluaran.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter kategori mutasi kas">
-              {(
-                [
-                  { id: 'ALL', label: 'Semua Kas' },
-                  { id: 'OPERASIONAL', label: 'Kas Operasional' },
-                  { id: 'PEMBANGUNAN', label: 'Kas Pembangunan' },
-                  { id: 'SOSIAL_ZISWAF', label: 'Kas Sosial & ZISWAF' },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={selectedCategory === tab.id}
-                  onClick={() => setSelectedCategory(tab.id)}
-                  className={`px-3.5 py-2 min-h-[44px] rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
-                    selectedCategory === tab.id
-                      ? 'bg-[#1E1B18] text-[#FAF7F2] border-[#1E1B18]'
-                      : 'bg-[#FAF7F2] text-[#1E1B18] border-[#DFD5C5] hover:border-[#1E1B18]'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {filteredTransactions.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-sm font-semibold text-[#1E1B18] mb-1">
-                Belum Ada Transaksi Tercatat pada Kategori Ini
-              </p>
-              <p className="text-xs sm:text-sm text-[#524740]">
-                Bendahara Takmir dapat menambahkan transaksi baru melalui menu Keuangan di Panel Admin.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-[#DFD5C5] bg-[#FAF7F2] text-xs font-bold text-[#524740]">
-                    <th className="py-3.5 px-4 sm:px-6">Tanggal</th>
-                    <th className="py-3.5 px-4 sm:px-6">Uraian Transaksi</th>
-                    <th className="py-3.5 px-4 sm:px-6">Pos Kas</th>
-                    <th className="py-3.5 px-4 sm:px-6 text-right">Jenis &amp; Nominal</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#DFD5C5] text-xs sm:text-sm">
-                  {filteredTransactions.map((trx) => (
-                    <tr key={trx.id} className="hover:bg-[#F2ECE1]/50 transition-colors">
-                      <td className="py-3.5 px-4 sm:px-6 font-mono text-[#524740] whitespace-nowrap">
-                        {trx.date}
-                      </td>
-                      <td className="py-3.5 px-4 sm:px-6 font-medium text-[#1E1B18]">
-                        {trx.description}
-                        <span className="block text-xs text-[#524740] font-normal">
-                          Dicatat oleh: {trx.recordedBy}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 sm:px-6 whitespace-nowrap">
-                        <span className="px-2.5 py-1 rounded text-xs font-semibold bg-[#F2ECE1] text-[#1E1B18] border border-[#DFD5C5]">
-                          {FUND_META[trx.category]?.title || trx.category}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap font-bold">
-                        {trx.type === 'IN' ? (
-                          <span className="text-[#3D4D33]">
-                            + {formatRupiah(trx.amount)} (Masuk)
-                          </span>
-                        ) : (
-                          <span className="text-[#A84A2E]">
-                            - {formatRupiah(trx.amount)} (Keluar)
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
       </div>
 
