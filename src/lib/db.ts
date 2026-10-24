@@ -9,6 +9,7 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
   mosqueProfile: {
     name: "Masjid Al Jami'ah IAIN Manado",
     institution: 'Institut Agama Islam Negeri (IAIN) Manado',
+    logoUrl: '',
     address: 'Jl. Dr. S.H. Sarundajang Kawasan Ring Road I, Malendeng, Kec. Paal Dua',
     city: 'Kota Manado',
     province: 'Sulawesi Utara',
@@ -16,6 +17,19 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     whatsapp: '628114300000',
     tagline:
       'Pusat Peribadatan, Kajian Keilmuan Islam, dan Pemberdayaan Umat di Lingkungan Kampus IAIN Manado.',
+  },
+  footerSettings: {
+    layoutStyle: 'THREE_COLUMN',
+    middleColumnTitle: 'Halaman & Informasi',
+    rightColumnTitle: 'Layar Informasi Masjid',
+    rightColumnDescription:
+      'Buka mode layar informasi penuh 16:9 untuk ditampilkan pada Smart TV di dalam ruang utama masjid.',
+    showTvButton: true,
+    showSitemapLink: true,
+    copyrightText: 'Hak Cipta Dilindungi.',
+    instagramUrl: '',
+    youtubeUrl: '',
+    campusWebsiteUrl: 'https://iain-manado.ac.id',
   },
   heroSlides: [
     {
@@ -568,6 +582,14 @@ export function readMosqueDb(): MosqueDatabase {
     return {
       ...INITIAL_MOSQUE_DATA,
       ...parsed,
+      mosqueProfile: {
+        ...INITIAL_MOSQUE_DATA.mosqueProfile,
+        ...(parsed.mosqueProfile || {}),
+      },
+      footerSettings: {
+        ...INITIAL_MOSQUE_DATA.footerSettings,
+        ...(parsed.footerSettings || {}),
+      },
     };
   } catch {
     return INITIAL_MOSQUE_DATA;

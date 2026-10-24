@@ -55,6 +55,7 @@ export default async function HomePage() {
       <Navbar
         mosqueName={db.mosqueProfile.name}
         institution={db.mosqueProfile.institution}
+        logoUrl={db.mosqueProfile.logoUrl}
         menus={db.menus}
       />
 
@@ -87,6 +88,7 @@ export default async function HomePage() {
       <Footer
         profile={db.mosqueProfile}
         customPages={db.customPages}
+        footerSettings={db.footerSettings}
       />
     </>
   );

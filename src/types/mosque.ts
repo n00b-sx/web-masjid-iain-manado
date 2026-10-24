@@ -187,10 +187,26 @@ export interface TVSettings {
   shafWarningText: string;
 }
 
+export type FooterLayoutStyle = 'THREE_COLUMN' | 'CENTERED' | 'COMPACT';
+
+export interface FooterSettings {
+  layoutStyle: FooterLayoutStyle;
+  middleColumnTitle: string;
+  rightColumnTitle: string;
+  rightColumnDescription: string;
+  showTvButton: boolean;
+  showSitemapLink: boolean;
+  copyrightText: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
+  campusWebsiteUrl?: string;
+}
+
 export interface MosqueDatabase {
   mosqueProfile: {
     name: string;
     institution: string;
+    logoUrl?: string;
     address: string;
     city: string;
     province: string;
@@ -198,6 +214,7 @@ export interface MosqueDatabase {
     whatsapp: string;
     tagline: string;
   };
+  footerSettings: FooterSettings;
   heroSlides: HeroSlide[];
   prayerSettings: PrayerSettings;
   events: MosqueEvent[];

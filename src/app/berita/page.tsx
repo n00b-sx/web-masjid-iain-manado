@@ -24,6 +24,7 @@ export default function BeritaIndexPage() {
       <Navbar
         mosqueName={db.mosqueProfile.name}
         institution={db.mosqueProfile.institution}
+        logoUrl={db.mosqueProfile.logoUrl}
         menus={db.menus}
       />
 
@@ -52,6 +53,7 @@ export default function BeritaIndexPage() {
       <Footer
         profile={db.mosqueProfile}
         customPages={db.customPages}
+        footerSettings={db.footerSettings}
       />
     </>
   );

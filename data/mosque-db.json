@@ -2,12 +2,25 @@
   "mosqueProfile": {
     "name": "Masjid Al Jami'ah IAIN Manado",
     "institution": "Institut Agama Islam Negeri (IAIN) Manado",
+    "logoUrl": "",
     "address": "Jl. Dr. S.H. Sarundajang Kawasan Ring Road I, Malendeng, Kec. Paal Dua",
     "city": "Kota Manado",
     "province": "Sulawesi Utara",
     "email": "masjid.aljamiah@iain-manado.ac.id",
     "whatsapp": "628114300000",
     "tagline": "Pusat Peribadatan, Kajian Keilmuan Islam, dan Pemberdayaan Umat di Lingkungan Kampus IAIN Manado."
+  },
+  "footerSettings": {
+    "layoutStyle": "THREE_COLUMN",
+    "middleColumnTitle": "Halaman & Informasi",
+    "rightColumnTitle": "Layar Informasi Masjid",
+    "rightColumnDescription": "Buka mode layar informasi penuh 16:9 untuk ditampilkan pada Smart TV di dalam ruang utama masjid.",
+    "showTvButton": true,
+    "showSitemapLink": true,
+    "copyrightText": "Hak Cipta Dilindungi.",
+    "instagramUrl": "",
+    "youtubeUrl": "",
+    "campusWebsiteUrl": "https://iain-manado.ac.id"
   },
   "heroSlides": [
     {
@@ -16,7 +29,7 @@
       "subtitle": "Ruang sujud, pusat diskusi keilmuan Islam, dan pembinaan karakter mahasiswa serta sivitas akademika di Kota Manado.",
       "mediaType": "VIDEO",
       "imageUrl": "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1920&q=85",
-      "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/28/201_Dome_Mosque%2C_Tangail_%2827%29.webm/201_Dome_Mosque%2C_Tangail_%2827%29.webm.480p.vp9.webm",
+      "videoUrl": "/uploads/1792817540303-ytdown-com_youtube_profil-institut-agama.mp4",
       "ctaText": "Lihat Jadwal Sholat & Kajian",
       "ctaLink": "#jadwal-sholat",
       "order": 1,

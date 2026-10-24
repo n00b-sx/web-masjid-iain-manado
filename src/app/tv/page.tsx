@@ -315,9 +315,17 @@ export default function MosqueTVPage() {
       <header className="bg-[#2C2520] border-b-2 border-[#A84A2E] px-4 sm:px-8 py-3.5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 shrink-0">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-xl shrink-0">
-              AJ
-            </div>
+            {db.mosqueProfile.logoUrl ? (
+              <img
+                src={db.mosqueProfile.logoUrl}
+                alt={`Logo ${db.mosqueProfile.name}`}
+                className="w-12 h-12 rounded-xl object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-xl bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-xl shrink-0">
+                AJ
+              </div>
+            )}
             <div>
               <h1 className="font-serif-heading text-lg sm:text-2xl font-bold text-[#FAF7F2] leading-tight">
                 {db.mosqueProfile.name}

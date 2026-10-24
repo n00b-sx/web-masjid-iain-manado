@@ -40,6 +40,7 @@ export default async function DynamicCustomPage({ params }: PageProps) {
         <Navbar
           mosqueName={db.mosqueProfile.name}
           institution={db.mosqueProfile.institution}
+          logoUrl={db.mosqueProfile.logoUrl}
           menus={db.menus}
         />
         <main id="main-content" className="flex-1 bg-[#FAF7F2]">
@@ -82,6 +83,7 @@ export default async function DynamicCustomPage({ params }: PageProps) {
       <Navbar
         mosqueName={db.mosqueProfile.name}
         institution={db.mosqueProfile.institution}
+        logoUrl={db.mosqueProfile.logoUrl}
         menus={db.menus}
       />
 
@@ -165,6 +167,7 @@ export default async function DynamicCustomPage({ params }: PageProps) {
       <Footer
         profile={db.mosqueProfile}
         customPages={db.customPages}
+        footerSettings={db.footerSettings}
       />
     </>
   );

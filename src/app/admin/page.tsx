@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   AdminRole,
   CustomPage,
+  FooterLayoutStyle,
   FundCategory,
   HeroSlide,
   IslamicQuote,
@@ -493,9 +494,17 @@ export default function AdminDashboardPage() {
       <header className="bg-[#1E1B18] text-[#FAF7F2] border-b-2 border-[#A84A2E] px-4 sm:px-6 lg:px-8 py-4 dark-surface">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-lg">
-              AJ
-            </div>
+            {db.mosqueProfile.logoUrl ? (
+              <img
+                src={db.mosqueProfile.logoUrl}
+                alt={`Logo ${db.mosqueProfile.name}`}
+                className="w-10 h-10 rounded-lg object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-lg">
+                AJ
+              </div>
+            )}
             <div>
               <h1 className="font-serif-heading text-lg sm:text-xl font-bold text-[#FAF7F2]">
                 CMS Admin Masjid Al Jami&apos;ah IAIN Manado
@@ -754,8 +763,63 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               <section className="lg:col-span-7 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
                 <h2 className="font-serif-heading text-xl font-bold text-[#1E1B18]">
-                  Identitas Resmi Masjid &amp; Kontak Sekretariat
+                  Identitas Resmi Masjid, Logo &amp; Kontak Sekretariat
                 </h2>
+
+                <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      {db.mosqueProfile.logoUrl ? (
+                        <img
+                          src={db.mosqueProfile.logoUrl}
+                          alt="Pratinjau Logo Masjid"
+                          className="w-12 h-12 rounded-lg object-contain bg-white p-1 border border-[#DFD5C5] shrink-0"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-[#1E1B18] text-[#E8CFA0] flex items-center justify-center font-serif-heading font-bold text-xl shrink-0">
+                          AJ
+                        </div>
+                      )}
+                      <div>
+                        <span className="block text-xs sm:text-sm font-bold text-[#1E1B18]">
+                          Logo Resmi Masjid (Navbar, Footer &amp; Layar TV)
+                        </span>
+                        <span className="block text-xs text-[#524740]">
+                          Unggah file logo (PNG transparan, JPG, WebP, atau SVG) atau kosongkan untuk memakai lencana inisial &ldquo;AJ&rdquo;.
+                        </span>
+                      </div>
+                    </div>
+                    {db.mosqueProfile.logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setDb({
+                            ...db,
+                            mosqueProfile: { ...db.mosqueProfile, logoUrl: '' },
+                          })
+                        }
+                        className="px-3 py-1.5 rounded border border-[#A84A2E] text-[#A84A2E] text-xs font-semibold hover:bg-[#A84A2E] hover:text-white cursor-pointer shrink-0"
+                      >
+                        Reset ke &ldquo;AJ&rdquo;
+                      </button>
+                    )}
+                  </div>
+
+                  <ImageUploaderField
+                    label="Unggah File Logo Baru atau Masukkan URL Logo"
+                    mediaMode="IMAGE"
+                    value={db.mosqueProfile.logoUrl || ''}
+                    onChange={(newLogoUrl) =>
+                      setDb({
+                        ...db,
+                        mosqueProfile: {
+                          ...db.mosqueProfile,
+                          logoUrl: newLogoUrl,
+                        },
+                      })
+                    }
+                  />
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -988,6 +1052,292 @@ export default function AdminDashboardPage() {
                 </div>
               </section>
             </div>
+
+            {/* Footer Model & Content Settings */}
+            <section
+              id="admin-footer-settings"
+              className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-5"
+            >
+              <div>
+                <h2 className="font-serif-heading text-xl font-bold text-[#1E1B18]">
+                  Pengaturan Model &amp; Konten Footer Website
+                </h2>
+                <p className="text-xs sm:text-sm text-[#524740]">
+                  Pilih model tata letak Footer (3 Kolom Lengkap, Simetris Rata Tengah, atau Ringkas Minimalis) serta atur elemen dan tautan yang ditampilkan di bagian bawah halaman.
+                </p>
+              </div>
+
+              {/* 3 Visual Model Cards */}
+              <div>
+                <label className="block text-xs font-bold text-[#1E1B18] mb-2">
+                  Pilih Model Tata Letak Footer:
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    {
+                      id: 'THREE_COLUMN' as FooterLayoutStyle,
+                      title: 'Model 1: Klasik 3 Kolom Lengkap',
+                      desc: 'Kolom kiri Identitas & Kontak, kolom tengah Halaman & Informasi, kolom kanan Akses Layar TV & Tautan Luar.',
+                    },
+                    {
+                      id: 'CENTERED' as FooterLayoutStyle,
+                      title: 'Model 2: Simetris Rata Tengah',
+                      desc: 'Logo, Nama Masjid, Tagline, dan Kontak tersusun simetris di tengah layar dengan deretan menu horizontal.',
+                    },
+                    {
+                      id: 'COMPACT' as FooterLayoutStyle,
+                      title: 'Model 3: Ringkas Minimalis (2 Sisi)',
+                      desc: 'Tampilan modern hemat ruang: Identitas masjid di kiri dan barisan navigasi horizontal di kanan.',
+                    },
+                  ].map((model) => {
+                    const isSelected =
+                      (db.footerSettings?.layoutStyle || 'THREE_COLUMN') ===
+                      model.id;
+                    return (
+                      <button
+                        key={model.id}
+                        type="button"
+                        onClick={() =>
+                          setDb({
+                            ...db,
+                            footerSettings: {
+                              ...db.footerSettings,
+                              layoutStyle: model.id,
+                            },
+                          })
+                        }
+                        className={`text-left p-4 rounded-xl border-2 transition-colors cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#1E1B18] text-[#FAF7F2] border-[#A84A2E]'
+                            : 'bg-[#FAF7F2] text-[#1E1B18] border-[#DFD5C5] hover:border-[#1E1B18]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <strong className="font-serif-heading text-sm sm:text-base">
+                            {model.title}
+                          </strong>
+                          {isSelected && (
+                            <span className="px-2 py-0.5 rounded bg-[#A84A2E] text-white text-[11px] font-bold">
+                              Aktif
+                            </span>
+                          )}
+                        </div>
+                        <p
+                          className={`text-xs leading-relaxed ${
+                            isSelected ? 'text-[#E8CFA0]' : 'text-[#524740]'
+                          }`}
+                        >
+                          {model.desc}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Judul Kolom Navigasi Footer
+                  </label>
+                  <input
+                    type="text"
+                    value={db.footerSettings?.middleColumnTitle || ''}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          middleColumnTitle: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Halaman & Informasi"
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Judul Kolom Kanan (Model 3 Kolom)
+                  </label>
+                  <input
+                    type="text"
+                    value={db.footerSettings?.rightColumnTitle || ''}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          rightColumnTitle: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Layar Informasi Masjid"
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Teks Hak Cipta (Copyright)
+                  </label>
+                  <input
+                    type="text"
+                    value={db.footerSettings?.copyrightText || ''}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          copyrightText: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Hak Cipta Dilindungi."
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                  Deskripsi Kolom Kanan (Model 3 Kolom)
+                </label>
+                <textarea
+                  rows={2}
+                  value={db.footerSettings?.rightColumnDescription || ''}
+                  onChange={(e) =>
+                    setDb({
+                      ...db,
+                      footerSettings: {
+                        ...db.footerSettings,
+                        rightColumnDescription: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full px-3.5 py-2 rounded-md bg-white border border-[#524740] text-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    URL Website Kampus (Opsional)
+                  </label>
+                  <input
+                    type="text"
+                    value={db.footerSettings?.campusWebsiteUrl || ''}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          campusWebsiteUrl: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="https://iain-manado.ac.id"
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    URL Instagram Masjid (Opsional)
+                  </label>
+                  <input
+                    type="text"
+                    value={db.footerSettings?.instagramUrl || ''}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          instagramUrl: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="https://instagram.com/..."
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    URL YouTube Masjid (Opsional)
+                  </label>
+                  <input
+                    type="text"
+                    value={db.footerSettings?.youtubeUrl || ''}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          youtubeUrl: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="https://youtube.com/..."
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-6 bg-[#FAF7F2] p-4 rounded-lg border border-[#DFD5C5]">
+                <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#1E1B18] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={db.footerSettings?.showTvButton ?? true}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          showTvButton: e.target.checked,
+                        },
+                      })
+                    }
+                    className="w-4 h-4 accent-[#A84A2E]"
+                  />
+                  <span>Tampilkan Tombol Layar Smart TV (/tv) di Footer</span>
+                </label>
+
+                <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#1E1B18] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={db.footerSettings?.showSitemapLink ?? true}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        footerSettings: {
+                          ...db.footerSettings,
+                          showSitemapLink: e.target.checked,
+                        },
+                      })
+                    }
+                    className="w-4 h-4 accent-[#A84A2E]"
+                  />
+                  <span>Tampilkan Tautan Peta Situs (Sitemap SEO) di Footer</span>
+                </label>
+              </div>
+
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() =>
+                  persistDatabase(
+                    db,
+                    'Model dan konfigurasi Footer berhasil disimpan.'
+                  )
+                }
+                className="px-5 py-2.5 min-h-[44px] inline-flex items-center gap-2 rounded-md bg-[#A84A2E] text-white text-sm font-semibold hover:bg-[#8E3B22] cursor-pointer"
+              >
+                <Save className="w-4 h-4" aria-hidden="true" />
+                <span>Simpan Pengaturan Footer</span>
+              </button>
+            </section>
           </div>
         )}
 
@@ -3162,6 +3512,31 @@ export default function AdminDashboardPage() {
                       )}
                     </div>
                   ))}
+              </div>
+
+              <div className="pt-4 border-t border-[#DFD5C5]">
+                <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-lg p-4 space-y-2">
+                  <strong className="block text-xs sm:text-sm font-bold text-[#1E1B18]">
+                    Ingin Mengubah Model Tata Letak Footer atau Logo Masjid?
+                  </strong>
+                  <p className="text-xs text-[#524740]">
+                    Anda dapat memilih 3 model tampilan Footer (3 Kolom Lengkap, Simetris Rata Tengah, atau Ringkas Minimalis) serta mengunggah Logo Masjid pada menu Verifikasi &amp; Profil.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTab('OVERVIEW');
+                      setTimeout(() => {
+                        document
+                          .getElementById('admin-footer-settings')
+                          ?.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }}
+                    className="w-full px-4 py-2.5 min-h-[40px] rounded-md bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                  >
+                    Buka Pengaturan Model Footer &amp; Logo Masjid
+                  </button>
+                </div>
               </div>
             </section>
           </div>

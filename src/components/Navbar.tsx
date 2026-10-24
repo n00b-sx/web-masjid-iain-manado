@@ -8,10 +8,16 @@ import { ChevronDown, Menu, X, Tv } from 'lucide-react';
 interface NavbarProps {
   mosqueName: string;
   institution: string;
+  logoUrl?: string;
   menus: MenuItem[];
 }
 
-export default function Navbar({ mosqueName, institution, menus }: NavbarProps) {
+export default function Navbar({
+  mosqueName,
+  institution,
+  logoUrl,
+  menus,
+}: NavbarProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -67,33 +73,41 @@ export default function Navbar({ mosqueName, institution, menus }: NavbarProps) 
         isSolid ? 'text-[#1E1B18]' : 'text-[#FAF7F2] dark-surface'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Brand Identity */}
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        <div className="flex items-center justify-between gap-4 h-20">
+          {/* Brand Identity (Left Aligned, Never Wraps) */}
           <Link
             href="/"
-            className="flex items-center gap-3 py-2 min-h-[44px] group rounded-md"
+            className="flex items-center gap-3 py-2 min-h-[44px] group rounded-md shrink-0"
           >
-            <div
-              className={`w-10 h-10 rounded-lg flex items-center justify-center font-serif-heading font-bold text-lg border transition-colors ${
-                isSolid
-                  ? 'bg-[#1E1B18] text-[#E8CFA0] border-[#1E1B18]'
-                  : 'bg-[#1E1B18]/80 text-[#E8CFA0] border-[#E8CFA0]/50'
-              }`}
-              aria-hidden="true"
-            >
-              AJ
-            </div>
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt={`Logo ${mosqueName}`}
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+              />
+            ) : (
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center font-serif-heading font-bold text-lg border transition-colors shrink-0 ${
+                  isSolid
+                    ? 'bg-[#1E1B18] text-[#E8CFA0] border-[#1E1B18]'
+                    : 'bg-[#1E1B18]/80 text-[#E8CFA0] border-[#E8CFA0]/50'
+                }`}
+                aria-hidden="true"
+              >
+                AJ
+              </div>
+            )}
             <div className="flex flex-col">
               <span
-                className={`font-serif-heading font-bold text-base sm:text-lg leading-tight transition-colors ${
+                className={`font-serif-heading font-bold text-base sm:text-lg leading-tight whitespace-nowrap transition-colors ${
                   isSolid ? 'text-[#1E1B18]' : 'text-[#FAF7F2]'
                 }`}
               >
                 {mosqueName}
               </span>
               <span
-                className={`text-xs font-medium transition-colors ${
+                className={`text-xs font-medium whitespace-nowrap transition-colors ${
                   isSolid ? 'text-[#524740]' : 'text-[#E8CFA0]'
                 }`}
               >
@@ -102,89 +116,88 @@ export default function Navbar({ mosqueName, institution, menus }: NavbarProps) 
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav
-            aria-label="Navigasi Utama"
-            className="hidden lg:flex items-center gap-1 xl:gap-2"
-          >
-            {sortedMenus.map((item) => {
-              const hasChildren = item.children && item.children.length > 0;
-              const isOpen = openDropdownId === item.id;
+          {/* Right-Aligned Desktop Navigation + TV Action Button (Single Line) */}
+          <div className="hidden lg:flex items-center justify-end gap-1 xl:gap-2 ml-auto">
+            <nav
+              aria-label="Navigasi Utama"
+              className="flex items-center justify-end gap-1 xl:gap-1.5"
+            >
+              {sortedMenus.map((item) => {
+                const hasChildren = item.children && item.children.length > 0;
+                const isOpen = openDropdownId === item.id;
 
-              if (!hasChildren) {
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className={`px-3.5 py-2.5 min-h-[44px] inline-flex items-center text-sm font-semibold rounded-md transition-colors ${
-                      isSolid
-                        ? 'text-[#1E1B18] hover:bg-[#F2ECE1] hover:text-[#A84A2E]'
-                        : 'text-[#FAF7F2] hover:bg-white/15'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              }
-
-              return (
-                <div key={item.id} className="relative">
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-haspopup="true"
-                    onClick={() =>
-                      setOpenDropdownId(isOpen ? null : item.id)
-                    }
-                    className={`px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-1.5 text-sm font-semibold rounded-md transition-colors cursor-pointer ${
-                      isSolid
-                        ? 'text-[#1E1B18] hover:bg-[#F2ECE1] hover:text-[#A84A2E]'
-                        : 'text-[#FAF7F2] hover:bg-white/15'
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        isOpen ? 'rotate-180' : ''
+                if (!hasChildren) {
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.href}
+                      className={`px-3 xl:px-3.5 py-2.5 min-h-[44px] inline-flex items-center text-sm font-semibold rounded-md whitespace-nowrap shrink-0 transition-colors ${
+                        isSolid
+                          ? 'text-[#1E1B18] hover:bg-[#F2ECE1] hover:text-[#A84A2E]'
+                          : 'text-[#FAF7F2] hover:bg-white/15'
                       }`}
-                    />
-                  </button>
-
-                  {isOpen && (
-                    <div
-                      role="menu"
-                      className="absolute left-0 mt-2 w-60 rounded-lg bg-[#FAF7F2] text-[#1E1B18] shadow-xl border border-[#DFD5C5] py-2 z-50"
                     >
-                      {item.children.map((sub) => (
-                        <Link
-                          key={sub.id}
-                          href={sub.href}
-                          role="menuitem"
-                          onClick={() => setOpenDropdownId(null)}
-                          className="block px-4 py-2.5 min-h-[44px] text-sm font-medium text-[#1E1B18] hover:bg-[#F2ECE1] hover:text-[#A84A2E] transition-colors"
-                        >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
+                      {item.label}
+                    </Link>
+                  );
+                }
 
-          {/* Action Button (TV Mode) */}
-          <div className="hidden lg:flex items-center gap-2.5">
+                return (
+                  <div key={item.id} className="relative shrink-0">
+                    <button
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-haspopup="true"
+                      onClick={() =>
+                        setOpenDropdownId(isOpen ? null : item.id)
+                      }
+                      className={`px-3 xl:px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-1.5 text-sm font-semibold rounded-md whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+                        isSolid
+                          ? 'text-[#1E1B18] hover:bg-[#F2ECE1] hover:text-[#A84A2E]'
+                          : 'text-[#FAF7F2] hover:bg-white/15'
+                      }`}
+                    >
+                      <span className="whitespace-nowrap">{item.label}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {isOpen && (
+                      <div
+                        role="menu"
+                        className="absolute right-0 mt-2 w-64 rounded-lg bg-[#FAF7F2] text-[#1E1B18] shadow-xl border border-[#DFD5C5] py-2 z-50"
+                      >
+                        {item.children.map((sub) => (
+                          <Link
+                            key={sub.id}
+                            href={sub.href}
+                            role="menuitem"
+                            onClick={() => setOpenDropdownId(null)}
+                            className="block px-4 py-2.5 min-h-[44px] text-sm font-medium text-[#1E1B18] hover:bg-[#F2ECE1] hover:text-[#A84A2E] transition-colors"
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+
             <Link
               href="/tv"
-              className={`px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-2 text-xs font-semibold rounded-md border transition-colors ${
+              className={`ml-1 px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-2 text-xs font-semibold rounded-md border whitespace-nowrap shrink-0 transition-colors ${
                 isSolid
                   ? 'border-[#1E1B18] text-[#1E1B18] hover:bg-[#1E1B18] hover:text-[#FAF7F2]'
                   : 'border-[#E8CFA0] text-[#E8CFA0] bg-[#1E1B18]/60 hover:bg-[#1E1B18]'
               }`}
               title="Buka tampilan layar penuh untuk Smart TV Masjid"
             >
-              <Tv className="w-4 h-4" />
+              <Tv className="w-4 h-4 shrink-0" />
               <span>Layar TV</span>
             </Link>
           </div>
