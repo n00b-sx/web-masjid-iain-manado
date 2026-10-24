@@ -131,10 +131,10 @@ export default function EventsSection({ events }: EventsSectionProps) {
             </div>
           </div>
 
-          {/* Right Column: Chronological Vertical Timeline */}
+          {/* Right Column: Chronological Vertical Timeline (Clean, No Card Box or Outlines) */}
           <div className="lg:col-span-8">
             {filteredEvents.length === 0 ? (
-              <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-8 text-center">
+              <div className="py-8 text-center">
                 <Calendar className="w-10 h-10 text-[#A84A2E] mx-auto mb-3" aria-hidden="true" />
                 <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18] mb-2">
                   Belum Ada Jadwal pada Kategori Ini
@@ -155,7 +155,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
             ) : (
               <ol
                 aria-label="Alur Waktu Kegiatan Masjid"
-                className="relative space-y-6"
+                className="relative space-y-8"
               >
                 {filteredEvents.map((evt, index) => {
                   const isLast = index === filteredEvents.length - 1;
@@ -166,7 +166,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
                       className="relative grid grid-cols-1 sm:grid-cols-[175px_36px_1fr] gap-0 sm:gap-2 items-start"
                     >
                       {/* Left Column of Timeline (Desktop/Tablet): Time & Day Label */}
-                      <div className="hidden sm:flex flex-col items-end text-right pr-3 pt-1">
+                      <div className="hidden sm:flex flex-col items-end text-right pr-3 pt-0.5">
                         <span
                           className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold mb-1.5 ${
                             evt.isToday
@@ -193,12 +193,12 @@ export default function EventsSection({ events }: EventsSectionProps) {
                         {/* Vertical Connector Line */}
                         {!isLast && (
                           <div
-                            className="w-0.5 bg-[#1E1B18]/25 absolute top-5 bottom-[-28px] left-1/2 -translate-x-1/2"
+                            className="w-0.5 bg-[#1E1B18]/25 absolute top-4 bottom-[-36px] left-1/2 -translate-x-1/2"
                           />
                         )}
                         {/* Timeline Node Circle */}
                         <div
-                          className={`relative z-10 mt-1.5 w-4 h-4 rounded-full border-2 transition-transform ${
+                          className={`relative z-10 mt-1.5 w-4 h-4 rounded-full border-2 ${
                             evt.isToday
                               ? 'bg-[#A84A2E] border-[#FAF7F2] ring-4 ring-[#A84A2E]/25'
                               : 'bg-[#1E1B18] border-[#FAF7F2] ring-4 ring-[#1E1B18]/15'
@@ -206,18 +206,18 @@ export default function EventsSection({ events }: EventsSectionProps) {
                         />
                       </div>
 
-                      {/* Right Column: Compact Event Card */}
-                      <div className="relative pl-6 sm:pl-0">
+                      {/* Right Column: Clean Editorial Event Details (No Box, No Outline, No Dividers) */}
+                      <div className="relative pl-6 sm:pl-2">
                         {/* Mobile Vertical Line & Node */}
                         <div
                           className="sm:hidden absolute left-0 top-0 bottom-0 flex flex-col items-center"
                           aria-hidden="true"
                         >
                           {!isLast && (
-                            <div className="w-0.5 bg-[#1E1B18]/25 absolute top-4 bottom-[-24px] left-1.5" />
+                            <div className="w-0.5 bg-[#1E1B18]/25 absolute top-4 bottom-[-32px] left-1.5" />
                           )}
                           <div
-                            className={`relative z-10 mt-2 w-3.5 h-3.5 rounded-full border-2 ${
+                            className={`relative z-10 mt-1.5 w-3.5 h-3.5 rounded-full border-2 ${
                               evt.isToday
                                 ? 'bg-[#A84A2E] border-[#FAF7F2] ring-2 ring-[#A84A2E]/30'
                                 : 'bg-[#1E1B18] border-[#FAF7F2]'
@@ -225,15 +225,9 @@ export default function EventsSection({ events }: EventsSectionProps) {
                           />
                         </div>
 
-                        <article
-                          className={`bg-[#FAF7F2] rounded-xl p-4 sm:p-5 border transition-colors ${
-                            evt.isToday
-                              ? 'border-[#A84A2E] shadow-sm'
-                              : 'border-[#DFD5C5] hover:border-[#1E1B18]'
-                          }`}
-                        >
+                        <article>
                           {/* Mobile Time Header */}
-                          <div className="flex sm:hidden flex-wrap items-center justify-between gap-2 mb-2.5 pb-2 border-b border-[#DFD5C5]">
+                          <div className="flex sm:hidden flex-wrap items-center gap-2 mb-2">
                             <span
                               className={`px-2 py-0.5 rounded text-[11px] font-bold ${
                                 evt.isToday
@@ -251,21 +245,25 @@ export default function EventsSection({ events }: EventsSectionProps) {
                             </span>
                           </div>
 
-                          {/* Card Top Row: Title + Category Pill */}
-                          <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                            <h3 className="font-serif-heading text-base sm:text-lg font-bold text-[#1E1B18] leading-snug">
-                              {evt.title}
-                            </h3>
-                            <span className="px-2.5 py-0.5 rounded text-xs font-semibold bg-[#F2ECE1] text-[#1E1B18] border border-[#DFD5C5] shrink-0">
+                          {/* Title */}
+                          <h3 className="font-serif-heading text-base sm:text-xl font-bold text-[#1E1B18] leading-snug mb-2">
+                            {evt.title}
+                          </h3>
+
+                          {/* Category Badge Uniformly Below Title */}
+                          <div className="mb-2.5">
+                            <span className="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-[#FAF7F2] text-[#1E1B18] border border-[#DFD5C5]">
                               {evt.category}
                             </span>
                           </div>
 
-                          <p className="text-xs sm:text-sm text-[#524740] leading-relaxed mb-3.5">
+                          {/* Description */}
+                          <p className="text-xs sm:text-sm text-[#524740] leading-relaxed mb-3">
                             {evt.description}
                           </p>
 
-                          <div className="pt-2.5 border-t border-[#DFD5C5] grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1E1B18]">
+                          {/* Speaker & Location (Clean, No Divider Line) */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1E1B18]">
                             <div className="flex items-start gap-1.5">
                               <User
                                 className="w-3.5 h-3.5 text-[#A84A2E] shrink-0 mt-0.5"
