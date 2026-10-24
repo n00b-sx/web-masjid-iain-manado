@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { HeroSlide } from '@/types/mosque';
 import {
   ChevronLeft,
@@ -71,15 +70,9 @@ export default function HeroSlideshow({
           <h1 className="font-serif-heading text-3xl sm:text-5xl font-bold text-[#FAF7F2] mb-4">
             Masjid Al Jami&apos;ah IAIN Manado
           </h1>
-          <p className="text-base sm:text-lg text-[#E8CFA0] max-w-2xl mb-6">
-            Belum ada slide gambar atau video aktif. Silakan tambahkan media sampul pada Panel Admin di menu Hero Slideshow.
+          <p className="text-base sm:text-lg text-[#E8CFA0] max-w-2xl">
+            Pusat Ibadah, Kajian Keislaman, dan Pemberdayaan Umat Kampus IAIN Manado.
           </p>
-          <Link
-            href="/admin"
-            className="inline-flex items-center justify-center px-6 py-3 min-h-[44px] rounded-md bg-[#A84A2E] text-white font-semibold text-sm hover:bg-[#8E3B22]"
-          >
-            Kelola Hero di Panel Admin
-          </Link>
         </div>
       </section>
     );

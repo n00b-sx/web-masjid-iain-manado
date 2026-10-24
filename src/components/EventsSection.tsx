@@ -140,7 +140,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
                   Belum Ada Jadwal pada Kategori Ini
                 </h3>
                 <p className="text-sm text-[#524740] mb-5 max-w-md mx-auto">
-                  Saat ini belum ada agenda yang tercatat untuk filter yang dipilih. Anda dapat menampilkan seluruh agenda atau menambahkan jadwal baru melalui Panel Admin.
+                  Saat ini belum ada agenda yang tercatat untuk filter yang dipilih. Silakan tampilkan seluruh agenda kegiatan masjid.
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   <button
@@ -150,12 +150,6 @@ export default function EventsSection({ events }: EventsSectionProps) {
                   >
                     Tampilkan Semua Agenda
                   </button>
-                  <Link
-                    href="/admin"
-                    className="px-4 py-2.5 min-h-[44px] inline-flex items-center rounded-md border border-[#1E1B18] text-[#1E1B18] text-sm font-semibold hover:bg-[#F2ECE1]"
-                  >
-                    Tambah Agenda di Admin
-                  </Link>
                 </div>
               </div>
             ) : (

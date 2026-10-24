@@ -52,15 +52,9 @@ export default function NewsSection({ articles }: NewsSectionProps) {
             <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18] mb-2">
               Belum Ada Berita yang Dipublikasikan
             </h3>
-            <p className="text-sm text-[#524740] mb-5">
-              Pengurus Humas Takmir dapat menulis dan menerbitkan berita baru melalui editor di Panel Admin.
+            <p className="text-sm text-[#524740]">
+              Warta kegiatan, pengumuman resmi, dan artikel kajian terbaru akan ditampilkan di bagian ini.
             </p>
-            <Link
-              href="/admin"
-              className="px-5 py-2.5 min-h-[44px] inline-flex items-center rounded-md bg-[#A84A2E] text-white text-sm font-semibold"
-            >
-              Tulis Berita di Panel Admin
-            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

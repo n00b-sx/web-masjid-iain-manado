@@ -52,7 +52,7 @@ export default async function DynamicCustomPage({ params }: PageProps) {
           </section>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
             <p className="text-base text-[#524740] mb-6">
-              Halaman informasi dengan alamat <code>/p/{slug}</code> belum dibuat atau telah dihapus. Anda dapat membuat halaman baru melalui Panel Admin.
+              Halaman informasi dengan alamat <code>/p/{slug}</code> belum tersedia atau telah dipindahkan.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Link
@@ -61,12 +61,6 @@ export default async function DynamicCustomPage({ params }: PageProps) {
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Kembali ke Beranda</span>
-              </Link>
-              <Link
-                href="/admin"
-                className="px-5 py-3 min-h-[44px] inline-flex items-center rounded-md bg-[#A84A2E] text-white text-sm font-semibold"
-              >
-                Kelola Halaman di Admin
               </Link>
             </div>
           </div>

@@ -142,11 +142,7 @@ export default function FinanceInfographicSection({
           <div className="mb-8 p-4 rounded-lg bg-[#F2ECE1] border border-[#1E1B18]/25 flex items-start gap-3 text-xs sm:text-sm text-[#1E1B18]">
             <Info className="w-5 h-5 text-[#A84A2E] shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <strong className="font-bold">Catatan Data Simulasi Awal:</strong> Angka mutasi di bawah ini merupakan data contoh awal struktur 3 kas masjid. Bendahara Takmir dapat menghapus atau memperbarui transaksi riil serta mengunggah gambar QRIS resmi melalui{' '}
-              <a href="/admin" className="underline font-semibold text-[#A84A2E]">
-                Panel Admin
-              </a>
-              .
+              <strong className="font-bold">Catatan Data Simulasi Awal:</strong> Angka mutasi di bawah ini merupakan data contoh awal struktur 3 kas masjid yang dikelola oleh Bendahara Takmir Masjid Al Jami&apos;ah IAIN Manado.
             </div>
           </div>
         )}

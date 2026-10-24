@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { MenuItem } from '@/types/mosque';
-import { ChevronDown, Menu, X, Tv, ShieldCheck } from 'lucide-react';
+import { ChevronDown, Menu, X, Tv } from 'lucide-react';
 
 interface NavbarProps {
   mosqueName: string;
@@ -173,7 +173,7 @@ export default function Navbar({ mosqueName, institution, menus }: NavbarProps) 
             })}
           </nav>
 
-          {/* Action Buttons (TV Mode & Admin) */}
+          {/* Action Button (TV Mode) */}
           <div className="hidden lg:flex items-center gap-2.5">
             <Link
               href="/tv"
@@ -186,13 +186,6 @@ export default function Navbar({ mosqueName, institution, menus }: NavbarProps) 
             >
               <Tv className="w-4 h-4" />
               <span>Layar TV</span>
-            </Link>
-            <Link
-              href="/admin"
-              className="px-4 py-2.5 min-h-[44px] inline-flex items-center gap-2 text-xs font-semibold rounded-md bg-[#A84A2E] text-white hover:bg-[#8E3B22] transition-colors"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Panel Admin</span>
             </Link>
           </div>
 
@@ -282,22 +275,14 @@ export default function Navbar({ mosqueName, institution, menus }: NavbarProps) 
               );
             })}
 
-            <div className="pt-4 mt-2 border-t border-[#DFD5C5] grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="pt-4 mt-2 border-t border-[#DFD5C5]">
               <Link
                 href="/tv"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 min-h-[44px] flex items-center justify-center gap-2 text-sm font-semibold rounded-md border border-[#1E1B18] text-[#1E1B18] hover:bg-[#1E1B18] hover:text-[#FAF7F2]"
+                className="w-full px-4 py-3 min-h-[44px] flex items-center justify-center gap-2 text-sm font-semibold rounded-md border border-[#1E1B18] text-[#1E1B18] hover:bg-[#1E1B18] hover:text-[#FAF7F2]"
               >
                 <Tv className="w-4 h-4" />
                 <span>Buka Mode TV Masjid</span>
-              </Link>
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 min-h-[44px] flex items-center justify-center gap-2 text-sm font-semibold rounded-md bg-[#A84A2E] text-white hover:bg-[#8E3B22]"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Buka Panel Admin</span>
               </Link>
             </div>
           </nav>

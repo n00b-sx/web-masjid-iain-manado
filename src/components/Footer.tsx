@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CustomPage, MosqueDatabase } from '@/types/mosque';
-import { Mail, MapPin, Phone, Tv, ShieldCheck } from 'lucide-react';
+import { Mail, MapPin, Phone, Tv } from 'lucide-react';
 
 interface FooterProps {
   profile: MosqueDatabase['mosqueProfile'];
@@ -119,10 +119,10 @@ export default function Footer({ profile, customPages }: FooterProps) {
           {/* Portal Sistem & Layar TV (3 cols) */}
           <div className="md:col-span-3">
             <h3 className="font-serif-heading text-base font-bold text-[#E8CFA0] mb-4">
-              Akses Sistem Masjid
+              Layar Informasi Masjid
             </h3>
             <p className="text-xs text-[#F2ECE1] leading-relaxed mb-4">
-              Buka mode layar informasi penuh 16:9 untuk ditampilkan pada Smart TV di dalam ruang utama masjid, atau masuk ke dashboard pengelola Takmir.
+              Buka mode layar informasi penuh 16:9 untuk ditampilkan pada Smart TV di dalam ruang utama masjid.
             </p>
             <div className="flex flex-col gap-3">
               <Link
@@ -131,13 +131,6 @@ export default function Footer({ profile, customPages }: FooterProps) {
               >
                 <Tv className="w-4 h-4" aria-hidden="true" />
                 <span>Layar Smart TV Masjid (/tv)</span>
-              </Link>
-              <Link
-                href="/admin"
-                className="px-4 py-3 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-md bg-[#A84A2E] text-white text-xs font-semibold hover:bg-[#8E3B22] transition-colors"
-              >
-                <ShieldCheck className="w-4 h-4" aria-hidden="true" />
-                <span>Dashboard Admin CMS</span>
               </Link>
             </div>
           </div>
@@ -150,9 +143,6 @@ export default function Footer({ profile, customPages }: FooterProps) {
           <div className="flex items-center gap-4">
             <Link href="/sitemap.xml" className="hover:underline">
               Peta Situs (Sitemap SEO)
-            </Link>
-            <Link href="/admin" className="hover:underline">
-              Pengelola Takmir
             </Link>
           </div>
         </div>
