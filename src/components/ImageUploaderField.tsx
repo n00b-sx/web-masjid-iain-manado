@@ -141,7 +141,7 @@ export default function ImageUploaderField({
             <img
               src={value}
               alt="Pratinjau Gambar"
-              className="h-24 w-auto object-cover rounded border border-[#DFD5C5]"
+              className="h-24 w-auto object-contain rounded"
             />
           )}
         </div>

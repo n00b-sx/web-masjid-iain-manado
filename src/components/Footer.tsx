@@ -62,7 +62,7 @@ export default function Footer({
       <img
         src={profile.logoUrl}
         alt={`Logo ${profile.name}`}
-        className="w-11 h-11 rounded-lg object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+        className="w-11 h-11 sm:w-12 sm:h-12 object-contain shrink-0"
       />
     ) : (
       <div className="w-10 h-10 rounded-lg bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-lg shrink-0">

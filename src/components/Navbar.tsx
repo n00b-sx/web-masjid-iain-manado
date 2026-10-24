@@ -84,7 +84,7 @@ export default function Navbar({
               <img
                 src={logoUrl}
                 alt={`Logo ${mosqueName}`}
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+                className="w-11 h-11 sm:w-12 sm:h-12 object-contain shrink-0"
               />
             ) : (
               <div

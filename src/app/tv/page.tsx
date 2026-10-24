@@ -319,7 +319,7 @@ export default function MosqueTVPage() {
               <img
                 src={db.mosqueProfile.logoUrl}
                 alt={`Logo ${db.mosqueProfile.name}`}
-                className="w-12 h-12 rounded-xl object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+                className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0"
               />
             ) : (
               <div className="w-12 h-12 rounded-xl bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-xl shrink-0">

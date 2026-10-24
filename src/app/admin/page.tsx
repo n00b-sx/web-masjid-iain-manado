@@ -498,7 +498,7 @@ export default function AdminDashboardPage() {
               <img
                 src={db.mosqueProfile.logoUrl}
                 alt={`Logo ${db.mosqueProfile.name}`}
-                className="w-10 h-10 rounded-lg object-contain bg-white/95 p-1 border border-[#DFD5C5] shrink-0"
+                className="w-11 h-11 object-contain shrink-0"
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-lg">
@@ -773,7 +773,7 @@ export default function AdminDashboardPage() {
                         <img
                           src={db.mosqueProfile.logoUrl}
                           alt="Pratinjau Logo Masjid"
-                          className="w-12 h-12 rounded-lg object-contain bg-white p-1 border border-[#DFD5C5] shrink-0"
+                          className="w-12 h-12 object-contain shrink-0"
                         />
                       ) : (
                         <div className="w-12 h-12 rounded-lg bg-[#1E1B18] text-[#E8CFA0] flex items-center justify-center font-serif-heading font-bold text-xl shrink-0">
