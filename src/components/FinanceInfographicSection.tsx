@@ -229,8 +229,8 @@ export default function FinanceInfographicSection({
                         <tr className="border-b border-white/15 bg-[#1E1B18]/60 text-xs font-bold text-[#E8CFA0]">
                           <th className="py-3 px-4 w-[115px] sm:w-[125px]">Tanggal</th>
                           <th className="py-3 px-4">Uraian Transaksi</th>
-                          <th className="py-3 px-4 w-[170px] sm:w-[195px] text-right">
-                            Jenis &amp; Nominal
+                          <th className="py-3 px-4 w-[140px] sm:w-[160px] text-right">
+                            Nominal
                           </th>
                         </tr>
                       </thead>
@@ -259,11 +259,11 @@ export default function FinanceInfographicSection({
                             <td className="py-3 px-4 text-right whitespace-nowrap font-bold align-middle">
                               {trx.type === 'IN' ? (
                                 <span className="text-[#8CD975]">
-                                  + {formatRupiah(trx.amount)} (Masuk)
+                                  + {formatRupiah(trx.amount)}
                                 </span>
                               ) : (
                                 <span className="text-[#F29C85]">
-                                  - {formatRupiah(trx.amount)} (Keluar)
+                                  - {formatRupiah(trx.amount)}
                                 </span>
                               )}
                             </td>
