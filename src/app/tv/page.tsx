@@ -11,6 +11,7 @@ import {
   formatIndonesianDate,
   formatRupiah,
   getNextPrayerInfo,
+  OBLIGATORY_PRAYERS,
   PRAYER_LIST,
 } from '@/lib/prayer-times';
 import {
@@ -56,6 +57,29 @@ export default function MosqueTVPage() {
     prayerName: 'Maghrib',
     secondsLeft: 0,
   });
+
+  // Prayer In Progress State (Displayed in the middle area after Iqomah finishes)
+  const [prayerInProgressMode, setPrayerInProgressMode] = useState<{
+    active: boolean;
+    prayerName: PrayerName;
+    secondsLeft: number;
+  }>({
+    active: false,
+    prayerName: 'Maghrib',
+    secondsLeft: 0,
+  });
+
+  const getPrayerDurationSeconds = useCallback(
+    (prayer: PrayerName) => {
+      const defaultMin = prayer === 'Isya' ? 15 : 12;
+      const configuredMin =
+        db?.prayerSettings.prayerDurationMinutes?.[
+          prayer as keyof typeof db.prayerSettings.iqomahMinutes
+        ] ?? defaultMin;
+      return Math.max(1, configuredMin) * 60;
+    },
+    [db?.prayerSettings.prayerDurationMinutes]
+  );
 
   // Web Audio Beep generator (no external MP3 dependency required)
   const playBeep = useCallback((enabled: boolean) => {
@@ -109,11 +133,43 @@ export default function MosqueTVPage() {
     return () => clearInterval(syncTimer);
   }, [fetchData]);
 
-  // Real-time 1-second clock & Iqomah countdown tick
+  // Real-time 1-second clock, automatic prayer time check, Iqomah countdown & Prayer In Progress tick
   useEffect(() => {
     const clockTimer = setInterval(() => {
       const current = new Date();
       setNow(current);
+
+      // Check if current WITA time exactly matches an obligatory prayer time (HH:mm:00)
+      const witaParts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Makassar',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }).format(current);
+      const [hh, mm, ss] = witaParts.split(':');
+      const hhmm = `${hh}:${mm}`;
+
+      if (ss === '00') {
+        const matchedPrayer = OBLIGATORY_PRAYERS.find(
+          (p) => times[p] === hhmm
+        );
+        if (matchedPrayer) {
+          const waitMin =
+            db?.prayerSettings.iqomahMinutes[
+              matchedPrayer as keyof typeof db.prayerSettings.iqomahMinutes
+            ] || 10;
+          if (db?.tvSettings.enableBeepSound) {
+            playBeep(true);
+          }
+          setPrayerInProgressMode((prev) => ({ ...prev, active: false, secondsLeft: 0 }));
+          setIqomahMode({
+            active: true,
+            prayerName: matchedPrayer,
+            secondsLeft: waitMin * 60,
+          });
+        }
+      }
 
       setIqomahMode((prev) => {
         if (!prev.active) return prev;
@@ -121,6 +177,12 @@ export default function MosqueTVPage() {
           if (db?.tvSettings.enableBeepSound) {
             playBeep(true);
           }
+          // Automatically transition to "Sholat (Nama Sholat) Sementara Berlangsung"
+          setPrayerInProgressMode({
+            active: true,
+            prayerName: prev.prayerName,
+            secondsLeft: getPrayerDurationSeconds(prev.prayerName),
+          });
           return { ...prev, active: false, secondsLeft: 0 };
         }
         if (prev.secondsLeft <= 4 && db?.tvSettings.enableBeepSound) {
@@ -128,10 +190,24 @@ export default function MosqueTVPage() {
         }
         return { ...prev, secondsLeft: prev.secondsLeft - 1 };
       });
+
+      setPrayerInProgressMode((prev) => {
+        if (!prev.active) return prev;
+        if (prev.secondsLeft <= 1) {
+          return { ...prev, active: false, secondsLeft: 0 };
+        }
+        return { ...prev, secondsLeft: prev.secondsLeft - 1 };
+      });
     }, 1000);
 
     return () => clearInterval(clockTimer);
-  }, [db?.tvSettings.enableBeepSound, playBeep]);
+  }, [
+    db?.prayerSettings.iqomahMinutes,
+    db?.tvSettings.enableBeepSound,
+    getPrayerDurationSeconds,
+    playBeep,
+    times,
+  ]);
 
   // Enabled slides list based on Admin TV Settings
   const enabledSlides: SlideType[] = [];
@@ -164,17 +240,29 @@ export default function MosqueTVPage() {
   };
 
   const triggerSimulateIqomah = (prayer: PrayerName = 'Maghrib') => {
+    const targetPrayer = prayer === 'Syuruq' ? 'Subuh' : prayer;
     const waitMin =
       db?.prayerSettings.iqomahMinutes[
-        prayer as keyof typeof db.prayerSettings.iqomahMinutes
+        targetPrayer as keyof typeof db.prayerSettings.iqomahMinutes
       ] || 10;
     if (db?.tvSettings.enableBeepSound) {
       playBeep(true);
     }
+    setPrayerInProgressMode({ active: false, prayerName: targetPrayer, secondsLeft: 0 });
     setIqomahMode({
       active: true,
-      prayerName: prayer,
+      prayerName: targetPrayer,
       secondsLeft: waitMin * 60,
+    });
+  };
+
+  const triggerSimulatePrayerInProgress = (prayer: PrayerName = 'Maghrib') => {
+    const targetPrayer = prayer === 'Syuruq' ? 'Subuh' : prayer;
+    setIqomahMode({ active: false, prayerName: targetPrayer, secondsLeft: 0 });
+    setPrayerInProgressMode({
+      active: true,
+      prayerName: targetPrayer,
+      secondsLeft: getPrayerDurationSeconds(targetPrayer),
     });
   };
 
@@ -298,15 +386,24 @@ export default function MosqueTVPage() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() =>
-                setIqomahMode({ active: false, prayerName: 'Maghrib', secondsLeft: 0 })
-              }
-              className="px-6 py-3 min-h-[44px] rounded-md border border-[#E8CFA0] text-[#E8CFA0] text-sm font-semibold hover:bg-[#E8CFA0] hover:text-[#1E1B18] cursor-pointer"
-            >
-              Tutup Tampilan Iqomah (Kembali ke Layar Utama TV)
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => triggerSimulatePrayerInProgress(iqomahMode.prayerName)}
+                className="px-6 py-3 min-h-[44px] rounded-md bg-[#A84A2E] text-white text-sm font-semibold hover:bg-[#8E3B22] cursor-pointer"
+              >
+                Mulai Sholat Sekarang
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setIqomahMode({ active: false, prayerName: 'Maghrib', secondsLeft: 0 })
+                }
+                className="px-6 py-3 min-h-[44px] rounded-md border border-[#E8CFA0] text-[#E8CFA0] text-sm font-semibold hover:bg-[#E8CFA0] hover:text-[#1E1B18] cursor-pointer"
+              >
+                Tutup Tampilan Iqomah
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -360,6 +457,29 @@ export default function MosqueTVPage() {
 
             <button
               type="button"
+              onClick={() =>
+                prayerInProgressMode.active
+                  ? setPrayerInProgressMode({
+                      active: false,
+                      prayerName: 'Maghrib',
+                      secondsLeft: 0,
+                    })
+                  : triggerSimulatePrayerInProgress(nextInfo.nextPrayer)
+              }
+              className={`px-3 py-2 min-h-[44px] inline-flex items-center gap-1.5 rounded-md border text-xs font-semibold cursor-pointer ${
+                prayerInProgressMode.active
+                  ? 'bg-[#E8CFA0] text-[#1E1B18] border-[#E8CFA0]'
+                  : 'bg-[#1E1B18] text-[#E8CFA0] border-[#E8CFA0]/50 hover:border-[#E8CFA0]'
+              }`}
+              title="Uji tampilan Sholat Sementara Berlangsung di area tengah"
+            >
+              <span>
+                {prayerInProgressMode.active ? 'Selesai Sholat' : 'Simulasi Sholat'}
+              </span>
+            </button>
+
+            <button
+              type="button"
               onClick={handleToggleFullscreen}
               className="px-3 py-2 min-h-[44px] inline-flex items-center gap-1.5 rounded-md bg-[#1E1B18] border border-white/25 text-xs font-semibold text-[#E8CFA0] hover:border-[#E8CFA0] cursor-pointer"
               title="Tampilkan Layar Penuh di Smart TV"
@@ -393,8 +513,19 @@ export default function MosqueTVPage() {
         </div>
       </header>
 
-      {/* 2. TV MAIN STAGE (DYNAMIC CAROUSEL: FINANCE | QUOTE/HADITS | AGENDA) */}
+      {/* 2. TV MAIN STAGE (PRAYER IN PROGRESS MODE OR DYNAMIC CAROUSEL) */}
       <main className="flex-1 px-4 sm:px-8 py-4 flex flex-col justify-between overflow-y-auto lg:overflow-hidden">
+        {prayerInProgressMode.active ? (
+          <div className="flex-1 bg-[#2C2520] border border-white/15 rounded-xl p-8 sm:p-14 flex items-center justify-center text-center my-auto">
+            <h2
+              style={{ fontSize: 'clamp(2rem, 4.5vw, 4.25rem)' }}
+              className="font-serif-heading font-bold text-[#FAF7F2] leading-tight tracking-tight"
+            >
+              Sholat {prayerInProgressMode.prayerName} Sementara Berlangsung
+            </h2>
+          </div>
+        ) : (
+          <>
         {/* Slide Navigation Bar */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3 shrink-0">
           <div className="flex items-center gap-2" role="tablist" aria-label="Pilih slide layar TV">
@@ -673,6 +804,8 @@ export default function MosqueTVPage() {
               </div>
             </div>
           </div>
+        )}
+          </>
         )}
       </main>
 

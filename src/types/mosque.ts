@@ -39,6 +39,14 @@ export interface IqomahWaitMinutes {
   Isya: number;
 }
 
+export interface PrayerDurationMinutes {
+  Subuh: number;
+  Dzuhur: number;
+  Ashar: number;
+  Maghrib: number;
+  Isya: number;
+}
+
 export interface ManualPrayerTimes {
   Subuh: string;
   Syuruq: string;
@@ -65,6 +73,7 @@ export interface PrayerSettings {
   manualTimes: ManualPrayerTimes;
   offsets: PrayerOffsets;
   iqomahMinutes: IqomahWaitMinutes;
+  prayerDurationMinutes?: PrayerDurationMinutes;
   adzanDurationSeconds: number;
   jumatOfficer: JumatOfficer;
 }

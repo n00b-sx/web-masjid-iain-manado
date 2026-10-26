@@ -1708,30 +1708,32 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
-              {/* Table of 6 Prayer Times: Live Value, Offset Minutes, Iqomah Wait, Manual Time */}
+              {/* Table of 6 Prayer Times: Live Value, Offset Minutes, Iqomah Wait, Prayer Duration, Manual Time */}
               <div className="overflow-x-auto bg-[#FAF7F2] rounded-lg border border-[#DFD5C5]">
                 <table className="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
                     <tr className="border-b border-[#DFD5C5] bg-[#F2ECE1] font-bold text-[#1E1B18]">
-                      <th className="py-3 px-3.5">Waktu</th>
-                      <th className="py-3 px-3.5">Jam Tampil (WITA)</th>
-                      <th className="py-3 px-3.5">Koreksi (+/- Menit)</th>
-                      <th className="py-3 px-3.5">Jeda Iqomah (Menit)</th>
-                      <th className="py-3 px-3.5">Jam Manual</th>
+                      <th className="py-3 px-3">Waktu</th>
+                      <th className="py-3 px-3">Jam Tampil (WITA)</th>
+                      <th className="py-3 px-3">Koreksi (+/- Menit)</th>
+                      <th className="py-3 px-3">Jeda Iqomah (Menit)</th>
+                      <th className="py-3 px-3">Durasi Sholat (Menit)</th>
+                      <th className="py-3 px-3">Jam Manual</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#DFD5C5]">
                     {PRAYER_LIST.map((name) => {
                       const isObligatory = OBLIGATORY_PRAYERS.includes(name);
+                      const defaultDuration = name === 'Isya' ? 15 : 12;
                       return (
                         <tr key={name}>
-                          <td className="py-3 px-3.5 font-bold text-[#1E1B18]">
+                          <td className="py-3 px-3 font-bold text-[#1E1B18]">
                             {name}
                           </td>
-                          <td className="py-3 px-3.5 font-mono font-bold text-[#A84A2E]">
+                          <td className="py-3 px-3 font-mono font-bold text-[#A84A2E]">
                             {calculatedTimes ? calculatedTimes[name] : db.prayerSettings.manualTimes[name]}
                           </td>
-                          <td className="py-3 px-3.5">
+                          <td className="py-3 px-3">
                             <input
                               type="number"
                               min={-30}
@@ -1752,7 +1754,7 @@ export default function AdminDashboardPage() {
                               className="w-20 px-2.5 py-1.5 rounded bg-white border border-[#524740] font-mono text-xs"
                             />
                           </td>
-                          <td className="py-3 px-3.5">
+                          <td className="py-3 px-3">
                             {isObligatory ? (
                               <input
                                 type="number"
@@ -1781,7 +1783,53 @@ export default function AdminDashboardPage() {
                               <span className="text-xs text-[#524740]">-</span>
                             )}
                           </td>
-                          <td className="py-3 px-3.5">
+                          <td className="py-3 px-3">
+                            {isObligatory ? (
+                              <input
+                                type="number"
+                                min={1}
+                                max={60}
+                                value={
+                                  db.prayerSettings.prayerDurationMinutes?.[
+                                    name as keyof typeof db.prayerSettings.iqomahMinutes
+                                  ] ?? defaultDuration
+                                }
+                                onChange={(e) =>
+                                  setDb({
+                                    ...db,
+                                    prayerSettings: {
+                                      ...db.prayerSettings,
+                                      prayerDurationMinutes: {
+                                        Subuh:
+                                          db.prayerSettings.prayerDurationMinutes
+                                            ?.Subuh ?? 12,
+                                        Dzuhur:
+                                          db.prayerSettings.prayerDurationMinutes
+                                            ?.Dzuhur ?? 12,
+                                        Ashar:
+                                          db.prayerSettings.prayerDurationMinutes
+                                            ?.Ashar ?? 12,
+                                        Maghrib:
+                                          db.prayerSettings.prayerDurationMinutes
+                                            ?.Maghrib ?? 12,
+                                        Isya:
+                                          db.prayerSettings.prayerDurationMinutes
+                                            ?.Isya ?? 15,
+                                        [name]: parseInt(
+                                          e.target.value || String(defaultDuration),
+                                          10
+                                        ),
+                                      },
+                                    },
+                                  })
+                                }
+                                className="w-20 px-2.5 py-1.5 rounded bg-white border border-[#524740] font-mono text-xs"
+                              />
+                            ) : (
+                              <span className="text-xs text-[#524740]">-</span>
+                            )}
+                          </td>
+                          <td className="py-3 px-3">
                             <input
                               type="time"
                               value={db.prayerSettings.manualTimes[name]}

@@ -104,6 +104,13 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       Maghrib: 7,
       Isya: 10,
     },
+    prayerDurationMinutes: {
+      Subuh: 12,
+      Dzuhur: 12,
+      Ashar: 12,
+      Maghrib: 12,
+      Isya: 15,
+    },
     adzanDurationSeconds: 180,
     jumatOfficer: {
       date: 'Jumat Pekan Ini (Data Contoh Awal, Ubah di Admin)',
@@ -589,6 +596,14 @@ export function readMosqueDb(): MosqueDatabase {
       footerSettings: {
         ...INITIAL_MOSQUE_DATA.footerSettings,
         ...(parsed.footerSettings || {}),
+      },
+      prayerSettings: {
+        ...INITIAL_MOSQUE_DATA.prayerSettings,
+        ...(parsed.prayerSettings || {}),
+        prayerDurationMinutes: {
+          ...INITIAL_MOSQUE_DATA.prayerSettings.prayerDurationMinutes!,
+          ...(parsed.prayerSettings?.prayerDurationMinutes || {}),
+        },
       },
     };
   } catch {

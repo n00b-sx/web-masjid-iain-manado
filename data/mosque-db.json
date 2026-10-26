@@ -2,7 +2,7 @@
   "mosqueProfile": {
     "name": "Masjid Al Jami'ah IAIN Manado",
     "institution": "Institut Agama Islam Negeri (IAIN) Manado",
-    "logoUrl": "",
+    "logoUrl": "/uploads/1792826397444-logo-iain-manado.png",
     "address": "Jl. Dr. S.H. Sarundajang Kawasan Ring Road I, Malendeng, Kec. Paal Dua",
     "city": "Kota Manado",
     "province": "Sulawesi Utara",
@@ -83,6 +83,13 @@
       "Ashar": 10,
       "Maghrib": 7,
       "Isya": 10
+    },
+    "prayerDurationMinutes": {
+      "Subuh": 12,
+      "Dzuhur": 12,
+      "Ashar": 12,
+      "Maghrib": 12,
+      "Isya": 15
     },
     "adzanDurationSeconds": 180,
     "jumatOfficer": {
