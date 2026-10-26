@@ -516,17 +516,17 @@ export default function MosqueTVPage() {
       {/* 2. TV MAIN STAGE (PRAYER IN PROGRESS MODE OR DYNAMIC CAROUSEL) */}
       <main className="flex-1 px-4 sm:px-8 py-4 flex flex-col justify-between overflow-y-auto lg:overflow-hidden">
         {prayerInProgressMode.active ? (
-          <div className="flex-1 bg-[#2C2520] border border-white/15 rounded-xl p-8 sm:p-14 flex items-center justify-center text-center my-auto">
-            <h2 className="font-serif-heading font-bold tracking-tight flex flex-col items-center justify-center gap-2 sm:gap-4">
+          <div className="flex-1 bg-[#2C2520] border border-white/15 rounded-xl p-6 sm:p-10 flex items-center justify-center text-center my-auto">
+            <h2 className="font-serif-heading font-bold tracking-tight flex flex-col items-center justify-center gap-3 sm:gap-5">
               <span
-                style={{ fontSize: 'clamp(3rem, 6.5vw, 6.5rem)' }}
-                className="block text-[#FAF7F2] leading-[1.08]"
+                style={{ fontSize: 'clamp(4.25rem, 9.5vw, 9.5rem)' }}
+                className="block text-[#FAF7F2] leading-[1.02]"
               >
                 Sholat {prayerInProgressMode.prayerName}
               </span>
               <span
-                style={{ fontSize: 'clamp(2.25rem, 5vw, 5rem)' }}
-                className="block text-[#E8CFA0] leading-[1.12]"
+                style={{ fontSize: 'clamp(3.25rem, 7.5vw, 7.5rem)' }}
+                className="block text-[#E8CFA0] leading-[1.06]"
               >
                 Sedang Berlangsung
               </span>
