@@ -50,9 +50,29 @@ export default function ImageUploaderField({
         body: formData,
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Gagal mengunggah media.');
+      const rawText = await res.text();
+      let data: { url?: string; filename?: string; error?: string; details?: string } = {};
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        const snippet = rawText
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .slice(0, 140);
+        throw new Error(
+          `Server mengembalikan HTTP ${res.status} (bukan JSON). Detail respons: "${
+            snippet || 'Kosong'
+          }". Jika di aaPanel/Nginx, pastikan proxy mengarah ke port aplikasi Node.js dan folder public/uploads memiliki izin tulis.`
+        );
+      }
+
+      if (!res.ok || !data.url) {
+        throw new Error(
+          data.error
+            ? `${data.error}${data.details ? ` (${data.details})` : ''}`
+            : `Gagal mengunggah media (HTTP ${res.status}).`
+        );
       }
 
       onChange(data.url);

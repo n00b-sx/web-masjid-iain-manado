@@ -1708,7 +1708,7 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
-              {/* Table of 6 Prayer Times: Live Value, Offset Minutes, Iqomah Wait, Prayer Duration, Manual Time */}
+              {/* Table of 6 Prayer Times: Live Value, Offset Minutes, Adzan Duration, Iqomah Wait, Prayer Duration, Manual Time */}
               <div className="overflow-x-auto bg-[#FAF7F2] rounded-lg border border-[#DFD5C5]">
                 <table className="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
@@ -1716,6 +1716,7 @@ export default function AdminDashboardPage() {
                       <th className="py-3 px-3">Waktu</th>
                       <th className="py-3 px-3">Jam Tampil (WITA)</th>
                       <th className="py-3 px-3">Koreksi (+/- Menit)</th>
+                      <th className="py-3 px-3">Durasi Adzan (Menit)</th>
                       <th className="py-3 px-3">Jeda Iqomah (Menit)</th>
                       <th className="py-3 px-3">Durasi Sholat (Menit)</th>
                       <th className="py-3 px-3">Jam Manual</th>
@@ -1753,6 +1754,52 @@ export default function AdminDashboardPage() {
                               }
                               className="w-20 px-2.5 py-1.5 rounded bg-white border border-[#524740] font-mono text-xs"
                             />
+                          </td>
+                          <td className="py-3 px-3">
+                            {isObligatory ? (
+                              <input
+                                type="number"
+                                min={1}
+                                max={30}
+                                value={
+                                  db.prayerSettings.adzanDurationMinutes?.[
+                                    name as keyof typeof db.prayerSettings.iqomahMinutes
+                                  ] ?? 4
+                                }
+                                onChange={(e) =>
+                                  setDb({
+                                    ...db,
+                                    prayerSettings: {
+                                      ...db.prayerSettings,
+                                      adzanDurationMinutes: {
+                                        Subuh:
+                                          db.prayerSettings.adzanDurationMinutes
+                                            ?.Subuh ?? 4,
+                                        Dzuhur:
+                                          db.prayerSettings.adzanDurationMinutes
+                                            ?.Dzuhur ?? 4,
+                                        Ashar:
+                                          db.prayerSettings.adzanDurationMinutes
+                                            ?.Ashar ?? 4,
+                                        Maghrib:
+                                          db.prayerSettings.adzanDurationMinutes
+                                            ?.Maghrib ?? 4,
+                                        Isya:
+                                          db.prayerSettings.adzanDurationMinutes
+                                            ?.Isya ?? 4,
+                                        [name]: parseInt(
+                                          e.target.value || '4',
+                                          10
+                                        ),
+                                      },
+                                    },
+                                  })
+                                }
+                                className="w-20 px-2.5 py-1.5 rounded bg-white border border-[#524740] font-mono text-xs"
+                              />
+                            ) : (
+                              <span className="text-xs text-[#524740]">-</span>
+                            )}
                           </td>
                           <td className="py-3 px-3">
                             {isObligatory ? (

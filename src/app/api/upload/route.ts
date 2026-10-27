@@ -16,7 +16,9 @@ export async function POST(req: NextRequest) {
 
     const allowedTypes = [
       'image/jpeg',
+      'image/jpg',
       'image/png',
+      'image/x-png',
       'image/webp',
       'image/gif',
       'image/svg+xml',
@@ -24,7 +26,19 @@ export async function POST(req: NextRequest) {
       'video/webm',
       'video/ogg',
     ];
-    if (!allowedTypes.includes(file.type)) {
+    const ext = (path.extname(file.name) || '.png').toLowerCase();
+    const allowedExts = [
+      '.jpg',
+      '.jpeg',
+      '.png',
+      '.webp',
+      '.gif',
+      '.svg',
+      '.mp4',
+      '.webm',
+      '.ogg',
+    ];
+    if (!allowedTypes.includes(file.type) && !allowedExts.includes(ext)) {
       return NextResponse.json(
         {
           error:
@@ -42,19 +56,18 @@ export async function POST(req: NextRequest) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    const ext = path.extname(file.name) || '.jpg';
     const safeBase = path
-      .basename(file.name, ext)
+      .basename(file.name, path.extname(file.name))
       .toLowerCase()
       .replace(/[^a-z0-9-_]/g, '-')
-      .slice(0, 40);
+      .slice(0, 40) || 'media';
     const filename = `${Date.now()}-${safeBase}${ext}`;
     const filepath = path.join(uploadDir, filename);
 
     fs.writeFileSync(filepath, buffer);
 
     return NextResponse.json({
-      url: `/uploads/${filename}`,
+      url: `/api/uploads/${filename}`,
       filename,
       message: 'Gambar berhasil diunggah ke server.',
     });

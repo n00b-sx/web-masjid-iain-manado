@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { HeroSlide } from '@/types/mosque';
 import {
   ChevronLeft,
@@ -106,16 +107,19 @@ export default function HeroSlideshow({
       aria-label="Sorotan Utama Masjid Al Jami'ah IAIN Manado"
       className="relative w-full min-h-screen h-dvh flex flex-col justify-between bg-[#1E1B18] text-[#FAF7F2] overflow-hidden dark-surface"
     >
-      {/* Background Media Layer (Supports Both Fullscreen Video & Image Slides) */}
+      {/* Background Media Layer (Supports Both Fullscreen Video & Image Slides with Motion Fade) */}
       {activeSlides.map((slide, idx) => {
         const isSlideVideo =
           slide.mediaType === 'VIDEO' && Boolean(slide.videoUrl);
         return (
-          <div
+          <motion.div
             key={slide.id}
             aria-hidden={idx !== safeIndex}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              idx === safeIndex ? 'opacity-100 z-0' : 'opacity-0 -z-10'
+            initial={false}
+            animate={{ opacity: idx === safeIndex ? 1 : 0 }}
+            transition={{ duration: 0.9, ease: 'easeInOut' }}
+            className={`absolute inset-0 ${
+              idx === safeIndex ? 'z-0' : '-z-10 pointer-events-none'
             }`}
           >
             {isSlideVideo ? (
@@ -157,7 +161,7 @@ export default function HeroSlideshow({
                   'linear-gradient(180deg, rgba(22, 18, 15, 0.80) 0%, rgba(22, 18, 15, 0.68) 50%, rgba(22, 18, 15, 0.90) 100%)',
               }}
             />
-          </div>
+          </motion.div>
         );
       })}
 
@@ -166,32 +170,41 @@ export default function HeroSlideshow({
 
       {/* Center Main Editorial Content (Vertically Centered in Any Viewport Size) */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-auto py-6">
-        <div className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-medium text-[#E8CFA0] mb-3">
-            <span>
-              {masehiDate} &bull; {hijriDate}
-            </span>
-          </div>
-
-          <h1
-            style={{ fontSize: 'clamp(2.1rem, 4.5vw, 3.85rem)' }}
-            className="font-serif-heading font-bold text-[#FAF7F2] leading-[1.12] tracking-tight mb-5"
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlide.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.55, ease: 'easeInOut' }}
+            className="max-w-3xl"
           >
-            {currentSlide.title}
-          </h1>
+            <div className="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-medium text-[#E8CFA0] mb-3">
+              <span>
+                {masehiDate} &bull; {hijriDate}
+              </span>
+            </div>
 
-          <p className="text-base sm:text-lg lg:text-xl text-[#F2ECE1] leading-relaxed mb-6 max-w-2xl">
-            {currentSlide.subtitle}
-          </p>
+            <h1
+              style={{ fontSize: 'clamp(2.1rem, 4.5vw, 3.85rem)' }}
+              className="font-serif-heading font-bold text-[#FAF7F2] leading-[1.12] tracking-tight mb-5"
+            >
+              {currentSlide.title}
+            </h1>
 
-          <div className="flex items-start sm:items-center gap-2 text-xs sm:text-sm text-[#E8CFA0]">
-            <MapPin
-              className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0"
-              aria-hidden="true"
-            />
-            <span>{mosqueAddress}</span>
-          </div>
-        </div>
+            <p className="text-base sm:text-lg lg:text-xl text-[#F2ECE1] leading-relaxed mb-6 max-w-2xl">
+              {currentSlide.subtitle}
+            </p>
+
+            <div className="flex items-start sm:items-center gap-2 text-xs sm:text-sm text-[#E8CFA0]">
+              <MapPin
+                className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0"
+                aria-hidden="true"
+              />
+              <span>{mosqueAddress}</span>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Bottom Right Control Bar (Harvard-Style Play/Pause + Prev/Next) */}

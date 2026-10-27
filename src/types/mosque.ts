@@ -39,6 +39,14 @@ export interface IqomahWaitMinutes {
   Isya: number;
 }
 
+export interface AdzanDurationMinutes {
+  Subuh: number;
+  Dzuhur: number;
+  Ashar: number;
+  Maghrib: number;
+  Isya: number;
+}
+
 export interface PrayerDurationMinutes {
   Subuh: number;
   Dzuhur: number;
@@ -72,6 +80,7 @@ export interface PrayerSettings {
   useManualOverride: boolean;
   manualTimes: ManualPrayerTimes;
   offsets: PrayerOffsets;
+  adzanDurationMinutes?: AdzanDurationMinutes;
   iqomahMinutes: IqomahWaitMinutes;
   prayerDurationMinutes?: PrayerDurationMinutes;
   adzanDurationSeconds: number;

@@ -97,6 +97,13 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       Maghrib: 0,
       Isya: 0,
     },
+    adzanDurationMinutes: {
+      Subuh: 4,
+      Dzuhur: 4,
+      Ashar: 4,
+      Maghrib: 4,
+      Isya: 4,
+    },
     iqomahMinutes: {
       Subuh: 15,
       Dzuhur: 10,
@@ -600,6 +607,10 @@ export function readMosqueDb(): MosqueDatabase {
       prayerSettings: {
         ...INITIAL_MOSQUE_DATA.prayerSettings,
         ...(parsed.prayerSettings || {}),
+        adzanDurationMinutes: {
+          ...INITIAL_MOSQUE_DATA.prayerSettings.adzanDurationMinutes!,
+          ...(parsed.prayerSettings?.adzanDurationMinutes || {}),
+        },
         prayerDurationMinutes: {
           ...INITIAL_MOSQUE_DATA.prayerSettings.prayerDurationMinutes!,
           ...(parsed.prayerSettings?.prayerDurationMinutes || {}),
