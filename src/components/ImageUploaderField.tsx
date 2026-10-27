@@ -33,6 +33,16 @@ export default function ImageUploaderField({
     ? 'Tempel URL video (.mp4 / .webm) atau unggah file video dari perangkat...'
     : 'Tempel URL gambar (https://...) atau unggah file dari perangkat...';
 
+  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i += 1) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -42,42 +52,75 @@ export default function ImageUploaderField({
     setUploadErr(null);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      // Chunked JSON upload (384 KB per chunk) so Cloudflare WAF never blocks multipart/form-data (HTTP 403)
+      // and Nginx default 1MB client_max_body_size never rejects large images/videos (HTTP 413)
+      const CHUNK_SIZE = 384 * 1024;
+      const totalChunks = Math.max(1, Math.ceil(file.size / CHUNK_SIZE));
+      let targetFilename = '';
+      let finalUrl = '';
 
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex += 1) {
+        const start = chunkIndex * CHUNK_SIZE;
+        const end = Math.min(file.size, start + CHUNK_SIZE);
+        const sliceBuffer = await file.slice(start, end).arrayBuffer();
+        const chunkBase64 = arrayBufferToBase64(sliceBuffer);
 
-      const rawText = await res.text();
-      let data: { url?: string; filename?: string; error?: string; details?: string } = {};
-      try {
-        data = JSON.parse(rawText);
-      } catch {
-        const snippet = rawText
-          .replace(/<[^>]+>/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim()
-          .slice(0, 140);
-        throw new Error(
-          `Server mengembalikan HTTP ${res.status} (bukan JSON). Detail respons: "${
-            snippet || 'Kosong'
-          }". Jika di aaPanel/Nginx, pastikan proxy mengarah ke port aplikasi Node.js dan folder public/uploads memiliki izin tulis.`
-        );
+        if (totalChunks > 1) {
+          const pct = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+          setUploadMsg(`Mengunggah... ${pct}% (${chunkIndex + 1}/${totalChunks})`);
+        }
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: file.name,
+            fileType: file.type,
+            chunkBase64,
+            chunkIndex,
+            totalChunks,
+            targetFilename,
+          }),
+        });
+
+        const rawText = await res.text();
+        let data: {
+          url?: string;
+          filename?: string;
+          error?: string;
+          details?: string;
+        } = {};
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          const snippet = rawText
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 140);
+          throw new Error(
+            `Server mengembalikan HTTP ${res.status} (bukan JSON). Detail respons: "${
+              snippet || 'Kosong'
+            }".`
+          );
+        }
+
+        if (!res.ok || !data.url || !data.filename) {
+          throw new Error(
+            data.error
+              ? `${data.error}${data.details ? ` (${data.details})` : ''}`
+              : `Gagal mengunggah media (HTTP ${res.status}).`
+          );
+        }
+
+        targetFilename = data.filename;
+        finalUrl = data.url;
       }
 
-      if (!res.ok || !data.url) {
-        throw new Error(
-          data.error
-            ? `${data.error}${data.details ? ` (${data.details})` : ''}`
-            : `Gagal mengunggah media (HTTP ${res.status}).`
-        );
-      }
-
-      onChange(data.url);
-      setUploadMsg(`Berhasil diunggah: ${data.filename}`);
+      onChange(finalUrl);
+      setUploadMsg(`Berhasil diunggah: ${targetFilename}`);
     } catch (err) {
+      setUploadMsg(null);
       setUploadErr(
         err instanceof Error ? err.message : 'Gagal mengunggah media.'
       );
