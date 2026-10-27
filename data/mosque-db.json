@@ -432,13 +432,6 @@
       "href": "/berita",
       "order": 6,
       "children": []
-    },
-    {
-      "id": "menu-7",
-      "label": "Mode TV Masjid",
-      "href": "/tv",
-      "order": 7,
-      "children": []
     }
   ],
   "quotes": [

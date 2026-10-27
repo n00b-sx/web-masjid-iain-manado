@@ -55,7 +55,9 @@ export default function Navbar({
     };
   }, []);
 
-  const sortedMenus = [...menus].sort((a, b) => a.order - b.order);
+  const sortedMenus = [...menus]
+    .filter((m) => m.href !== '/tv' && m.label.toLowerCase() !== 'mode tv masjid')
+    .sort((a, b) => a.order - b.order);
   const isSolid = scrollProgress > 0.45;
 
   return (

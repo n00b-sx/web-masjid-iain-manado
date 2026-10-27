@@ -523,13 +523,6 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       order: 6,
       children: [],
     },
-    {
-      id: 'menu-7',
-      label: 'Mode TV Masjid',
-      href: '/tv',
-      order: 7,
-      children: [],
-    },
   ],
   quotes: [
     {
@@ -593,9 +586,13 @@ export function readMosqueDb(): MosqueDatabase {
     }
     const raw = fs.readFileSync(DB_FILE_PATH, 'utf-8');
     const parsed = JSON.parse(raw) as Partial<MosqueDatabase>;
+    const filteredMenus = (parsed.menus || INITIAL_MOSQUE_DATA.menus).filter(
+      (m) => m.href !== '/tv' && m.label.toLowerCase() !== 'mode tv masjid'
+    );
     return {
       ...INITIAL_MOSQUE_DATA,
       ...parsed,
+      menus: filteredMenus,
       mosqueProfile: {
         ...INITIAL_MOSQUE_DATA.mosqueProfile,
         ...(parsed.mosqueProfile || {}),
