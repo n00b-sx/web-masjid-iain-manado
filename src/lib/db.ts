@@ -319,6 +319,207 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     },
   ],
   serviceSubmissions: [],
+  rehabSettings: {
+    pageTitle: 'Progres Rehabilitasi & Pengembangan Fasilitas Masjid',
+    pageSubtitle:
+      'Laporan berkala tahapan pekerjaan fisik, rencana penambahan fasilitas baru, serta transparansi kebutuhan material dan dana pembangunan Masjid Al Jami’ah IAIN Manado.',
+    syncWithDevelopmentFund: true,
+    picName: 'Panitia Rehabilitasi & Bidang Ri’ayah Takmir',
+    picWhatsapp: '628114300000',
+    projects: [
+      {
+        id: 'proj-rehab-1',
+        title: "Rehabilitasi Ruang Utama, Plafon & Tata Suara Masjid Al Jami'ah",
+        category: 'Rehabilitasi Utama',
+        summary:
+          'Perbaikan menyeluruh plafon ruang sujud utama, peremajaan instalasi pencahayaan hemat energi, serta penataan akustik tata suara agar ibadah berjamaah dan kajian lebih khusyuk.',
+        status: 'BERJALAN',
+        overallProgress: 65,
+        estimatedBudget: 185000000,
+        startDate: 'September 2026',
+        targetDate: 'Desember 2026',
+        materialNeeds: [
+          'Gypsum & Rangka Hollow Galvalum (45 Lembar)',
+          'Lampu Panel LED Warm White Ruang Utama (24 Unit)',
+          'Kabel Audio Speaker & Peredam Akustik Mihrab',
+          'Cat Dinding Interior & Pelapis Anti Bocor Kubah',
+        ],
+        stages: [
+          {
+            id: 'stg-1',
+            title: 'Tahap 1: Pemeriksaan Struktur Atap & Pembongkaran Plafon Lama',
+            description:
+              'Pembersihan area atap, perbaikan titik rembesan air hujan pada kubah, dan pembongkaran plafon lama yang rusak.',
+            dateLabel: 'September 2026',
+            progressPercent: 100,
+            status: 'SELESAI',
+          },
+          {
+            id: 'stg-2',
+            title: 'Tahap 2: Pemasangan Rangka Plafon Baru & Jalur Kelistrikan',
+            description:
+              'Pemasangan rangka hollow galvalum tahan karat, penarikan jalur kabel lampu utama, dan instalasi titik speaker ruang sujud.',
+            dateLabel: 'Oktober - November 2026',
+            progressPercent: 75,
+            status: 'BERJALAN',
+          },
+          {
+            id: 'stg-3',
+            title: 'Tahap 3: Pengecatan Akhir, Penataan Mihrab & Uji Akustik',
+            description:
+              'Pengecatan ulang dinding ruang utama, perapian area mihrab imam, dan kalibrasi sistem tata suara masjid.',
+            dateLabel: 'Desember 2026',
+            progressPercent: 15,
+            status: 'BELUM_DIMULAI',
+          },
+        ],
+        gallery: [
+          {
+            id: 'pho-1',
+            caption: 'Suasana ruang utama Masjid Al Jami’ah pada tahap pengerjaan dan penataan',
+            imageUrl:
+              'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1000&q=80',
+            date: '2026-10-15',
+            tag: 'PROGRES',
+          },
+          {
+            id: 'pho-2',
+            caption: 'Target penataan pencahayaan dan ruang ibadah utama pasca rehabilitasi',
+            imageUrl:
+              'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=80',
+            date: '2026-10-20',
+            tag: 'DESAIN_TARGET',
+          },
+        ],
+      },
+      {
+        id: 'proj-rehab-2',
+        title: 'Penambahan & Penataan Kamar Mandi serta Tempat Wudhu Jamaah',
+        category: 'Pengembangan Fasilitas Baru',
+        summary:
+          'Rencana penambahan bilik kamar mandi bersih, peremajaan kran air wudhu hemat air, serta pembuatan jalur ramah disabilitas menuju tempat wudhu putra dan putri.',
+        status: 'DIRENCANAKAN',
+        overallProgress: 0,
+        estimatedBudget: 95000000,
+        startDate: 'Januari 2027',
+        targetDate: 'Maret 2027',
+        materialNeeds: [
+          'Keramik Lantai Anti-Slip Tempat Wudhu (90 m2)',
+          'Kran Wudhu Kuningan & Pipa Distribusi Air Bersih (30 Titik)',
+          'Pintu Kamar Mandi PVC & Kloset Duduk/Jongkok (6 Unit)',
+          'Tandon Air Tambahan Kapasitas 2.000 Liter',
+        ],
+        stages: [
+          {
+            id: 'stg-2-1',
+            title: 'Tahap 1: Pengukuran Lahan & Perencanaan Sanitasi',
+            description:
+              'Penyusunan gambar kerja jalur pipa air bersih dan pembuangan limbah kamar mandi baru.',
+            dateLabel: 'Januari 2027',
+            progressPercent: 0,
+            status: 'BELUM_DIMULAI',
+          },
+          {
+            id: 'stg-2-2',
+            title: 'Tahap 2: Konstruksi Bilik Kamar Mandi & Area Wudhu',
+            description:
+              'Pembangunan dinding sekat, pemasangan keramik anti-slip, dan instalasi kran wudhu.',
+            dateLabel: 'Februari - Maret 2027',
+            progressPercent: 0,
+            status: 'BELUM_DIMULAI',
+          },
+        ],
+        gallery: [],
+      },
+    ],
+  },
+  mualafCenter: {
+    pageTitle: "Mualaf Center Masjid Al Jami'ah IAIN Manado",
+    pageSubtitle:
+      'Pusat Pelayanan Konsultasi Keislaman, Prosesi Ikrar Syahadat, dan Pembinaan Berkelanjutan bagi Mualaf di Lingkungan Kampus IAIN Manado & Sulawesi Utara.',
+    welcomeMessage:
+      'Segala puji bagi Allah SWT atas limpahan hidayah-Nya. Mualaf Center Masjid Al Jami’ah IAIN Manado hadir untuk mendampingi saudara-saudari yang ingin mengenal Islam lebih dekat, mengucapkan dua kalimat syahadat secara resmi, serta mendapatkan bimbingan ibadah dasar secara ramah, kekeluargaan, dan tanpa dipungut biaya.',
+    requirements: [
+      'Niat tulus ikhlas dari hati sendiri tanpa adanya paksaan dari pihak mana pun',
+      'Membawa fotokopi identitas diri (KTP / Kartu Mahasiswa / Paspor) sebanyak 2 lembar',
+      'Menyiapkan pasfoto terbaru ukuran 3x4 sebanyak 3 lembar (untuk Piagam Syahadat)',
+      'Menghadirkan 2 (dua) orang saksi (dapat dibantu disediakan oleh Pengurus Takmir jika belum memiliki saksi)',
+      'Menandatangani Surat Pernyataan Memeluk Agama Islam di atas materai yang disiapkan oleh Sekretariat Mualaf Center',
+    ],
+    steps: [
+      {
+        id: 'mstep-1',
+        stepNumber: 1,
+        title: 'Konsultasi & Pendampingan Awal',
+        description:
+          'Calon mualaf dapat berdiskusi secara privat dan nyaman dengan tim pembina (tersedia pembimbing Ustadz maupun Ustadzah) mengenai dasar-dasar aqidah Islam.',
+      },
+      {
+        id: 'mstep-2',
+        stepNumber: 2,
+        title: 'Verifikasi Berkas & Penjadwalan',
+        description:
+          'Pengurus sekretariat membantu kelengkapan administrasi dan menyepakati waktu pelaksanaan ikrar syahadat di Masjid Al Jami’ah.',
+      },
+      {
+        id: 'mstep-3',
+        stepNumber: 3,
+        title: 'Prosesi Ikrar Dua Kalimat Syahadat',
+        description:
+          'Pelaksanaan ikrar syahadat yang dibimbing langsung oleh Imam/Ulama Takmir Masjid Al Jami’ah IAIN Manado dengan disaksikan oleh para saksi.',
+      },
+      {
+        id: 'mstep-4',
+        stepNumber: 4,
+        title: 'Penyerahan Sertifikat & Pembinaan Rutin',
+        description:
+          'Penerbitan Surat Keterangan / Piagam Ikrar Syahadat resmi, pemberian paket peralatan ibadah, serta pendampingan belajar sholat dan Al-Qur’an.',
+      },
+    ],
+    programs: [
+      {
+        id: 'mprog-1',
+        title: 'Bimbingan Thaharah (Bersuci) & Tata Cara Sholat Fardhu',
+        schedule: 'Setiap Pekan (Waktu Fleksibel Sesuai Kesepakatan)',
+        mentor: 'Tim Pembina Ibadah Mualaf Center',
+        description:
+          'Pendampingan praktik wudhu, tayammum, mandi wajib, serta gerakan dan bacaan sholat lima waktu secara bertahap hingga mandiri.',
+      },
+      {
+        id: 'mprog-2',
+        title: 'Kelas Belajar Membaca Al-Qur’an (Iqra & Tahsin Dasar)',
+        schedule: 'Setiap Selasa & Jumat Sore (Atau Kelas Privat)',
+        mentor: 'Tim Pengajar Tahsin & Ustadzah Pembina',
+        description:
+          'Belajar mengenal huruf hijaiyah dari dasar (Iqra) hingga mampu membaca surat-surat pendek Al-Qur’an dengan makhraj yang benar.',
+      },
+      {
+        id: 'mprog-3',
+        title: 'Kajian Dasar Aqidah, Akhlak & Kekeluargaan Islam',
+        schedule: '2 Minggu Sekali / Pendampingan Berkelanjutan',
+        mentor: 'Dosen Pembina Takmir IAIN Manado',
+        description:
+          'Penguatan keimanan, pengenalan rukun iman dan rukun Islam, serta ruang konsultasi kekeluargaan bagi para mualaf.',
+      },
+    ],
+    mentors: [
+      {
+        id: 'mmen-1',
+        name: 'Tim Ulama & Dosen Pembina Putra Takmir Al Jami’ah',
+        role: 'Pembimbing Ikrar Syahadat, Aqidah & Fiqih Ibadah (Putra)',
+        whatsapp: '628114300000',
+      },
+      {
+        id: 'mmen-2',
+        name: 'Tim Dosen & Ustadzah Pembina Muslimah IAIN Manado',
+        role: 'Pembimbing Khusus Calon Mualaf & Muslimah (Putri)',
+        whatsapp: '628114300000',
+      },
+    ],
+    hotlineName: 'Sekretariat Mualaf Center Al Jami’ah',
+    hotlineWhatsapp: '628114300000',
+    submissions: [],
+  },
   news: [
     {
       id: 'news-1',
@@ -514,7 +715,23 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       label: 'Layanan',
       href: '/#layanan',
       order: 5,
-      children: [],
+      children: [
+        {
+          id: 'sub-5-1',
+          label: 'Layanan Umum & Fasilitas',
+          href: '/#layanan',
+        },
+        {
+          id: 'sub-5-2',
+          label: 'Progres Rehabilitasi Masjid',
+          href: '/rehabilitasi',
+        },
+        {
+          id: 'sub-5-3',
+          label: 'Layanan Mualaf Center',
+          href: '/mualaf-center',
+        },
+      ],
     },
     {
       id: 'menu-6',
@@ -586,13 +803,69 @@ export function readMosqueDb(): MosqueDatabase {
     }
     const raw = fs.readFileSync(DB_FILE_PATH, 'utf-8');
     const parsed = JSON.parse(raw) as Partial<MosqueDatabase>;
-    const filteredMenus = (parsed.menus || INITIAL_MOSQUE_DATA.menus).filter(
-      (m) => m.href !== '/tv' && m.label.toLowerCase() !== 'mode tv masjid'
-    );
+    const filteredMenus = (parsed.menus || INITIAL_MOSQUE_DATA.menus)
+      .filter((m) => m.href !== '/tv' && m.label.toLowerCase() !== 'mode tv masjid')
+      .map((m) => {
+        if (m.id === 'menu-5' || m.label.toLowerCase() === 'layanan') {
+          const existingChildren = m.children || [];
+          const hasRehab = existingChildren.some((c) => c.href === '/rehabilitasi');
+          const hasMualaf = existingChildren.some((c) => c.href === '/mualaf-center');
+          const hasGeneral = existingChildren.some((c) => c.href === '/#layanan');
+          const nextChildren = [...existingChildren];
+
+          if (!hasGeneral) {
+            nextChildren.unshift({
+              id: 'sub-5-1',
+              label: 'Layanan Umum & Fasilitas',
+              href: '/#layanan',
+            });
+          }
+          if (!hasRehab) {
+            nextChildren.push({
+              id: 'sub-5-2',
+              label: 'Progres Rehabilitasi Masjid',
+              href: '/rehabilitasi',
+            });
+          }
+          if (!hasMualaf) {
+            nextChildren.push({
+              id: 'sub-5-3',
+              label: 'Layanan Mualaf Center',
+              href: '/mualaf-center',
+            });
+          }
+          return {
+            ...m,
+            children: nextChildren,
+          };
+        }
+        return m;
+      });
     return {
       ...INITIAL_MOSQUE_DATA,
       ...parsed,
       menus: filteredMenus,
+      rehabSettings: {
+        ...INITIAL_MOSQUE_DATA.rehabSettings,
+        ...(parsed.rehabSettings || {}),
+        projects:
+          parsed.rehabSettings?.projects ?? INITIAL_MOSQUE_DATA.rehabSettings.projects,
+      },
+      mualafCenter: {
+        ...INITIAL_MOSQUE_DATA.mualafCenter,
+        ...(parsed.mualafCenter || {}),
+        requirements:
+          parsed.mualafCenter?.requirements ??
+          INITIAL_MOSQUE_DATA.mualafCenter.requirements,
+        steps:
+          parsed.mualafCenter?.steps ?? INITIAL_MOSQUE_DATA.mualafCenter.steps,
+        programs:
+          parsed.mualafCenter?.programs ??
+          INITIAL_MOSQUE_DATA.mualafCenter.programs,
+        mentors:
+          parsed.mualafCenter?.mentors ?? INITIAL_MOSQUE_DATA.mualafCenter.mentors,
+        submissions: parsed.mualafCenter?.submissions ?? [],
+      },
       mosqueProfile: {
         ...INITIAL_MOSQUE_DATA.mosqueProfile,
         ...(parsed.mosqueProfile || {}),

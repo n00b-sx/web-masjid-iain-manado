@@ -220,6 +220,102 @@ export interface FooterSettings {
   campusWebsiteUrl?: string;
 }
 
+export type ProjectStatus = 'BERJALAN' | 'DIRENCANAKAN' | 'SELESAI';
+export type StageStatus = 'SELESAI' | 'BERJALAN' | 'BELUM_DIMULAI';
+
+export interface RehabStage {
+  id: string;
+  title: string;
+  description: string;
+  dateLabel: string;
+  progressPercent: number;
+  status: StageStatus;
+}
+
+export interface RehabPhoto {
+  id: string;
+  caption: string;
+  imageUrl: string;
+  date: string;
+  tag: 'PROGRES' | 'SEBELUM' | 'DESAIN_TARGET' | 'SELESAI';
+}
+
+export interface RehabProject {
+  id: string;
+  title: string;
+  category: string;
+  summary: string;
+  status: ProjectStatus;
+  overallProgress: number;
+  estimatedBudget: number;
+  collectedAmount?: number;
+  startDate: string;
+  targetDate: string;
+  materialNeeds: string[];
+  stages: RehabStage[];
+  gallery: RehabPhoto[];
+}
+
+export interface RehabSettings {
+  pageTitle: string;
+  pageSubtitle: string;
+  syncWithDevelopmentFund: boolean;
+  picName: string;
+  picWhatsapp: string;
+  projects: RehabProject[];
+}
+
+export interface MualafStep {
+  id: string;
+  stepNumber: number;
+  title: string;
+  description: string;
+}
+
+export interface MualafProgram {
+  id: string;
+  title: string;
+  schedule: string;
+  mentor: string;
+  description: string;
+}
+
+export interface MualafMentor {
+  id: string;
+  name: string;
+  role: string;
+  whatsapp?: string;
+}
+
+export interface MualafSubmission {
+  id: string;
+  fullName: string;
+  gender: 'LAKI_LAKI' | 'PEREMPUAN';
+  whatsapp: string;
+  requestType:
+    | 'IKRAR_SYAHADAT'
+    | 'KONSULTASI_ISLAM'
+    | 'PEMBINAAN_MUALAF'
+    | 'SERTIFIKAT_MUALAF';
+  preferredDate: string;
+  notes: string;
+  status: 'MENUNGGU' | 'DIDAMPINGI' | 'SELESAI';
+  createdAt: string;
+}
+
+export interface MualafCenterSettings {
+  pageTitle: string;
+  pageSubtitle: string;
+  welcomeMessage: string;
+  requirements: string[];
+  steps: MualafStep[];
+  programs: MualafProgram[];
+  mentors: MualafMentor[];
+  hotlineName: string;
+  hotlineWhatsapp: string;
+  submissions: MualafSubmission[];
+}
+
 export interface MosqueDatabase {
   mosqueProfile: {
     name: string;
@@ -240,6 +336,8 @@ export interface MosqueDatabase {
   donationInfo: DonationInfo;
   services: MosqueService[];
   serviceSubmissions: ServiceSubmission[];
+  rehabSettings: RehabSettings;
+  mualafCenter: MualafCenterSettings;
   news: NewsArticle[];
   customPages: CustomPage[];
   menus: MenuItem[];

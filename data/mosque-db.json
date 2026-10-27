@@ -424,7 +424,23 @@
       "label": "Layanan",
       "href": "/#layanan",
       "order": 5,
-      "children": []
+      "children": [
+        {
+          "id": "sub-5-1",
+          "label": "Layanan Umum & Fasilitas",
+          "href": "/#layanan"
+        },
+        {
+          "id": "sub-5-2",
+          "label": "Progres Rehabilitasi Masjid",
+          "href": "/rehabilitasi"
+        },
+        {
+          "id": "sub-5-3",
+          "label": "Layanan Mualaf Center",
+          "href": "/mualaf-center"
+        }
+      ]
     },
     {
       "id": "menu-6",

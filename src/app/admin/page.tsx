@@ -14,8 +14,15 @@ import {
   MosqueDatabase,
   MosqueEvent,
   MosqueService,
+  MualafMentor,
+  MualafProgram,
   NewsArticle,
   PrayerName,
+  ProjectStatus,
+  RehabPhoto,
+  RehabProject,
+  RehabStage,
+  StageStatus,
 } from '@/types/mosque';
 import { formatRupiah, OBLIGATORY_PRAYERS, PRAYER_LIST } from '@/lib/prayer-times';
 import ImageUploaderField from '@/components/ImageUploaderField';
@@ -40,6 +47,8 @@ import {
   Briefcase,
   AlertCircle,
   Edit3,
+  Hammer,
+  HeartHandshake,
 } from 'lucide-react';
 
 type AdminTab =
@@ -49,6 +58,8 @@ type AdminTab =
   | 'EVENTS'
   | 'FINANCE'
   | 'SERVICES'
+  | 'REHAB'
+  | 'MUALAF'
   | 'NEWS'
   | 'PAGES_MENUS'
   | 'TV_QUOTES';
@@ -228,6 +239,69 @@ export default function AdminDashboardPage() {
     username: '',
     name: '',
     role: 'HUMAS',
+  });
+
+  // 10. New Rehab / Facility Development Project Form
+  const [newRehabProject, setNewRehabProject] = useState<{
+    title: string;
+    category: string;
+    summary: string;
+    status: ProjectStatus;
+    overallProgress: number;
+    estimatedBudget: string;
+    startDate: string;
+    targetDate: string;
+    materialNeedsText: string;
+  }>({
+    title: '',
+    category: 'Pengembangan Fasilitas Baru',
+    summary: '',
+    status: 'BERJALAN',
+    overallProgress: 0,
+    estimatedBudget: '0',
+    startDate: 'November 2026',
+    targetDate: 'Januari 2027',
+    materialNeedsText: '',
+  });
+
+  // Per-project new Stage & new Photo draft state
+  const [newStageByProject, setNewStageByProject] = useState<
+    Record<
+      string,
+      {
+        title: string;
+        description: string;
+        dateLabel: string;
+        progressPercent: number;
+        status: StageStatus;
+      }
+    >
+  >({});
+
+  const [newPhotoByProject, setNewPhotoByProject] = useState<
+    Record<
+      string,
+      {
+        caption: string;
+        imageUrl: string;
+        date: string;
+        tag: RehabPhoto['tag'];
+      }
+    >
+  >({});
+
+  // 11. Mualaf Center Admin Form States
+  const [newMualafReq, setNewMualafReq] = useState('');
+  const [newMualafProgram, setNewMualafProgram] = useState({
+    title: '',
+    schedule: 'Setiap Pekan (Waktu Fleksibel)',
+    mentor: 'Tim Pembina Mualaf Center',
+    description: '',
+  });
+  const [newMualafMentor, setNewMualafMentor] = useState({
+    name: '',
+    role: '',
+    whatsapp: '628114300000',
   });
 
   const loadData = useCallback(async () => {
@@ -433,6 +507,9 @@ export default function AdminDashboardPage() {
   const pendingSubmissions = db.serviceSubmissions.filter(
     (s) => s.status === 'MENUNGGU'
   );
+  const pendingMualafSubmissions = (db.mualafCenter?.submissions || []).filter(
+    (s) => s.status === 'MENUNGGU'
+  );
   const totalBalance = db.transactions.reduce(
     (acc, t) => (t.type === 'IN' ? acc + t.amount : acc - t.amount),
     0
@@ -470,6 +547,20 @@ export default function AdminDashboardPage() {
       id: 'SERVICES',
       label: 'Layanan Masjid',
       icon: <Briefcase className="w-4 h-4" />,
+    },
+    {
+      id: 'REHAB',
+      label: 'Rehabilitasi & Fasilitas',
+      icon: <Hammer className="w-4 h-4" />,
+    },
+    {
+      id: 'MUALAF',
+      label: 'Mualaf Center',
+      icon: <HeartHandshake className="w-4 h-4" />,
+      badge:
+        pendingMualafSubmissions.length > 0
+          ? pendingMualafSubmissions.length
+          : undefined,
     },
     {
       id: 'NEWS',
@@ -3978,6 +4069,1637 @@ export default function AdminDashboardPage() {
                 ))}
               </div>
             </section>
+          </div>
+        )}
+
+        {/* =========================================================
+            TAB 10: REHABILITASI & PENGEMBANGAN FASILITAS MASJID
+           ========================================================= */}
+        {activeTab === 'REHAB' && (
+          <div className="space-y-8">
+            {/* Page Header Settings */}
+            <section className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="font-serif-heading text-xl font-bold text-[#1E1B18]">
+                    Pengaturan Halaman Rehabilitasi &amp; Pembangunan Fasilitas (/rehabilitasi)
+                  </h2>
+                  <p className="text-xs text-[#524740]">
+                    Anda dapat mengubah judul halaman kapan saja (misalnya saat rehabilitasi telah selesai dan beralih ke penambahan fasilitas baru seperti kamar mandi atau tempat wudhu).
+                  </p>
+                </div>
+                <Link
+                  href="/rehabilitasi"
+                  target="_blank"
+                  className="px-3.5 py-2 min-h-[40px] inline-flex items-center gap-1.5 rounded-md bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold"
+                >
+                  <span>Buka Halaman /rehabilitasi</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Judul Utama Halaman
+                  </label>
+                  <input
+                    type="text"
+                    value={db.rehabSettings.pageTitle}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        rehabSettings: {
+                          ...db.rehabSettings,
+                          pageTitle: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Nama Panitia / Penanggung Jawab
+                    </label>
+                    <input
+                      type="text"
+                      value={db.rehabSettings.picName}
+                      onChange={(e) =>
+                        setDb({
+                          ...db,
+                          rehabSettings: {
+                            ...db.rehabSettings,
+                            picName: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      WhatsApp Panitia (628...)
+                    </label>
+                    <input
+                      type="text"
+                      value={db.rehabSettings.picWhatsapp}
+                      onChange={(e) =>
+                        setDb({
+                          ...db,
+                          rehabSettings: {
+                            ...db.rehabSettings,
+                            picWhatsapp: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                  Subjudul / Deskripsi Pengantar Halaman
+                </label>
+                <textarea
+                  rows={2}
+                  value={db.rehabSettings.pageSubtitle}
+                  onChange={(e) =>
+                    setDb({
+                      ...db,
+                      rehabSettings: {
+                        ...db.rehabSettings,
+                        pageSubtitle: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full px-3.5 py-2 rounded-md bg-white border border-[#524740] text-sm"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  persistDatabase(
+                    db,
+                    'Pengaturan judul & kontak halaman Rehabilitasi disimpan.'
+                  )
+                }
+                className="px-5 py-2.5 min-h-[44px] inline-flex items-center gap-2 rounded-md bg-[#A84A2E] text-white text-sm font-semibold cursor-pointer"
+              >
+                <Save className="w-4 h-4" />
+                <span>Simpan Pengaturan Header Rehabilitasi</span>
+              </button>
+            </section>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Left: Add New Rehab / Facility Project */}
+              <section className="lg:col-span-4 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+                <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18]">
+                  + Tambah Proyek Rehabilitasi / Fasilitas Baru
+                </h3>
+                <p className="text-xs text-[#524740]">
+                  Gunakan formulir ini untuk menambahkan program rehabilitasi maupun pembangunan fasilitas baru (seperti kamar mandi, tempat wudhu, kanopi, dll).
+                </p>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Nama Proyek / Fasilitas Baru *
+                  </label>
+                  <input
+                    type="text"
+                    value={newRehabProject.title}
+                    onChange={(e) =>
+                      setNewRehabProject({
+                        ...newRehabProject,
+                        title: e.target.value,
+                      })
+                    }
+                    placeholder="Contoh: Pembangunan Kamar Mandi & Tempat Wudhu Baru"
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Kategori Pekerjaan
+                    </label>
+                    <input
+                      type="text"
+                      value={newRehabProject.category}
+                      onChange={(e) =>
+                        setNewRehabProject({
+                          ...newRehabProject,
+                          category: e.target.value,
+                        })
+                      }
+                      placeholder="Fasilitas Baru / Rehabilitasi"
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Status Proyek
+                    </label>
+                    <select
+                      value={newRehabProject.status}
+                      onChange={(e) =>
+                        setNewRehabProject({
+                          ...newRehabProject,
+                          status: e.target.value as ProjectStatus,
+                        })
+                      }
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-xs font-bold"
+                    >
+                      <option value="BERJALAN">SEDANG BERJALAN</option>
+                      <option value="DIRENCANAKAN">DIRENCANAKAN</option>
+                      <option value="SELESAI">SELESAI (100%)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Capaian Progres Fisik (%)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={newRehabProject.overallProgress}
+                      onChange={(e) =>
+                        setNewRehabProject({
+                          ...newRehabProject,
+                          overallProgress: parseInt(e.target.value || '0', 10),
+                        })
+                      }
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-sm font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Estimasi Anggaran (Rp)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={newRehabProject.estimatedBudget}
+                      onChange={(e) =>
+                        setNewRehabProject({
+                          ...newRehabProject,
+                          estimatedBudget: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-sm font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Waktu Mulai
+                    </label>
+                    <input
+                      type="text"
+                      value={newRehabProject.startDate}
+                      onChange={(e) =>
+                        setNewRehabProject({
+                          ...newRehabProject,
+                          startDate: e.target.value,
+                        })
+                      }
+                      placeholder="Contoh: Januari 2027"
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Target Selesai
+                    </label>
+                    <input
+                      type="text"
+                      value={newRehabProject.targetDate}
+                      onChange={(e) =>
+                        setNewRehabProject({
+                          ...newRehabProject,
+                          targetDate: e.target.value,
+                        })
+                      }
+                      placeholder="Contoh: Maret 2027"
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Ringkasan Tujuan Pekerjaan *
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={newRehabProject.summary}
+                    onChange={(e) =>
+                      setNewRehabProject({
+                        ...newRehabProject,
+                        summary: e.target.value,
+                      })
+                    }
+                    placeholder="Jelaskan lingkup pekerjaan rehabilitasi atau pembangunan fasilitas baru ini..."
+                    className="w-full px-3 py-2 rounded-md bg-white border border-[#524740] text-xs sm:text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Daftar Kebutuhan Material / Wakaf (Pisahkan per Baris)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={newRehabProject.materialNeedsText}
+                    onChange={(e) =>
+                      setNewRehabProject({
+                        ...newRehabProject,
+                        materialNeedsText: e.target.value,
+                      })
+                    }
+                    placeholder={'Contoh:\n50 Sak Semen\nKeramik Anti-Slip 80 m2\n20 Kran Wudhu'}
+                    className="w-full px-3 py-2 rounded-md bg-white border border-[#524740] text-xs"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newRehabProject.title.trim()) {
+                      setSaveError('Nama proyek wajib diisi.');
+                      return;
+                    }
+                    const createdProj: RehabProject = {
+                      id: `proj-${Date.now()}`,
+                      title: newRehabProject.title.trim(),
+                      category:
+                        newRehabProject.category.trim() ||
+                        'Pengembangan Fasilitas',
+                      summary: newRehabProject.summary.trim(),
+                      status: newRehabProject.status,
+                      overallProgress: Math.min(
+                        100,
+                        Math.max(0, newRehabProject.overallProgress || 0)
+                      ),
+                      estimatedBudget:
+                        parseInt(newRehabProject.estimatedBudget || '0', 10) || 0,
+                      startDate: newRehabProject.startDate.trim(),
+                      targetDate: newRehabProject.targetDate.trim(),
+                      materialNeeds: newRehabProject.materialNeedsText
+                        .split('\n')
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                      stages: [],
+                      gallery: [],
+                    };
+                    const updated = {
+                      ...db,
+                      rehabSettings: {
+                        ...db.rehabSettings,
+                        projects: [createdProj, ...db.rehabSettings.projects],
+                      },
+                    };
+                    setNewRehabProject({
+                      title: '',
+                      category: 'Pengembangan Fasilitas Baru',
+                      summary: '',
+                      status: 'BERJALAN',
+                      overallProgress: 0,
+                      estimatedBudget: '0',
+                      startDate: 'November 2026',
+                      targetDate: 'Januari 2027',
+                      materialNeedsText: '',
+                    });
+                    persistDatabase(
+                      updated,
+                      `Proyek "${createdProj.title}" berhasil ditambahkan. Silakan tambahkan tahapan pekerjaan di sebelah kanan.`
+                    );
+                  }}
+                  className="w-full px-5 py-3 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-md bg-[#1E1B18] text-[#FAF7F2] text-xs sm:text-sm font-semibold cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Tambahkan Proyek Baru</span>
+                </button>
+              </section>
+
+              {/* Right: Manage Existing Projects, Stages & Photo Gallery */}
+              <section className="lg:col-span-8 space-y-6">
+                <h3 className="font-serif-heading text-xl font-bold text-[#1E1B18]">
+                  Daftar Proyek Rehabilitasi &amp; Fasilitas ({db.rehabSettings.projects.length})
+                </h3>
+
+                {db.rehabSettings.projects.map((proj) => {
+                  const stageDraft = newStageByProject[proj.id] || {
+                    title: '',
+                    description: '',
+                    dateLabel: '',
+                    progressPercent: 0,
+                    status: 'BERJALAN' as StageStatus,
+                  };
+                  const photoDraft = newPhotoByProject[proj.id] || {
+                    caption: '',
+                    imageUrl: '',
+                    date: new Date().toISOString().slice(0, 10),
+                    tag: 'PROGRES' as const,
+                  };
+
+                  const updateProjectField = (
+                    updater: (p: RehabProject) => RehabProject
+                  ) => {
+                    setDb({
+                      ...db,
+                      rehabSettings: {
+                        ...db.rehabSettings,
+                        projects: db.rehabSettings.projects.map((item) =>
+                          item.id === proj.id ? updater(item) : item
+                        ),
+                      },
+                    });
+                  };
+
+                  return (
+                    <div
+                      key={proj.id}
+                      className="bg-[#F2ECE1] border-2 border-[#1E1B18] rounded-xl p-5 sm:p-6 space-y-6"
+                    >
+                      {/* Project Main Controls */}
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#DFD5C5] pb-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <select
+                              value={proj.status}
+                              onChange={(e) => {
+                                const newStatus = e.target.value as ProjectStatus;
+                                updateProjectField((p) => ({
+                                  ...p,
+                                  status: newStatus,
+                                  overallProgress:
+                                    newStatus === 'SELESAI'
+                                      ? 100
+                                      : p.overallProgress,
+                                }));
+                              }}
+                              className="px-3 py-1.5 rounded bg-[#1E1B18] text-[#E8CFA0] text-xs font-bold"
+                            >
+                              <option value="BERJALAN">STATUS: SEDANG BERJALAN</option>
+                              <option value="DIRENCANAKAN">STATUS: DIRENCANAKAN</option>
+                              <option value="SELESAI">STATUS: SELESAI (ARSIP)</option>
+                            </select>
+
+                            <span className="text-xs font-bold text-[#A84A2E]">
+                              Progres Total: {proj.overallProgress}%
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                persistDatabase(
+                                  db,
+                                  `Perubahan pada proyek "${proj.title}" berhasil disimpan.`
+                                )
+                              }
+                              className="px-3.5 py-1.5 min-h-[36px] inline-flex items-center gap-1.5 rounded bg-[#A84A2E] text-white text-xs font-semibold cursor-pointer"
+                            >
+                              <Save className="w-3.5 h-3.5" />
+                              <span>Simpan Proyek Ini</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = {
+                                  ...db,
+                                  rehabSettings: {
+                                    ...db.rehabSettings,
+                                    projects: db.rehabSettings.projects.filter(
+                                      (item) => item.id !== proj.id
+                                    ),
+                                  },
+                                };
+                                persistDatabase(updated, 'Proyek berhasil dihapus.');
+                              }}
+                              className="px-3 py-1.5 min-h-[36px] rounded border border-[#A84A2E] text-[#A84A2E] text-xs font-semibold cursor-pointer"
+                            >
+                              Hapus Proyek
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                          <div className="md:col-span-6">
+                            <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                              Judul Proyek / Fasilitas
+                            </label>
+                            <input
+                              type="text"
+                              value={proj.title}
+                              onChange={(e) =>
+                                updateProjectField((p) => ({
+                                  ...p,
+                                  title: e.target.value,
+                                }))
+                              }
+                              className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-sm font-bold"
+                            />
+                          </div>
+                          <div className="md:col-span-3">
+                            <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                              Progres Fisik (%)
+                            </label>
+                            <input
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={proj.overallProgress}
+                              onChange={(e) =>
+                                updateProjectField((p) => ({
+                                  ...p,
+                                  overallProgress: parseInt(
+                                    e.target.value || '0',
+                                    10
+                                  ),
+                                }))
+                              }
+                              className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-sm font-mono"
+                            />
+                          </div>
+                          <div className="md:col-span-3">
+                            <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                              Estimasi Dana (Rp)
+                            </label>
+                            <input
+                              type="number"
+                              min={0}
+                              value={proj.estimatedBudget}
+                              onChange={(e) =>
+                                updateProjectField((p) => ({
+                                  ...p,
+                                  estimatedBudget: parseInt(
+                                    e.target.value || '0',
+                                    10
+                                  ),
+                                }))
+                              }
+                              className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-sm font-mono"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                            Ringkasan Deskripsi Proyek
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={proj.summary}
+                            onChange={(e) =>
+                              updateProjectField((p) => ({
+                                ...p,
+                                summary: e.target.value,
+                              }))
+                            }
+                            className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-xs sm:text-sm"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                            Daftar Kebutuhan Material / Wakaf (1 Baris = 1 Item)
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={proj.materialNeeds.join('\n')}
+                            onChange={(e) =>
+                              updateProjectField((p) => ({
+                                ...p,
+                                materialNeeds: e.target.value
+                                  .split('\n')
+                                  .map((item) => item.trim())
+                                  .filter(Boolean),
+                              }))
+                            }
+                            className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Sub-section A: Stages / Milestones Management */}
+                      <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-4 space-y-4">
+                        <h4 className="font-serif-heading text-base font-bold text-[#1E1B18]">
+                          Tahapan Pekerjaan (Timeline) untuk Proyek Ini ({proj.stages.length})
+                        </h4>
+
+                        {proj.stages.length > 0 && (
+                          <div className="space-y-2.5">
+                            {proj.stages.map((stg) => (
+                              <div
+                                key={stg.id}
+                                className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-lg p-3 space-y-2"
+                              >
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <input
+                                    type="text"
+                                    value={stg.title}
+                                    onChange={(e) =>
+                                      updateProjectField((p) => ({
+                                        ...p,
+                                        stages: p.stages.map((s) =>
+                                          s.id === stg.id
+                                            ? { ...s, title: e.target.value }
+                                            : s
+                                        ),
+                                      }))
+                                    }
+                                    className="flex-1 min-w-[200px] px-2.5 py-1 rounded bg-white border border-[#524740] text-xs font-bold"
+                                  />
+
+                                  <div className="flex items-center gap-2">
+                                    <select
+                                      value={stg.status}
+                                      onChange={(e) => {
+                                        const nextSt = e.target
+                                          .value as StageStatus;
+                                        updateProjectField((p) => ({
+                                          ...p,
+                                          stages: p.stages.map((s) =>
+                                            s.id === stg.id
+                                              ? {
+                                                  ...s,
+                                                  status: nextSt,
+                                                  progressPercent:
+                                                    nextSt === 'SELESAI'
+                                                      ? 100
+                                                      : s.progressPercent,
+                                                }
+                                              : s
+                                          ),
+                                        }));
+                                      }}
+                                      className="px-2 py-1 rounded bg-white border border-[#524740] text-xs font-bold"
+                                    >
+                                      <option value="SELESAI">Selesai</option>
+                                      <option value="BERJALAN">Sedang Berjalan</option>
+                                      <option value="BELUM_DIMULAI">Tahap Berikutnya</option>
+                                    </select>
+
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      max={100}
+                                      value={stg.progressPercent}
+                                      onChange={(e) =>
+                                        updateProjectField((p) => ({
+                                          ...p,
+                                          stages: p.stages.map((s) =>
+                                            s.id === stg.id
+                                              ? {
+                                                  ...s,
+                                                  progressPercent: parseInt(
+                                                    e.target.value || '0',
+                                                    10
+                                                  ),
+                                                }
+                                              : s
+                                          ),
+                                        }))
+                                      }
+                                      className="w-16 px-2 py-1 rounded bg-white border border-[#524740] text-xs font-mono"
+                                      title="Persentase Tahap (%)"
+                                    />
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const updated = {
+                                          ...db,
+                                          rehabSettings: {
+                                            ...db.rehabSettings,
+                                            projects:
+                                              db.rehabSettings.projects.map(
+                                                (p) =>
+                                                  p.id === proj.id
+                                                    ? {
+                                                        ...p,
+                                                        stages: p.stages.filter(
+                                                          (s) => s.id !== stg.id
+                                                        ),
+                                                      }
+                                                    : p
+                                              ),
+                                          },
+                                        };
+                                        persistDatabase(
+                                          updated,
+                                          'Tahapan pekerjaan dihapus.'
+                                        );
+                                      }}
+                                      className="text-xs font-bold text-[#A84A2E] underline cursor-pointer"
+                                    >
+                                      Hapus
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                  <input
+                                    type="text"
+                                    value={stg.dateLabel}
+                                    onChange={(e) =>
+                                      updateProjectField((p) => ({
+                                        ...p,
+                                        stages: p.stages.map((s) =>
+                                          s.id === stg.id
+                                            ? { ...s, dateLabel: e.target.value }
+                                            : s
+                                        ),
+                                      }))
+                                    }
+                                    placeholder="Label Waktu (Misal: Nov 2026)"
+                                    className="px-2.5 py-1 rounded bg-white border border-[#524740] text-xs"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={stg.description}
+                                    onChange={(e) =>
+                                      updateProjectField((p) => ({
+                                        ...p,
+                                        stages: p.stages.map((s) =>
+                                          s.id === stg.id
+                                            ? {
+                                                ...s,
+                                                description: e.target.value,
+                                              }
+                                            : s
+                                        ),
+                                      }))
+                                    }
+                                    placeholder="Rincian pekerjaan tahap ini..."
+                                    className="sm:col-span-2 px-2.5 py-1 rounded bg-white border border-[#524740] text-xs"
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Add New Stage Form for this Project */}
+                        <div className="pt-3 border-t border-[#DFD5C5] space-y-2.5">
+                          <span className="text-xs font-bold text-[#A84A2E] block">
+                            + Tambah Tahap Pekerjaan Baru ke Proyek Ini:
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input
+                              type="text"
+                              value={stageDraft.title}
+                              onChange={(e) =>
+                                setNewStageByProject({
+                                  ...newStageByProject,
+                                  [proj.id]: {
+                                    ...stageDraft,
+                                    title: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="Nama Tahap (Misal: Tahap 4: Pemasangan Keramik)"
+                              className="sm:col-span-2 px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                            />
+                            <input
+                              type="text"
+                              value={stageDraft.dateLabel}
+                              onChange={(e) =>
+                                setNewStageByProject({
+                                  ...newStageByProject,
+                                  [proj.id]: {
+                                    ...stageDraft,
+                                    dateLabel: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="Bulan / Tanggal Target"
+                              className="px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                            />
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <input
+                              type="text"
+                              value={stageDraft.description}
+                              onChange={(e) =>
+                                setNewStageByProject({
+                                  ...newStageByProject,
+                                  [proj.id]: {
+                                    ...stageDraft,
+                                    description: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="Keterangan singkat pekerjaan..."
+                              className="flex-1 min-w-[200px] px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                            />
+                            <select
+                              value={stageDraft.status}
+                              onChange={(e) =>
+                                setNewStageByProject({
+                                  ...newStageByProject,
+                                  [proj.id]: {
+                                    ...stageDraft,
+                                    status: e.target.value as StageStatus,
+                                  },
+                                })
+                              }
+                              className="px-2.5 py-2 rounded bg-white border border-[#524740] text-xs font-bold"
+                            >
+                              <option value="BERJALAN">Sedang Berjalan</option>
+                              <option value="BELUM_DIMULAI">Tahap Berikutnya</option>
+                              <option value="SELESAI">Selesai</option>
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!stageDraft.title.trim()) return;
+                                const createdStage: RehabStage = {
+                                  id: `stg-${Date.now()}`,
+                                  title: stageDraft.title.trim(),
+                                  description: stageDraft.description.trim(),
+                                  dateLabel:
+                                    stageDraft.dateLabel.trim() || 'Jadwal Menyusul',
+                                  progressPercent:
+                                    stageDraft.status === 'SELESAI'
+                                      ? 100
+                                      : stageDraft.progressPercent || 0,
+                                  status: stageDraft.status,
+                                };
+                                const updated = {
+                                  ...db,
+                                  rehabSettings: {
+                                    ...db.rehabSettings,
+                                    projects: db.rehabSettings.projects.map(
+                                      (p) =>
+                                        p.id === proj.id
+                                          ? {
+                                              ...p,
+                                              stages: [
+                                                ...p.stages,
+                                                createdStage,
+                                              ],
+                                            }
+                                          : p
+                                    ),
+                                  },
+                                };
+                                setNewStageByProject({
+                                  ...newStageByProject,
+                                  [proj.id]: {
+                                    title: '',
+                                    description: '',
+                                    dateLabel: '',
+                                    progressPercent: 0,
+                                    status: 'BERJALAN',
+                                  },
+                                });
+                                persistDatabase(
+                                  updated,
+                                  'Tahap pekerjaan baru berhasil ditambahkan.'
+                                );
+                              }}
+                              className="px-3.5 py-2 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                            >
+                              + Tambah Tahap
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Sub-section B: Photo Gallery Management */}
+                      <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-4 space-y-4">
+                        <h4 className="font-serif-heading text-base font-bold text-[#1E1B18]">
+                          Galeri Dokumentasi Foto Proyek ({proj.gallery.length})
+                        </h4>
+
+                        {proj.gallery.length > 0 && (
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            {proj.gallery.map((ph) => (
+                              <div
+                                key={ph.id}
+                                className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-lg p-2.5 space-y-1.5"
+                              >
+                                <img
+                                  src={ph.imageUrl}
+                                  alt={ph.caption}
+                                  className="w-full h-28 object-cover rounded"
+                                />
+                                <p className="text-xs font-semibold text-[#1E1B18] line-clamp-2">
+                                  {ph.caption}
+                                </p>
+                                <div className="flex items-center justify-between text-[11px]">
+                                  <span className="font-mono text-[#524740]">
+                                    {ph.tag}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = {
+                                        ...db,
+                                        rehabSettings: {
+                                          ...db.rehabSettings,
+                                          projects:
+                                            db.rehabSettings.projects.map(
+                                              (p) =>
+                                                p.id === proj.id
+                                                  ? {
+                                                      ...p,
+                                                      gallery: p.gallery.filter(
+                                                        (g) => g.id !== ph.id
+                                                      ),
+                                                    }
+                                                  : p
+                                            ),
+                                        },
+                                      };
+                                      persistDatabase(
+                                        updated,
+                                        'Foto dokumentasi dihapus.'
+                                      );
+                                    }}
+                                    className="text-[#A84A2E] font-bold underline cursor-pointer"
+                                  >
+                                    Hapus
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="pt-3 border-t border-[#DFD5C5] space-y-3">
+                          <span className="text-xs font-bold text-[#A84A2E] block">
+                            + Unggah Foto Dokumentasi Progres / Desain Baru:
+                          </span>
+
+                          <ImageUploaderField
+                            label="Pilih File Gambar Progres atau Tempel URL"
+                            mediaMode="IMAGE"
+                            value={photoDraft.imageUrl}
+                            onChange={(url) =>
+                              setNewPhotoByProject({
+                                ...newPhotoByProject,
+                                [proj.id]: { ...photoDraft, imageUrl: url },
+                              })
+                            }
+                          />
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <input
+                              type="text"
+                              value={photoDraft.caption}
+                              onChange={(e) =>
+                                setNewPhotoByProject({
+                                  ...newPhotoByProject,
+                                  [proj.id]: {
+                                    ...photoDraft,
+                                    caption: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="Keterangan foto (Misal: Pengerjaan plafon sisi utara)"
+                              className="flex-1 min-w-[200px] px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                            />
+                            <select
+                              value={photoDraft.tag}
+                              onChange={(e) =>
+                                setNewPhotoByProject({
+                                  ...newPhotoByProject,
+                                  [proj.id]: {
+                                    ...photoDraft,
+                                    tag: e.target.value as RehabPhoto['tag'],
+                                  },
+                                })
+                              }
+                              className="px-2.5 py-2 rounded bg-white border border-[#524740] text-xs font-bold"
+                            >
+                              <option value="PROGRES">Progres Lapangan</option>
+                              <option value="SEBELUM">Kondisi Awal</option>
+                              <option value="DESAIN_TARGET">Target Desain</option>
+                              <option value="SELESAI">Hasil Akhir (100%)</option>
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!photoDraft.imageUrl.trim()) {
+                                  setSaveError(
+                                    'Unggah atau masukkan URL foto terlebih dahulu.'
+                                  );
+                                  return;
+                                }
+                                const createdPhoto: RehabPhoto = {
+                                  id: `pho-${Date.now()}`,
+                                  caption:
+                                    photoDraft.caption.trim() ||
+                                    `Dokumentasi ${proj.title}`,
+                                  imageUrl: photoDraft.imageUrl.trim(),
+                                  date:
+                                    photoDraft.date ||
+                                    new Date().toISOString().slice(0, 10),
+                                  tag: photoDraft.tag,
+                                };
+                                const updated = {
+                                  ...db,
+                                  rehabSettings: {
+                                    ...db.rehabSettings,
+                                    projects: db.rehabSettings.projects.map(
+                                      (p) =>
+                                        p.id === proj.id
+                                          ? {
+                                              ...p,
+                                              gallery: [
+                                                ...p.gallery,
+                                                createdPhoto,
+                                              ],
+                                            }
+                                          : p
+                                    ),
+                                  },
+                                };
+                                setNewPhotoByProject({
+                                  ...newPhotoByProject,
+                                  [proj.id]: {
+                                    caption: '',
+                                    imageUrl: '',
+                                    date: new Date().toISOString().slice(0, 10),
+                                    tag: 'PROGRES',
+                                  },
+                                });
+                                persistDatabase(
+                                  updated,
+                                  'Foto dokumentasi berhasil ditambahkan ke proyek.'
+                                );
+                              }}
+                              className="px-4 py-2 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                            >
+                              + Tambahkan Foto
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </section>
+            </div>
+          </div>
+        )}
+
+        {/* =========================================================
+            TAB 11: MUALAF CENTER MANAGEMENT & SUBMISSIONS
+           ========================================================= */}
+        {activeTab === 'MUALAF' && (
+          <div className="space-y-8">
+            {/* 1. Incoming Mualaf Center Consultations & Registrations */}
+            <section className="bg-[#F2ECE1] border-2 border-[#1E1B18] rounded-xl p-6 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="font-serif-heading text-xl font-bold text-[#1E1B18]">
+                    Daftar Permohonan Konsultasi &amp; Pendaftaran Mualaf Center ({db.mualafCenter.submissions.length})
+                  </h2>
+                  <p className="text-xs text-[#524740]">
+                    Data pendaftar dari halaman publik <code>/mualaf-center</code> untuk ditindaklanjuti oleh Ustadz/Ustadzah pembina.
+                  </p>
+                </div>
+                <Link
+                  href="/mualaf-center"
+                  target="_blank"
+                  className="px-3.5 py-2 min-h-[40px] inline-flex items-center gap-1.5 rounded-md bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold"
+                >
+                  <span>Buka Halaman /mualaf-center</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+
+              {db.mualafCenter.submissions.length === 0 ? (
+                <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-lg p-6 text-center text-xs sm:text-sm text-[#524740]">
+                  Belum ada permohonan konsultasi atau pendaftaran ikrar syahadat yang masuk.
+                </div>
+              ) : (
+                <div className="overflow-x-auto bg-[#FAF7F2] rounded-lg border border-[#DFD5C5]">
+                  <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                      <tr className="border-b border-[#DFD5C5] bg-[#F2ECE1] font-bold text-[#1E1B18]">
+                        <th className="py-3 px-4">Tanggal Rencana</th>
+                        <th className="py-3 px-4">Nama &amp; Gender</th>
+                        <th className="py-3 px-4">Keperluan &amp; Catatan</th>
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4 text-right">Tindakan Pembina</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#DFD5C5]">
+                      {db.mualafCenter.submissions.map((sub) => (
+                        <tr key={sub.id}>
+                          <td className="py-3 px-4 font-mono whitespace-nowrap">
+                            {sub.preferredDate}
+                          </td>
+                          <td className="py-3 px-4">
+                            <strong className="block text-[#1E1B18]">
+                              {sub.fullName}
+                            </strong>
+                            <span className="text-xs text-[#524740]">
+                              {sub.gender === 'PEREMPUAN'
+                                ? 'Perempuan (Ustadzah)'
+                                : 'Laki-laki (Ustadz)'}{' '}
+                              &bull; WA: {sub.whatsapp}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <strong className="block text-[#A84A2E]">
+                              {sub.requestType.replace(/_/g, ' ')}
+                            </strong>
+                            <span className="text-xs text-[#524740]">
+                              {sub.notes || 'Tidak ada catatan khusus'}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <span
+                              className={`px-2.5 py-1 rounded text-xs font-bold ${
+                                sub.status === 'SELESAI'
+                                  ? 'bg-[#3D4D33] text-white'
+                                  : sub.status === 'DIDAMPINGI'
+                                  ? 'bg-[#A84A2E] text-white'
+                                  : 'bg-[#1E1B18] text-[#E8CFA0]'
+                              }`}
+                            >
+                              {sub.status}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap space-x-1.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = {
+                                  ...db,
+                                  mualafCenter: {
+                                    ...db.mualafCenter,
+                                    submissions:
+                                      db.mualafCenter.submissions.map((item) =>
+                                        item.id === sub.id
+                                          ? {
+                                              ...item,
+                                              status: 'DIDAMPINGI' as const,
+                                            }
+                                          : item
+                                      ),
+                                  },
+                                };
+                                persistDatabase(
+                                  updated,
+                                  `Status ${sub.fullName} diubah menjadi Sedang Didampingi.`
+                                );
+                              }}
+                              className="px-2.5 py-1.5 rounded bg-[#A84A2E] text-white text-xs font-semibold cursor-pointer"
+                            >
+                              Dampingi
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = {
+                                  ...db,
+                                  mualafCenter: {
+                                    ...db.mualafCenter,
+                                    submissions:
+                                      db.mualafCenter.submissions.map((item) =>
+                                        item.id === sub.id
+                                          ? {
+                                              ...item,
+                                              status: 'SELESAI' as const,
+                                            }
+                                          : item
+                                      ),
+                                  },
+                                };
+                                persistDatabase(
+                                  updated,
+                                  `Status ${sub.fullName} ditandai Selesai.`
+                                );
+                              }}
+                              className="px-2.5 py-1.5 rounded bg-[#3D4D33] text-white text-xs font-semibold cursor-pointer"
+                            >
+                              Selesai
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = {
+                                  ...db,
+                                  mualafCenter: {
+                                    ...db.mualafCenter,
+                                    submissions:
+                                      db.mualafCenter.submissions.filter(
+                                        (item) => item.id !== sub.id
+                                      ),
+                                  },
+                                };
+                                persistDatabase(
+                                  updated,
+                                  'Data permohonan dihapus.'
+                                );
+                              }}
+                              className="px-2.5 py-1.5 rounded border border-[#1E1B18] text-[#1E1B18] text-xs font-semibold cursor-pointer"
+                            >
+                              Hapus
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+
+            {/* 2. Mualaf Center Content, Programs & Mentors */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Left: General Info & Requirements */}
+              <section className="lg:col-span-6 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+                <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18]">
+                  Identitas, Sambutan &amp; Syarat Administrasi Mualaf Center
+                </h3>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Judul Halaman Mualaf Center
+                  </label>
+                  <input
+                    type="text"
+                    value={db.mualafCenter.pageTitle}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        mualafCenter: {
+                          ...db.mualafCenter,
+                          pageTitle: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full px-3.5 py-2.5 min-h-[44px] rounded-md bg-white border border-[#524740] text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      Nama Hotline Sekretariat
+                    </label>
+                    <input
+                      type="text"
+                      value={db.mualafCenter.hotlineName}
+                      onChange={(e) =>
+                        setDb({
+                          ...db,
+                          mualafCenter: {
+                            ...db.mualafCenter,
+                            hotlineName: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                      WhatsApp Hotline (628...)
+                    </label>
+                    <input
+                      type="text"
+                      value={db.mualafCenter.hotlineWhatsapp}
+                      onChange={(e) =>
+                        setDb({
+                          ...db,
+                          mualafCenter: {
+                            ...db.mualafCenter,
+                            hotlineWhatsapp: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 min-h-[42px] rounded-md bg-white border border-[#524740] text-xs font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                    Pesan Sambutan Persaudaraan
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={db.mualafCenter.welcomeMessage}
+                    onChange={(e) =>
+                      setDb({
+                        ...db,
+                        mualafCenter: {
+                          ...db.mualafCenter,
+                          welcomeMessage: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full px-3.5 py-2 rounded-md bg-white border border-[#524740] text-xs sm:text-sm"
+                  />
+                </div>
+
+                {/* Requirements List */}
+                <div className="pt-2 border-t border-[#DFD5C5] space-y-2.5">
+                  <label className="block text-xs font-bold text-[#1E1B18]">
+                    Daftar Persyaratan Administrasi Ikrar Syahadat:
+                  </label>
+
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newMualafReq}
+                      onChange={(e) => setNewMualafReq(e.target.value)}
+                      placeholder="Tambahkan poin persyaratan baru..."
+                      className="flex-1 px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!newMualafReq.trim()) return;
+                        const updated = {
+                          ...db,
+                          mualafCenter: {
+                            ...db.mualafCenter,
+                            requirements: [
+                              ...db.mualafCenter.requirements,
+                              newMualafReq.trim(),
+                            ],
+                          },
+                        };
+                        setNewMualafReq('');
+                        persistDatabase(
+                          updated,
+                          'Persyaratan syahadat berhasil ditambahkan.'
+                        );
+                      }}
+                      className="px-3.5 py-2 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                    >
+                      + Tambah
+                    </button>
+                  </div>
+
+                  <ul className="space-y-1.5">
+                    {db.mualafCenter.requirements.map((req, i) => (
+                      <li
+                        key={i}
+                        className="bg-[#FAF7F2] p-2.5 rounded border border-[#DFD5C5] flex items-center justify-between gap-2 text-xs"
+                      >
+                        <span>{req}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = {
+                              ...db,
+                              mualafCenter: {
+                                ...db.mualafCenter,
+                                requirements:
+                                  db.mualafCenter.requirements.filter(
+                                    (_, idx) => idx !== i
+                                  ),
+                              },
+                            };
+                            persistDatabase(updated, 'Item persyaratan dihapus.');
+                          }}
+                          className="text-[#A84A2E] font-bold underline shrink-0 cursor-pointer"
+                        >
+                          Hapus
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    persistDatabase(
+                      db,
+                      'Pengaturan informasi Mualaf Center berhasil disimpan.'
+                    )
+                  }
+                  className="w-full px-5 py-3 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-md bg-[#A84A2E] text-white text-sm font-semibold cursor-pointer"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Pengaturan Mualaf Center</span>
+                </button>
+              </section>
+
+              {/* Right: Programs & Mentors */}
+              <section className="lg:col-span-6 space-y-6">
+                {/* Programs Management */}
+                <div className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+                  <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18]">
+                    Program Pembinaan Pasca-Syahadat ({db.mualafCenter.programs.length})
+                  </h3>
+
+                  <div className="space-y-2.5">
+                    {db.mualafCenter.programs.map((prog) => (
+                      <div
+                        key={prog.id}
+                        className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-lg p-3.5 space-y-1"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <strong className="text-xs sm:text-sm text-[#1E1B18]">
+                            {prog.title}
+                          </strong>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = {
+                                ...db,
+                                mualafCenter: {
+                                  ...db.mualafCenter,
+                                  programs: db.mualafCenter.programs.filter(
+                                    (p) => p.id !== prog.id
+                                  ),
+                                },
+                              };
+                              persistDatabase(updated, 'Program pembinaan dihapus.');
+                            }}
+                            className="text-xs font-bold text-[#A84A2E] underline cursor-pointer"
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                        <p className="text-xs text-[#524740]">{prog.description}</p>
+                        <span className="block text-[11px] font-semibold text-[#A84A2E]">
+                          {prog.schedule} &bull; {prog.mentor}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-3 border-t border-[#DFD5C5] space-y-2.5">
+                    <span className="text-xs font-bold text-[#A84A2E] block">
+                      + Tambah Program Pembinaan Baru:
+                    </span>
+                    <input
+                      type="text"
+                      value={newMualafProgram.title}
+                      onChange={(e) =>
+                        setNewMualafProgram({
+                          ...newMualafProgram,
+                          title: e.target.value,
+                        })
+                      }
+                      placeholder="Judul Program (Misal: Kelas Tahsin Dasar Mualaf)"
+                      className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        value={newMualafProgram.schedule}
+                        onChange={(e) =>
+                          setNewMualafProgram({
+                            ...newMualafProgram,
+                            schedule: e.target.value,
+                          })
+                        }
+                        placeholder="Jadwal Pelaksanaan"
+                        className="px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                      />
+                      <input
+                        type="text"
+                        value={newMualafProgram.mentor}
+                        onChange={(e) =>
+                          setNewMualafProgram({
+                            ...newMualafProgram,
+                            mentor: e.target.value,
+                          })
+                        }
+                        placeholder="Nama Pembimbing"
+                        className="px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                      />
+                    </div>
+                    <textarea
+                      rows={2}
+                      value={newMualafProgram.description}
+                      onChange={(e) =>
+                        setNewMualafProgram({
+                          ...newMualafProgram,
+                          description: e.target.value,
+                        })
+                      }
+                      placeholder="Penjelasan materi pembinaan..."
+                      className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!newMualafProgram.title.trim()) return;
+                        const createdProg: MualafProgram = {
+                          id: `mprog-${Date.now()}`,
+                          title: newMualafProgram.title.trim(),
+                          schedule: newMualafProgram.schedule.trim(),
+                          mentor: newMualafProgram.mentor.trim(),
+                          description: newMualafProgram.description.trim(),
+                        };
+                        const updated = {
+                          ...db,
+                          mualafCenter: {
+                            ...db.mualafCenter,
+                            programs: [...db.mualafCenter.programs, createdProg],
+                          },
+                        };
+                        setNewMualafProgram({
+                          title: '',
+                          schedule: 'Setiap Pekan (Waktu Fleksibel)',
+                          mentor: 'Tim Pembina Mualaf Center',
+                          description: '',
+                        });
+                        persistDatabase(
+                          updated,
+                          'Program pembinaan mualaf berhasil ditambahkan.'
+                        );
+                      }}
+                      className="px-4 py-2 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                    >
+                      + Tambahkan Program
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mentors Management */}
+                <div className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+                  <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18]">
+                    Tim Pembina Ustadz &amp; Ustadzah ({db.mualafCenter.mentors.length})
+                  </h3>
+
+                  <div className="space-y-2">
+                    {db.mualafCenter.mentors.map((men) => (
+                      <div
+                        key={men.id}
+                        className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-lg p-3 flex items-center justify-between gap-2 text-xs"
+                      >
+                        <div>
+                          <strong className="block text-[#1E1B18]">
+                            {men.name}
+                          </strong>
+                          <span className="text-[#524740]">
+                            {men.role} {men.whatsapp ? `• WA: ${men.whatsapp}` : ''}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = {
+                              ...db,
+                              mualafCenter: {
+                                ...db.mualafCenter,
+                                mentors: db.mualafCenter.mentors.filter(
+                                  (m) => m.id !== men.id
+                                ),
+                              },
+                            };
+                            persistDatabase(updated, 'Data pembina dihapus.');
+                          }}
+                          className="text-[#A84A2E] font-bold underline shrink-0 cursor-pointer"
+                        >
+                          Hapus
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-3 border-t border-[#DFD5C5] space-y-2">
+                    <span className="text-xs font-bold text-[#A84A2E] block">
+                      + Tambah Ustadz / Ustadzah Pembina:
+                    </span>
+                    <input
+                      type="text"
+                      value={newMualafMentor.name}
+                      onChange={(e) =>
+                        setNewMualafMentor({
+                          ...newMualafMentor,
+                          name: e.target.value,
+                        })
+                      }
+                      placeholder="Nama Lengkap & Gelar Pembina"
+                      className="w-full px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        value={newMualafMentor.role}
+                        onChange={(e) =>
+                          setNewMualafMentor({
+                            ...newMualafMentor,
+                            role: e.target.value,
+                          })
+                        }
+                        placeholder="Peran (Misal: Pembina Khusus Muslimah)"
+                        className="px-3 py-2 rounded bg-white border border-[#524740] text-xs"
+                      />
+                      <input
+                        type="text"
+                        value={newMualafMentor.whatsapp}
+                        onChange={(e) =>
+                          setNewMualafMentor({
+                            ...newMualafMentor,
+                            whatsapp: e.target.value,
+                          })
+                        }
+                        placeholder="No. WA (628...)"
+                        className="px-3 py-2 rounded bg-white border border-[#524740] text-xs font-mono"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!newMualafMentor.name.trim()) return;
+                        const createdMen: MualafMentor = {
+                          id: `mmen-${Date.now()}`,
+                          name: newMualafMentor.name.trim(),
+                          role:
+                            newMualafMentor.role.trim() ||
+                            'Pembina Mualaf Center',
+                          whatsapp: newMualafMentor.whatsapp.trim(),
+                        };
+                        const updated = {
+                          ...db,
+                          mualafCenter: {
+                            ...db.mualafCenter,
+                            mentors: [...db.mualafCenter.mentors, createdMen],
+                          },
+                        };
+                        setNewMualafMentor({
+                          name: '',
+                          role: '',
+                          whatsapp: '628114300000',
+                        });
+                        persistDatabase(
+                          updated,
+                          'Pembina baru berhasil ditambahkan.'
+                        );
+                      }}
+                      className="px-4 py-2 rounded bg-[#1E1B18] text-[#FAF7F2] text-xs font-semibold cursor-pointer"
+                    >
+                      + Tambahkan Pembina
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         )}
       </main>

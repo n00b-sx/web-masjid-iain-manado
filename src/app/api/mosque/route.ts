@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readMosqueDb, writeMosqueDb } from '@/lib/db';
 import { fetchManadoPrayerTimes } from '@/lib/prayer-times';
-import { MosqueDatabase, ServiceSubmission } from '@/types/mosque';
+import {
+  MosqueDatabase,
+  MualafSubmission,
+  ServiceSubmission,
+} from '@/types/mosque';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,6 +89,54 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         message: 'Pengajuan layanan berhasil dikirim dan tercatat di sistem Takmir.',
         submission: newSubmission,
+      });
+    }
+
+    if (payload.action === 'SUBMIT_MUALAF') {
+      const {
+        fullName,
+        gender,
+        whatsapp,
+        requestType,
+        preferredDate,
+        notes,
+      } = payload;
+
+      if (!fullName || !whatsapp) {
+        return NextResponse.json(
+          { error: 'Mohon lengkapi nama lengkap dan nomor WhatsApp aktif Anda.' },
+          { status: 400 }
+        );
+      }
+
+      const currentDb = readMosqueDb();
+      const newMualafSub: MualafSubmission = {
+        id: `mualaf-${Date.now()}`,
+        fullName: String(fullName).trim(),
+        gender: gender === 'PEREMPUAN' ? 'PEREMPUAN' : 'LAKI_LAKI',
+        whatsapp: String(whatsapp).trim(),
+        requestType: requestType || 'KONSULTASI_ISLAM',
+        preferredDate: String(
+          preferredDate || new Date().toISOString().slice(0, 10)
+        ),
+        notes: String(notes || '').trim(),
+        status: 'MENUNGGU',
+        createdAt: new Date().toISOString(),
+      };
+
+      currentDb.mualafCenter = {
+        ...currentDb.mualafCenter,
+        submissions: [
+          newMualafSub,
+          ...(currentDb.mualafCenter?.submissions || []),
+        ],
+      };
+      writeMosqueDb(currentDb);
+
+      return NextResponse.json({
+        message:
+          'Permohonan pendampingan Mualaf Center berhasil dikirim dan diterima oleh Sekretariat Takmir.',
+        submission: newMualafSub,
       });
     }
 
