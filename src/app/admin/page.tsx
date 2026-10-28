@@ -49,6 +49,9 @@ import {
   Edit3,
   Hammer,
   HeartHandshake,
+  PanelLeftClose,
+  PanelLeftOpen,
+  X,
 } from 'lucide-react';
 
 type AdminTab =
@@ -91,6 +94,8 @@ export default function AdminDashboardPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<AdminTab>('OVERVIEW');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // --- Form States for Adding/Editing Items ---
   // 1. New Hero Slide
@@ -515,199 +520,416 @@ export default function AdminDashboardPage() {
     0
   );
 
-  // Navigation items for Admin Sidebar/Topbar
-  const TABS: { id: AdminTab; label: string; icon: React.ReactNode; badge?: number }[] = [
+  // Navigation groups for Admin Left Sidebar
+  const SIDEBAR_GROUPS: {
+    category: string;
+    items: {
+      id: AdminTab;
+      label: string;
+      subtitle: string;
+      icon: React.ReactNode;
+      badge?: number;
+    }[];
+  }[] = [
     {
-      id: 'OVERVIEW',
-      label: 'Verifikasi & Profil',
-      icon: <LayoutDashboard className="w-4 h-4" />,
-      badge: pendingSubmissions.length > 0 ? pendingSubmissions.length : undefined,
+      category: 'Utama & Profil',
+      items: [
+        {
+          id: 'OVERVIEW',
+          label: 'Verifikasi & Profil',
+          subtitle: 'Permohonan layanan masuk, profil identitas masjid, dan pengaturan footer',
+          icon: <LayoutDashboard className="w-4 h-4 shrink-0" />,
+          badge:
+            pendingSubmissions.length > 0 ? pendingSubmissions.length : undefined,
+        },
+        {
+          id: 'HERO',
+          label: 'Hero Slideshow',
+          subtitle: 'Kelola slide foto & video di bagian atas beranda utama',
+          icon: <ImageIcon className="w-4 h-4 shrink-0" />,
+        },
+      ],
     },
     {
-      id: 'HERO',
-      label: 'Hero Slideshow',
-      icon: <ImageIcon className="w-4 h-4" />,
+      category: 'Ibadah & Layar TV',
+      items: [
+        {
+          id: 'PRAYER',
+          label: 'Jadwal Sholat & Jumat',
+          subtitle: 'Waktu sholat, durasi adzan, jeda iqomah, dan petugas Sholat Jumat',
+          icon: <Clock className="w-4 h-4 shrink-0" />,
+        },
+        {
+          id: 'EVENTS',
+          label: 'Kegiatan Masjid',
+          subtitle: 'Agenda kajian, kegiatan akademik, dan program Ramadhan',
+          icon: <Calendar className="w-4 h-4 shrink-0" />,
+        },
+        {
+          id: 'TV_QUOTES',
+          label: 'Layar TV & Hadits',
+          subtitle: 'Pengaturan tampilan Smart TV 16:9 dan kutipan ayat/hadits harian',
+          icon: <Tv className="w-4 h-4 shrink-0" />,
+        },
+      ],
     },
     {
-      id: 'PRAYER',
-      label: 'Jadwal Sholat & Jumat',
-      icon: <Clock className="w-4 h-4" />,
+      category: 'Layanan & Pembangunan',
+      items: [
+        {
+          id: 'FINANCE',
+          label: 'Keuangan & QRIS',
+          subtitle: 'Transparansi kas masjid, rekening donasi, dan gambar QRIS',
+          icon: <Wallet className="w-4 h-4 shrink-0" />,
+        },
+        {
+          id: 'SERVICES',
+          label: 'Layanan Masjid',
+          subtitle: 'Daftar fasilitas dan layanan umum Masjid Al Jami\'ah',
+          icon: <Briefcase className="w-4 h-4 shrink-0" />,
+        },
+        {
+          id: 'REHAB',
+          label: 'Rehabilitasi & Fasilitas',
+          subtitle: 'Progres pembangunan, tahapan pekerjaan, laporan dana, dan galeri proyek',
+          icon: <Hammer className="w-4 h-4 shrink-0" />,
+        },
+        {
+          id: 'MUALAF',
+          label: 'Mualaf Center',
+          subtitle: 'Pendaftaran syahadat/bimbingan masuk, alur layanan, dan tim pembina',
+          icon: <HeartHandshake className="w-4 h-4 shrink-0" />,
+          badge:
+            pendingMualafSubmissions.length > 0
+              ? pendingMualafSubmissions.length
+              : undefined,
+        },
+      ],
     },
     {
-      id: 'EVENTS',
-      label: 'Kegiatan Masjid',
-      icon: <Calendar className="w-4 h-4" />,
-    },
-    {
-      id: 'FINANCE',
-      label: 'Keuangan & QRIS',
-      icon: <Wallet className="w-4 h-4" />,
-    },
-    {
-      id: 'SERVICES',
-      label: 'Layanan Masjid',
-      icon: <Briefcase className="w-4 h-4" />,
-    },
-    {
-      id: 'REHAB',
-      label: 'Rehabilitasi & Fasilitas',
-      icon: <Hammer className="w-4 h-4" />,
-    },
-    {
-      id: 'MUALAF',
-      label: 'Mualaf Center',
-      icon: <HeartHandshake className="w-4 h-4" />,
-      badge:
-        pendingMualafSubmissions.length > 0
-          ? pendingMualafSubmissions.length
-          : undefined,
-    },
-    {
-      id: 'NEWS',
-      label: 'Berita & Artikel',
-      icon: <Newspaper className="w-4 h-4" />,
-    },
-    {
-      id: 'PAGES_MENUS',
-      label: 'Halaman & Menu',
-      icon: <MenuIcon className="w-4 h-4" />,
-    },
-    {
-      id: 'TV_QUOTES',
-      label: 'Layar TV & Hadits',
-      icon: <Tv className="w-4 h-4" />,
+      category: 'Konten & Navigasi',
+      items: [
+        {
+          id: 'NEWS',
+          label: 'Berita & Artikel',
+          subtitle: 'Publikasi berita kegiatan, pengumuman, dan artikel keislaman',
+          icon: <Newspaper className="w-4 h-4 shrink-0" />,
+        },
+        {
+          id: 'PAGES_MENUS',
+          label: 'Halaman & Menu',
+          subtitle: 'Halaman statis kustom dan struktur menu navigasi beranda',
+          icon: <MenuIcon className="w-4 h-4 shrink-0" />,
+        },
+      ],
     },
   ];
 
+  const allTabs = SIDEBAR_GROUPS.flatMap((group) =>
+    group.items.map((item) => ({ ...item, category: group.category }))
+  );
+  const currentTabInfo =
+    allTabs.find((t) => t.id === activeTab) || allTabs[0];
+
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#1E1B18] flex flex-col">
-      {/* Admin Top Header */}
-      <header className="bg-[#1E1B18] text-[#FAF7F2] border-b-2 border-[#A84A2E] px-4 sm:px-6 lg:px-8 py-4 dark-surface">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-[#FAF7F2] text-[#1E1B18] flex">
+      {/* Mobile Sidebar Backdrop */}
+      {isMobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs lg:hidden"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Left Sidebar Navigation (#1E1B18 Dark Surface) */}
+      <aside
+        aria-label="Navigasi Modul Admin"
+        className={`fixed inset-y-0 left-0 z-50 lg:sticky lg:top-0 lg:h-screen bg-[#1E1B18] text-[#FAF7F2] border-r-2 border-[#A84A2E] flex flex-col shrink-0 transition-all duration-200 dark-surface ${
+          isMobileSidebarOpen
+            ? 'translate-x-0 w-72'
+            : '-translate-x-full lg:translate-x-0'
+        } ${isSidebarCollapsed ? 'lg:w-20' : 'lg:w-72'}`}
+      >
+        {/* 1. Sidebar Brand Header & Collapse Toggle */}
+        <div className="p-4 border-b border-white/15 flex items-center justify-between gap-2.5">
+          <div
+            className={`flex items-center gap-3 min-w-0 ${
+              isSidebarCollapsed ? 'lg:justify-center lg:w-full' : ''
+            }`}
+          >
             {db.mosqueProfile.logoUrl ? (
               <img
                 src={db.mosqueProfile.logoUrl}
                 alt={`Logo ${db.mosqueProfile.name}`}
-                className="w-11 h-11 object-contain shrink-0"
+                className="w-10 h-10 object-contain shrink-0 rounded-md bg-white/5 p-1"
               />
             ) : (
-              <div className="w-10 h-10 rounded-lg bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-lg">
+              <div className="w-10 h-10 rounded-lg bg-[#A84A2E] text-white flex items-center justify-center font-serif-heading font-bold text-base shrink-0">
                 AJ
               </div>
             )}
-            <div>
-              <h1 className="font-serif-heading text-lg sm:text-xl font-bold text-[#FAF7F2]">
-                CMS Admin Masjid Al Jami&apos;ah IAIN Manado
-              </h1>
-              <p className="text-xs text-[#E8CFA0]">
-                Masuk sebagai: <strong>Admin Utama Takmir (SUPER_ADMIN)</strong>
+            <div
+              className={`min-w-0 ${
+                isSidebarCollapsed ? 'lg:hidden' : 'block'
+              }`}
+            >
+              <p className="font-serif-heading text-sm font-bold text-[#FAF7F2] truncate">
+                CMS Masjid Al Jami&apos;ah
+              </p>
+              <p className="text-[11px] text-[#E8CFA0] truncate">
+                SUPER_ADMIN • IAIN Manado
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Link
-              href="/"
-              target="_blank"
-              className="px-3.5 py-2 min-h-[44px] inline-flex items-center gap-1.5 rounded-md bg-[#2C2520] border border-white/25 text-xs font-semibold text-[#FAF7F2] hover:border-[#E8CFA0]"
-            >
-              <span>Lihat Web Publik</span>
-              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/tv"
-              target="_blank"
-              className="px-3.5 py-2 min-h-[44px] inline-flex items-center gap-1.5 rounded-md bg-[#2C2520] border border-[#E8CFA0] text-xs font-semibold text-[#E8CFA0] hover:bg-[#E8CFA0] hover:text-[#1E1B18]"
-            >
-              <Tv className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Lihat Layar TV</span>
-            </Link>
+          {/* Close button on Mobile */}
+          <button
+            type="button"
+            onClick={() => setIsMobileSidebarOpen(false)}
+            className="lg:hidden p-2 rounded-md text-[#E8CFA0] hover:bg-white/10 cursor-pointer"
+            aria-label="Tutup menu sidebar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          {/* Collapse button on Desktop (when expanded) */}
+          {!isSidebarCollapsed && (
             <button
               type="button"
-              onClick={handleLogout}
-              className="px-3.5 py-2 min-h-[44px] inline-flex items-center gap-1.5 rounded-md bg-[#A84A2E] text-white text-xs font-semibold hover:bg-[#8E3B22] cursor-pointer"
+              onClick={() => setIsSidebarCollapsed(true)}
+              title="Lipat Sidebar"
+              className="hidden lg:inline-flex p-2 rounded-md text-[#E8CFA0] hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+              aria-label="Lipat sidebar"
             >
-              <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Keluar</span>
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Expand button bar when collapsed on Desktop */}
+        {isSidebarCollapsed && (
+          <div className="hidden lg:flex justify-center py-2.5 border-b border-white/10">
+            <button
+              type="button"
+              onClick={() => setIsSidebarCollapsed(false)}
+              title="Buka Sidebar"
+              className="p-2 rounded-md text-[#E8CFA0] hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Buka sidebar"
+            >
+              <PanelLeftOpen className="w-4 h-4" />
             </button>
           </div>
-        </div>
-      </header>
+        )}
 
-      {/* Module Selector Bar */}
-      <div className="bg-[#F2ECE1] border-b border-[#DFD5C5] sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-2 overflow-x-auto">
-          {TABS.map((t) => {
-            const isSelected = activeTab === t.id;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setActiveTab(t.id)}
-                className={`px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-2 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                  isSelected
-                    ? 'bg-[#1E1B18] text-[#FAF7F2]'
-                    : 'bg-[#FAF7F2] text-[#1E1B18] border border-[#DFD5C5] hover:border-[#1E1B18]'
+        {/* 2. Categorized Module List */}
+        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+          {SIDEBAR_GROUPS.map((group) => (
+            <div key={group.category} className="space-y-1.5">
+              <div
+                className={`px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#E8CFA0]/75 ${
+                  isSidebarCollapsed ? 'lg:hidden' : 'block'
                 }`}
               >
-                {t.icon}
-                <span>{t.label}</span>
-                {t.badge !== undefined && (
-                  <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#A84A2E] text-white">
-                    {t.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Global Save Feedback Banner */}
-      {(saveMessage || saveError) && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full">
-          {saveMessage && (
-            <div
-              role="status"
-              className="p-4 rounded-lg bg-[#3D4D33] text-white text-sm font-semibold flex items-center justify-between gap-3 shadow"
-            >
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
-                <span>{saveMessage}</span>
+                {group.category}
               </div>
+
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const isSelected = activeTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      title={
+                        isSidebarCollapsed
+                          ? `${item.label}${
+                              item.badge ? ` (${item.badge})` : ''
+                            }`
+                          : undefined
+                      }
+                      onClick={() => {
+                        setActiveTab(item.id);
+                        setIsMobileSidebarOpen(false);
+                      }}
+                      className={`w-full relative flex items-center gap-3 px-3 py-2.5 min-h-[42px] rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+                        isSidebarCollapsed
+                          ? 'lg:justify-center lg:px-0'
+                          : 'justify-between'
+                      } ${
+                        isSelected
+                          ? 'bg-[#A84A2E] text-white shadow-xs'
+                          : 'text-[#FAF7F2]/85 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <div
+                        className={`flex items-center gap-3 min-w-0 ${
+                          isSidebarCollapsed ? 'lg:justify-center' : ''
+                        }`}
+                      >
+                        {item.icon}
+                        <span
+                          className={`truncate ${
+                            isSidebarCollapsed ? 'lg:hidden' : 'block'
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                      </div>
+
+                      {item.badge !== undefined && (
+                        <span
+                          className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
+                            isSelected
+                              ? 'bg-white text-[#A84A2E]'
+                              : 'bg-[#A84A2E] text-white'
+                          } ${
+                            isSidebarCollapsed
+                              ? 'lg:absolute lg:top-1 lg:right-1 lg:px-1 lg:py-0 lg:text-[9px]'
+                              : ''
+                          }`}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </nav>
+
+        {/* 3. Sidebar Bottom Quick Actions (Web Publik, Layar TV, Keluar) */}
+        <div className="p-3 border-t border-white/15 space-y-2 bg-[#161311]">
+          <Link
+            href="/"
+            target="_blank"
+            title="Lihat Web Publik"
+            className={`w-full px-3 py-2 min-h-[40px] flex items-center gap-2.5 rounded-lg bg-[#2C2520] border border-white/20 text-xs font-semibold text-[#FAF7F2] hover:border-[#E8CFA0] transition-colors ${
+              isSidebarCollapsed ? 'lg:justify-center lg:px-0' : 'justify-between'
+            }`}
+          >
+            <div className="flex items-center gap-2.5 truncate">
+              <ExternalLink className="w-4 h-4 shrink-0 text-[#E8CFA0]" aria-hidden="true" />
+              <span className={isSidebarCollapsed ? 'lg:hidden' : 'block'}>
+                Lihat Web Publik
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/tv"
+            target="_blank"
+            title="Lihat Layar TV"
+            className={`w-full px-3 py-2 min-h-[40px] flex items-center gap-2.5 rounded-lg bg-[#2C2520] border border-[#E8CFA0]/60 text-xs font-semibold text-[#E8CFA0] hover:bg-[#E8CFA0] hover:text-[#1E1B18] transition-colors ${
+              isSidebarCollapsed ? 'lg:justify-center lg:px-0' : 'justify-between'
+            }`}
+          >
+            <div className="flex items-center gap-2.5 truncate">
+              <Tv className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span className={isSidebarCollapsed ? 'lg:hidden' : 'block'}>
+                Lihat Layar TV
+              </span>
+            </div>
+          </Link>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="Keluar dari CMS Admin"
+            className={`w-full px-3 py-2 min-h-[40px] flex items-center gap-2.5 rounded-lg bg-[#A84A2E] text-white text-xs font-semibold hover:bg-[#8E3B22] transition-colors cursor-pointer ${
+              isSidebarCollapsed ? 'lg:justify-center lg:px-0' : 'justify-start'
+            }`}
+          >
+            <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <span className={isSidebarCollapsed ? 'lg:hidden' : 'block'}>
+              Keluar
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Right Column: Slim Top Header + Main Workspace */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Slim Context Header */}
+        <header className="sticky top-0 z-30 bg-[#F2ECE1]/95 backdrop-blur-xs border-b border-[#DFD5C5] px-4 sm:px-6 lg:px-8 py-3.5">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <button
                 type="button"
-                onClick={() => setSaveMessage(null)}
-                className="text-xs underline cursor-pointer"
+                onClick={() => setIsMobileSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg bg-[#1E1B18] text-[#FAF7F2] hover:bg-[#332C27] cursor-pointer shrink-0"
+                aria-label="Buka menu navigasi admin"
               >
-                Tutup
+                <MenuIcon className="w-5 h-5" />
               </button>
-            </div>
-          )}
-          {saveError && (
-            <div
-              role="alert"
-              className="p-4 rounded-lg bg-[#A84A2E] text-white text-sm font-semibold flex items-center justify-between gap-3 shadow"
-            >
-              <div className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 shrink-0" aria-hidden="true" />
-                <span>{saveError}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSaveError(null)}
-                className="text-xs underline cursor-pointer"
-              >
-                Tutup
-              </button>
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* Main Content Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#A84A2E]">
+                  <span>{currentTabInfo.category}</span>
+                </div>
+                <h1 className="font-serif-heading text-lg sm:text-xl font-bold text-[#1E1B18] truncate">
+                  {currentTabInfo.label}
+                </h1>
+                <p className="text-xs text-[#524740] hidden sm:block truncate">
+                  {currentTabInfo.subtitle}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <div className="px-3 py-1.5 rounded-lg bg-[#1E1B18] text-[#E8CFA0] text-xs font-bold">
+                Saldo Kas: {formatRupiah(totalBalance)}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Global Save Feedback Banner */}
+        {(saveMessage || saveError) && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full">
+            {saveMessage && (
+              <div
+                role="status"
+                className="p-4 rounded-lg bg-[#3D4D33] text-white text-sm font-semibold flex items-center justify-between gap-3 shadow"
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
+                  <span>{saveMessage}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSaveMessage(null)}
+                  className="text-xs underline cursor-pointer"
+                >
+                  Tutup
+                </button>
+              </div>
+            )}
+            {saveError && (
+              <div
+                role="alert"
+                className="p-4 rounded-lg bg-[#A84A2E] text-white text-sm font-semibold flex items-center justify-between gap-3 shadow"
+              >
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 shrink-0" aria-hidden="true" />
+                  <span>{saveError}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSaveError(null)}
+                  className="text-xs underline cursor-pointer"
+                >
+                  Tutup
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Main Content Workspace */}
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* =========================================================
             TAB 1: OVERVIEW, SERVICE SUBMISSIONS & MOSQUE PROFILE
            ========================================================= */}
@@ -5702,7 +5924,8 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         )}
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
