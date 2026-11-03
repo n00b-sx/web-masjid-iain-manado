@@ -110,6 +110,7 @@ export interface FinanceTransaction {
   type: 'IN' | 'OUT';
   amount: number;
   recordedBy: string;
+  receiptImageUrl?: string;
 }
 
 export interface DonationInfo {
@@ -119,6 +120,8 @@ export interface DonationInfo {
   qrisImageUrl: string;
   confirmationWhatsapp: string;
   isSampleDataNotice: boolean;
+  treasurerPin?: string;
+  treasurerName?: string;
 }
 
 export interface MosqueService {

@@ -254,6 +254,8 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     qrisImageUrl: '',
     confirmationWhatsapp: '628114300000',
     isSampleDataNotice: true,
+    treasurerPin: '123456',
+    treasurerName: 'Bendahara Takmir Masjid',
   },
   services: [
     {
@@ -869,6 +871,13 @@ export function readMosqueDb(): MosqueDatabase {
       mosqueProfile: {
         ...INITIAL_MOSQUE_DATA.mosqueProfile,
         ...(parsed.mosqueProfile || {}),
+      },
+      donationInfo: {
+        ...INITIAL_MOSQUE_DATA.donationInfo,
+        ...(parsed.donationInfo || {}),
+        treasurerPin: parsed.donationInfo?.treasurerPin || '123456',
+        treasurerName:
+          parsed.donationInfo?.treasurerName || 'Bendahara Takmir Masjid',
       },
       footerSettings: {
         ...INITIAL_MOSQUE_DATA.footerSettings,
