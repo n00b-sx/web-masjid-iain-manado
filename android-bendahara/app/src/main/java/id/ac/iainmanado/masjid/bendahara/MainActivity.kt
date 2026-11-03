@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
+            setBackgroundColor(0xFF14110F.toInt())
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.allowFileAccess = true
@@ -78,6 +80,69 @@ class MainActivity : AppCompatActivity() {
                         return true
                     }
                     return false
+                }
+
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
+                    if (request?.isForMainFrame == true) {
+                        val activeUrl = prefs.getString("server_url", BuildConfig.DEFAULT_SERVER_URL)
+                            ?: BuildConfig.DEFAULT_SERVER_URL
+                        val fallbackHtml = """
+                            <!DOCTYPE html>
+                            <html lang="id">
+                            <head>
+                              <meta charset="utf-8" />
+                              <meta name="viewport" content="width=device-width, initial-scale=1" />
+                              <style>
+                                body {
+                                  background: #14110F;
+                                  color: #FAF7F2;
+                                  font-family: sans-serif;
+                                  display: flex;
+                                  flex-direction: column;
+                                  justify-content: center;
+                                  align-items: center;
+                                  min-height: 90vh;
+                                  margin: 0;
+                                  padding: 24px;
+                                  text-align: center;
+                                }
+                                .card {
+                                  background: #1E1B18;
+                                  border: 1px solid #A84A2E;
+                                  border-radius: 16px;
+                                  padding: 24px;
+                                  max-width: 360px;
+                                }
+                                h2 { color: #E8CFA0; margin-top: 0; font-size: 18px; }
+                                p { font-size: 13px; color: #DFD5C5; line-height: 1.5; }
+                                code {
+                                  display: block;
+                                  background: #14110F;
+                                  padding: 8px;
+                                  border-radius: 8px;
+                                  color: #E8CFA0;
+                                  font-size: 12px;
+                                  margin: 12px 0;
+                                  word-break: break-all;
+                                }
+                              </style>
+                            </head>
+                            <body>
+                              <div class="card">
+                                <h2>Aplikasi Bendahara Masjid Al Jami'ah</h2>
+                                <p>Belum dapat terhubung ke alamat server masjid:</p>
+                                <code>$activeUrl</code>
+                                <p>Ketuk ikon <strong>Pengaturan (Gear)</strong> di pojok kanan bawah layar untuk mengatur alamat domain atau IP server masjid Anda.</p>
+                              </div>
+                            </body>
+                            </html>
+                        """.trimIndent()
+                        view?.loadDataWithBaseURL(null, fallbackHtml, "text/html", "UTF-8", null)
+                    }
                 }
             }
 
@@ -103,7 +168,7 @@ class MainActivity : AppCompatActivity() {
         val serverConfigBtn = ImageButton(this).apply {
             setImageResource(android.R.drawable.ic_menu_preferences)
             setBackgroundColor(0xCC2C2520.toInt())
-            val sizePx = (40 * resources.displayMetrics.density).toInt()
+            val sizePx = (42 * resources.displayMetrics.density).toInt()
             val marginPx = (14 * resources.displayMetrics.density).toInt()
             val bottomMarginPx = (78 * resources.displayMetrics.density).toInt()
             layoutParams = FrameLayout.LayoutParams(sizePx, sizePx).apply {
