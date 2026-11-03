@@ -1,0 +1,18 @@
+{
+  "name": "Kas Bendahara Masjid Al Jami'ah IAIN Manado",
+  "short_name": "Bendahara Masjid",
+  "description": "Aplikasi pencatatan cepat keuangan kas masuk dan keluar khusus Bendahara Masjid Al Jami'ah IAIN Manado",
+  "start_url": "/bendahara",
+  "scope": "/bendahara",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1E1B18",
+  "theme_color": "#1E1B18",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -2840,6 +2840,74 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
+                {/* Pengaturan Akses Aplikasi Mobile Bendahara (/bendahara) */}
+                <div className="p-4 rounded-xl bg-[#FAF7F2] border border-[#DFD5C5] space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <h3 className="text-sm font-bold text-[#1E1B18]">
+                        Akses Aplikasi Smartphone Bendahara (/bendahara)
+                      </h3>
+                      <p className="text-xs text-[#524740]">
+                        Atur nama petugas dan kode PIN 6 digit untuk login cepat di aplikasi HP Bendahara.
+                      </p>
+                    </div>
+                    <Link
+                      href="/bendahara"
+                      target="_blank"
+                      className="px-3 py-2 rounded-md bg-[#1E1B18] text-[#E8CFA0] text-xs font-bold inline-flex items-center gap-1.5 hover:bg-[#332C27]"
+                    >
+                      <span>Buka Aplikasi Bendahara</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                        Nama Petugas Bendahara
+                      </label>
+                      <input
+                        type="text"
+                        value={db.donationInfo.treasurerName || 'Bendahara Takmir Masjid'}
+                        onChange={(e) =>
+                          setDb({
+                            ...db,
+                            donationInfo: {
+                              ...db.donationInfo,
+                              treasurerName: e.target.value,
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-md bg-white border border-[#524740] text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#1E1B18] mb-1">
+                        Kode PIN 6 Digit Bendahara
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={db.donationInfo.treasurerPin || '123456'}
+                        onChange={(e) =>
+                          setDb({
+                            ...db,
+                            donationInfo: {
+                              ...db.donationInfo,
+                              treasurerPin: e.target.value
+                                .replace(/[^0-9]/g, '')
+                                .slice(0, 6),
+                            },
+                          })
+                        }
+                        placeholder="123456"
+                        className="w-full px-3.5 py-2 rounded-md bg-white border border-[#524740] text-sm font-mono font-bold tracking-widest"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <ImageUploaderField
                   label="Gambar Barcode QRIS Masjid (Tampil di Web & Layar TV)"
                   value={db.donationInfo.qrisImageUrl}

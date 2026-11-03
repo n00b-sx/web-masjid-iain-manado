@@ -1,0 +1,47 @@
+name: Build APK Aplikasi Bendahara Masjid
+
+on:
+  workflow_dispatch:
+    inputs:
+      server_url:
+        description: 'URL Halaman Bendahara Server Masjid'
+        required: false
+        default: 'https://masjid.iain-manado.ac.id/bendahara'
+  push:
+    paths:
+      - 'android-bendahara/**'
+      - '.github/workflows/build-bendahara-apk.yml'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build Bendahara APK
+        working-directory: ./android-bendahara
+        run: |
+          gradle assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../bendahara-masjid-al-jamiah.apk
+
+      - name: Upload APK Artifact (Siap Diunduh)
+        uses: actions/upload-artifact@v4
+        with:
+          name: bendahara-masjid-al-jamiah-apk
+          path: bendahara-masjid-al-jamiah.apk
+          retention-days: 90
