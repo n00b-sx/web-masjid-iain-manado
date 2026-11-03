@@ -5,12 +5,27 @@ import { MosqueDatabase } from '@/types/mosque';
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_FILE_PATH = path.join(DATA_DIR, 'mosque-db.json');
 
+const LEGACY_DUMMY_TRX_IDS = new Set([
+  'trx-1',
+  'trx-2',
+  'trx-3',
+  'trx-4',
+  'trx-5',
+  'trx-6',
+  'trx-7',
+]);
+
+const LEGACY_DUMMY_EVENT_IDS = new Set(['evt-1', 'evt-2', 'evt-3', 'evt-4']);
+const LEGACY_DUMMY_PROJECT_IDS = new Set(['proj-rehab-1', 'proj-rehab-2']);
+const LEGACY_DUMMY_NEWS_IDS = new Set(['news-1', 'news-2', 'news-3']);
+
 export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
   mosqueProfile: {
     name: "Masjid Al Jami'ah IAIN Manado",
     institution: 'Institut Agama Islam Negeri (IAIN) Manado',
-    logoUrl: '',
-    address: 'Jl. Dr. S.H. Sarundajang Kawasan Ring Road I, Malendeng, Kec. Paal Dua',
+    logoUrl: '/uploads/1792826397444-logo-iain-manado.png',
+    address:
+      'Jl. Dr. S.H. Sarundajang Kawasan Ring Road I, Malendeng, Kec. Paal Dua',
     city: 'Kota Manado',
     province: 'Sulawesi Utara',
     email: 'masjid.aljamiah@iain-manado.ac.id',
@@ -41,7 +56,7 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       imageUrl:
         'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1920&q=85',
       videoUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/transcoded/2/28/201_Dome_Mosque%2C_Tangail_%2827%29.webm/201_Dome_Mosque%2C_Tangail_%2827%29.webm.480p.vp9.webm',
+        '/uploads/1792817540303-ytdown-com_youtube_profil-institut-agama.mp4',
       ctaText: 'Lihat Jadwal Sholat & Kajian',
       ctaLink: '#jadwal-sholat',
       order: 1,
@@ -120,140 +135,23 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     },
     adzanDurationSeconds: 180,
     jumatOfficer: {
-      date: 'Jumat Pekan Ini (Data Contoh Awal, Ubah di Admin)',
-      khatib: '[Nama Khatib Jumat - Diatur via Admin]',
-      khatibTopic: 'Membangun Etika Akademik Berlandaskan Akhlakul Karimah',
-      imam: '[Nama Imam Jumat - Diatur via Admin]',
-      muadzin: '[Nama Muadzin - Diatur via Admin]',
-      bilal: '[Nama Bilal - Diatur via Admin]',
+      date: 'Setiap Hari Jumat',
+      khatib: '-',
+      khatibTopic: '-',
+      imam: '-',
+      muadzin: '-',
+      bilal: '-',
     },
   },
-  events: [
-    {
-      id: 'evt-1',
-      title: 'Kajian Tafsir Ayat-Ayat Keilmuan & Adab Penuntut Ilmu',
-      speaker: 'Dosen Tafsir Fakultas Ushuluddin, Adab dan Dakwah',
-      date: '2026-10-23',
-      dayLabel: 'Hari Ini (Ba’da Maghrib)',
-      time: '18:15 - 19:05 WITA',
-      location: "Ruang Utama Lantai 1 Masjid Al Jami'ah",
-      category: 'Kajian Rutin',
-      description:
-        'Kajian terbuka bagi mahasiswa, dosen, dan masyarakat sekitar kampus membahas adab menuntut ilmu dalam Al-Qur’an.',
-      isToday: true,
-    },
-    {
-      id: 'evt-2',
-      title: 'Tahsin Al-Qur’an & Pembinaan Qira’ah Mahasiswa',
-      speaker: 'Tim Pembina Ma’had Al-Jami’ah IAIN Manado',
-      date: '2026-10-23',
-      dayLabel: 'Hari Ini (Ba’da Ashar)',
-      time: '15:30 - 17:00 WITA',
-      location: "Serambi Timur Masjid Al Jami'ah",
-      category: 'Tahsin & Tahfidz',
-      description:
-        'Perbaikan makharijul huruf dan tajwid secara berkelompok untuk mahasiswa semester awal dan umum.',
-      isToday: true,
-    },
-    {
-      id: 'evt-3',
-      title: 'Kajian Fiqih Kontemporer & Muamalah Kampus',
-      speaker: 'Tim Pengajar Fakultas Syariah IAIN Manado',
-      date: 'RUTIN',
-      dayLabel: 'Setiap Kamis Malam',
-      time: '18:15 - 19:10 WITA',
-      location: "Ruang Utama Masjid Al Jami'ah",
-      category: 'Kajian Rutin',
-      description:
-        'Membahas persoalan fiqih keseharian dan transaksi digital dari sudut pandang empat mazhab.',
-      isToday: false,
-    },
-    {
-      id: 'evt-4',
-      title: 'Diskusi Keislaman & Bedah Buku Perpustakaan Masjid',
-      speaker: 'Unit Kegiatan Mahasiswa & Remaja Masjid Al Jami’ah',
-      date: 'RUTIN',
-      dayLabel: 'Setiap Sabtu Pagi',
-      time: '09:00 - 11:30 WITA',
-      location: "Aula Diskusi Lantai Dasar Masjid Al Jami'ah",
-      category: 'Kegiatan Kampus',
-      description:
-        'Forum diskusi literasi Islam bagi mahasiswa lintas fakultas di lingkungan IAIN Manado.',
-      isToday: false,
-    },
-  ],
-  transactions: [
-    {
-      id: 'trx-1',
-      date: '2026-10-02',
-      description: 'Saldo Awal Kas Operasional Oktober (Data Contoh Awal)',
-      category: 'OPERASIONAL',
-      type: 'IN',
-      amount: 14500000,
-      recordedBy: 'Bendahara Takmir',
-    },
-    {
-      id: 'trx-2',
-      date: '2026-10-09',
-      description: 'Penerimaan Kotak Infaq Sholat Jumat Pekan I & II (Data Contoh)',
-      category: 'OPERASIONAL',
-      type: 'IN',
-      amount: 6850000,
-      recordedBy: 'Bendahara Takmir',
-    },
-    {
-      id: 'trx-3',
-      date: '2026-10-12',
-      description: 'Pemeliharaan Kebersihan, Air Wudhu, dan Perlengkapan Sanctum (Data Contoh)',
-      category: 'OPERASIONAL',
-      type: 'OUT',
-      amount: 3200000,
-      recordedBy: 'Bendahara Takmir',
-    },
-    {
-      id: 'trx-4',
-      date: '2026-10-16',
-      description: 'Infaq Khusus Peremajaan Tata Suara & Karpet Shaf (Data Contoh)',
-      category: 'PEMBANGUNAN',
-      type: 'IN',
-      amount: 22000000,
-      recordedBy: 'Bendahara Takmir',
-    },
-    {
-      id: 'trx-5',
-      date: '2026-10-19',
-      description: 'Pengadaan 4 Unit Mikrofon Wireless & Kabel Audio Aula (Data Contoh)',
-      category: 'PEMBANGUNAN',
-      type: 'OUT',
-      amount: 5400000,
-      recordedBy: 'Bendahara Takmir',
-    },
-    {
-      id: 'trx-6',
-      date: '2026-10-20',
-      description: 'Penerimaan ZISWAF & Donasi Beasiswa Mahasiswa Dhuafa (Data Contoh)',
-      category: 'SOSIAL_ZISWAF',
-      type: 'IN',
-      amount: 9500000,
-      recordedBy: 'Bendahara Takmir',
-    },
-    {
-      id: 'trx-7',
-      date: '2026-10-22',
-      description: 'Penyaluran Bantuan Penunjang Studi Mahasiswa & Konsumsi Kajian (Data Contoh)',
-      category: 'SOSIAL_ZISWAF',
-      type: 'OUT',
-      amount: 2750000,
-      recordedBy: 'Bendahara Takmir',
-    },
-  ],
+  events: [],
+  transactions: [],
   donationInfo: {
     bankName: 'Bank Syariah Indonesia (BSI)',
-    accountNumber: '[NOMOR REKENING DIATUR DI ADMIN]',
+    accountNumber: '-',
     accountHolder: "UPZ / Takmir Masjid Al Jami'ah IAIN Manado",
     qrisImageUrl: '',
     confirmationWhatsapp: '628114300000',
-    isSampleDataNotice: true,
+    isSampleDataNotice: false,
     treasurerPin: '123456',
     treasurerName: 'Bendahara Takmir Masjid',
   },
@@ -328,112 +226,7 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     syncWithDevelopmentFund: true,
     picName: 'Panitia Rehabilitasi & Bidang Ri’ayah Takmir',
     picWhatsapp: '628114300000',
-    projects: [
-      {
-        id: 'proj-rehab-1',
-        title: "Rehabilitasi Ruang Utama, Plafon & Tata Suara Masjid Al Jami'ah",
-        category: 'Rehabilitasi Utama',
-        summary:
-          'Perbaikan menyeluruh plafon ruang sujud utama, peremajaan instalasi pencahayaan hemat energi, serta penataan akustik tata suara agar ibadah berjamaah dan kajian lebih khusyuk.',
-        status: 'BERJALAN',
-        overallProgress: 65,
-        estimatedBudget: 185000000,
-        startDate: 'September 2026',
-        targetDate: 'Desember 2026',
-        materialNeeds: [
-          'Gypsum & Rangka Hollow Galvalum (45 Lembar)',
-          'Lampu Panel LED Warm White Ruang Utama (24 Unit)',
-          'Kabel Audio Speaker & Peredam Akustik Mihrab',
-          'Cat Dinding Interior & Pelapis Anti Bocor Kubah',
-        ],
-        stages: [
-          {
-            id: 'stg-1',
-            title: 'Tahap 1: Pemeriksaan Struktur Atap & Pembongkaran Plafon Lama',
-            description:
-              'Pembersihan area atap, perbaikan titik rembesan air hujan pada kubah, dan pembongkaran plafon lama yang rusak.',
-            dateLabel: 'September 2026',
-            progressPercent: 100,
-            status: 'SELESAI',
-          },
-          {
-            id: 'stg-2',
-            title: 'Tahap 2: Pemasangan Rangka Plafon Baru & Jalur Kelistrikan',
-            description:
-              'Pemasangan rangka hollow galvalum tahan karat, penarikan jalur kabel lampu utama, dan instalasi titik speaker ruang sujud.',
-            dateLabel: 'Oktober - November 2026',
-            progressPercent: 75,
-            status: 'BERJALAN',
-          },
-          {
-            id: 'stg-3',
-            title: 'Tahap 3: Pengecatan Akhir, Penataan Mihrab & Uji Akustik',
-            description:
-              'Pengecatan ulang dinding ruang utama, perapian area mihrab imam, dan kalibrasi sistem tata suara masjid.',
-            dateLabel: 'Desember 2026',
-            progressPercent: 15,
-            status: 'BELUM_DIMULAI',
-          },
-        ],
-        gallery: [
-          {
-            id: 'pho-1',
-            caption: 'Suasana ruang utama Masjid Al Jami’ah pada tahap pengerjaan dan penataan',
-            imageUrl:
-              'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1000&q=80',
-            date: '2026-10-15',
-            tag: 'PROGRES',
-          },
-          {
-            id: 'pho-2',
-            caption: 'Target penataan pencahayaan dan ruang ibadah utama pasca rehabilitasi',
-            imageUrl:
-              'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=80',
-            date: '2026-10-20',
-            tag: 'DESAIN_TARGET',
-          },
-        ],
-      },
-      {
-        id: 'proj-rehab-2',
-        title: 'Penambahan & Penataan Kamar Mandi serta Tempat Wudhu Jamaah',
-        category: 'Pengembangan Fasilitas Baru',
-        summary:
-          'Rencana penambahan bilik kamar mandi bersih, peremajaan kran air wudhu hemat air, serta pembuatan jalur ramah disabilitas menuju tempat wudhu putra dan putri.',
-        status: 'DIRENCANAKAN',
-        overallProgress: 0,
-        estimatedBudget: 95000000,
-        startDate: 'Januari 2027',
-        targetDate: 'Maret 2027',
-        materialNeeds: [
-          'Keramik Lantai Anti-Slip Tempat Wudhu (90 m2)',
-          'Kran Wudhu Kuningan & Pipa Distribusi Air Bersih (30 Titik)',
-          'Pintu Kamar Mandi PVC & Kloset Duduk/Jongkok (6 Unit)',
-          'Tandon Air Tambahan Kapasitas 2.000 Liter',
-        ],
-        stages: [
-          {
-            id: 'stg-2-1',
-            title: 'Tahap 1: Pengukuran Lahan & Perencanaan Sanitasi',
-            description:
-              'Penyusunan gambar kerja jalur pipa air bersih dan pembuangan limbah kamar mandi baru.',
-            dateLabel: 'Januari 2027',
-            progressPercent: 0,
-            status: 'BELUM_DIMULAI',
-          },
-          {
-            id: 'stg-2-2',
-            title: 'Tahap 2: Konstruksi Bilik Kamar Mandi & Area Wudhu',
-            description:
-              'Pembangunan dinding sekat, pemasangan keramik anti-slip, dan instalasi kran wudhu.',
-            dateLabel: 'Februari - Maret 2027',
-            progressPercent: 0,
-            status: 'BELUM_DIMULAI',
-          },
-        ],
-        gallery: [],
-      },
-    ],
+    projects: [],
   },
   mualafCenter: {
     pageTitle: "Mualaf Center Masjid Al Jami'ah IAIN Manado",
@@ -522,75 +315,7 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     hotlineWhatsapp: '628114300000',
     submissions: [],
   },
-  news: [
-    {
-      id: 'news-1',
-      title: "Takmir Masjid Al Jami'ah IAIN Manado Luncurkan Layanan Informasi Terpadu & Layar Digital",
-      slug: 'peluncuran-layanan-informasi-terpadu-masjid-al-jamiah-iain-manado',
-      excerpt:
-        'Pengurus Takmir Masjid Al Jami’ah menghadirkan sistem informasi berbasis web dan layar Smart TV untuk memudahkan akses jadwal sholat, agenda kajian, serta transparansi kas masjid.',
-      content: `<p><strong>MANADO</strong> - Pengurus Takmir Masjid Al Jami'ah IAIN Manado terus meningkatkan kualitas pelayanan ibadah dan informasi bagi seluruh jamaah, baik dari kalangan mahasiswa, dosen, tenaga kependidikan, maupun masyarakat sekitar kawasan Malendeng, Kota Manado.</p>
-<h2>Integrasi Website Publik dan Layar Informasi TV Masjid</h2>
-<p>Melalui pembaruan portal digital ini, jamaah kini dapat mengakses jadwal waktu sholat lima waktu wilayah Kota Manado (WITA), memantau jadwal kajian rutin harian, serta mengajukan peminjaman fasilitas aula diskusi masjid secara daring.</p>
-<blockquote>"Masjid kampus bukan sekadar tempat sujud, tetapi juga laboratorium akhlak dan pusat peradaban akademik. Keterbukaan informasi jadwal kajian dan laporan kas masjid adalah bagian dari ikhtiar memakmurkan rumah Allah," ujar Pengurus Takmir Masjid Al Jami'ah.</blockquote>
-<h3>Kemudahan Akses Layanan Mahasiswa</h3>
-<p>Unit Kegiatan Mahasiswa (UKM), Himpunan Mahasiswa Jurusan (HMJ), serta fakultas yang hendak menyelenggarakan kegiatan keislaman di lingkungan masjid kini dapat langsung mengisi formulir pengajuan daring pada menu Layanan Masjid dan berkoordinasi langsung dengan pengurus bidang kerumahtanggaan.</p>`,
-      category: 'Pengumuman Takmir',
-      coverImageUrl:
-        'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1200&q=80',
-      author: "Humas Takmir Masjid Al Jami'ah",
-      publishedAt: '2026-10-23',
-      status: 'PUBLISHED',
-      seoTitle: "Peluncuran Portal Digital & Layar TV Masjid Al Jami'ah IAIN Manado",
-      seoDescription:
-        "Portal resmi Masjid Al Jami'ah IAIN Manado menyediakan jadwal sholat Manado WITA, agenda kajian kampus, transparansi keuangan masjid, dan layanan mahasiswa.",
-    },
-    {
-      id: 'news-2',
-      title: 'Semarak Halaqah Tahsin & Kajian Tafsir Sore bagi Mahasiswa Baru IAIN Manado',
-      slug: 'semarak-halaqah-tahsin-dan-kajian-tafsir-mahasiswa-iain-manado',
-      excerpt:
-        'Program pembinaan bacaan Al-Qur’an dan halaqah keilmuan rutin setiap sore di serambi Masjid Al Jami’ah terbuka bagi seluruh mahasiswa lintas fakultas.',
-      content: `<p><strong>MANADO</strong> - Serambi Masjid Al Jami'ah IAIN Manado tampak semarak setiap selesai pelaksanaan sholat Ashar dan Maghrib berjamaah. Puluhan mahasiswa berkumpul dalam lingkaran halaqah untuk mengikuti pembinaan tahsin Al-Qur'an dan kajian kitab kuning.</p>
-<h2>Terbuka untuk Seluruh Fakultas</h2>
-<p>Program ini dirancang agar mahasiswa dari seluruh fakultas di IAIN Manado memiliki ruang belajar tambahan yang kondusif di luar ruang kelas perkuliahan formal.</p>
-<ul>
-<li>Kelas Tahsin Dasar: Fokus pada pembenahan makharijul huruf dan sifatul huruf.</li>
-<li>Kelas Tahsin Lanjutan: Fokus pada kelancaran tilawah dan hukum tajwid terapan.</li>
-<li>Kajian Ba'da Maghrib: Pembahasan tafsir tematik, hadits arbain, dan fiqih ibadah.</li>
-</ul>
-<p>Bagi mahasiswa yang ingin bergabung, pendaftaran dapat dilakukan langsung di meja sekretariat remaja masjid setiap selesai waktu sholat Ashar atau melalui halaman Layanan Masjid di website ini.</p>`,
-      category: 'Kegiatan Masjid',
-      coverImageUrl:
-        'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1200&q=80',
-      author: 'Bidang Keilmuan & Dakwah',
-      publishedAt: '2026-10-20',
-      status: 'PUBLISHED',
-      seoTitle: "Halaqah Tahsin & Kajian Tafsir Mahasiswa di Masjid Al Jami'ah IAIN Manado",
-      seoDescription:
-        "Informasi jadwal halaqah tahsin Al-Qur'an dan kajian rutin mahasiswa di Masjid Al Jami'ah IAIN Manado setiap ba'da Ashar dan Maghrib.",
-    },
-    {
-      id: 'news-3',
-      title: 'Adab Menuntut Ilmu dan Memakmurkan Masjid Kampus dalam Perspektif Al-Qur’an',
-      slug: 'adab-menuntut-ilmu-dan-memakmurkan-masjid-kampus',
-      excerpt:
-        'Ringkasan materi kajian pekanan mengenai pentingnya menyelaraskan kecerdasan intelektual akademik dengan ketundukan spiritual di rumah ibadah.',
-      content: `<p><strong>MANADO</strong> - Dalam tradisi keilmuan Islam klasik hingga perguruan tinggi Islam modern, masjid selalu memegang peranan sentral sebagai jantung aktivitas intelektual dan spiritual.</p>
-<h2>Menjaga Keikhlasan Niat Belajar</h2>
-<p>Para ulama mengingatkan bahwa keberkahan ilmu sangat erat kaitannya dengan adab seorang penuntut ilmu terhadap gurunya, kitabnya, dan tempat ia menimba ilmu. Di lingkungan kampus IAIN Manado, Masjid Al Jami'ah hadir sebagai pengingat bahwa setiap disiplin ilmu yang dipelajari bermuara pada pengabdian kepada Allah SWT dan kemaslahatan sesama manusia.</p>
-<blockquote>"Sesungguhnya yang memakmurkan masjid-masjid Allah hanyalah orang-orang yang beriman kepada Allah dan hari kemudian, serta tetap mendirikan sholat, menunaikan zakat dan tidak takut kepada siapa pun selain kepada Allah." (QS. At-Taubah: 18)</blockquote>`,
-      category: 'Khutbah & Kajian',
-      coverImageUrl:
-        'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80',
-      author: 'Redaksi Kajian Al Jami’ah',
-      publishedAt: '2026-10-16',
-      status: 'PUBLISHED',
-      seoTitle: "Adab Menuntut Ilmu & Memakmurkan Masjid Al Jami'ah IAIN Manado",
-      seoDescription:
-        "Artikel kajian tentang adab menuntut ilmu dan peran strategis Masjid Al Jami'ah di lingkungan kampus IAIN Manado.",
-    },
-  ],
+  news: [],
   customPages: [
     {
       id: 'page-profil',
@@ -599,7 +324,7 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       subtitle: 'Jantung Spiritual dan Intelektual Sivitas Akademika IAIN Manado',
       content: `<p><strong>Masjid Al Jami'ah IAIN Manado</strong> merupakan pusat peribadatan utama sekaligus ruang pembinaan keagamaan bagi mahasiswa, dosen, tenaga kependidikan, serta masyarakat di sekitar kampus Institut Agama Islam Negeri (IAIN) Manado, Sulawesi Utara.</p>
 <h2>Visi Kemakmuran Masjid</h2>
-<p>Menjadikan Masjid Al Jami'ah sebagai pusat peribadatan yang khusyuk, pusat kajian keilmuan Islam yang moderat dan inklusif, serta pusat pemberdayaan umat berbasis lingkungan akademik.</p>
+<p>Menjadikan Masjid Al Jami'ah sebagai pusat peribadatan yang khusyuk, pusat kajian keilmuan Islam yang moderat dan inklklusif, serta pusat pemberdayaan umat berbasis lingkungan akademik.</p>
 <h2>Misi Utama</h2>
 <ul>
 <li>Menyelenggarakan peribadatan sholat fardhu berjamaah dan sholat Jumat yang tertib, bersih, dan nyaman.</li>
@@ -616,7 +341,8 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       id: 'page-takmir',
       title: "Struktur Kepengurusan Takmir Masjid Al Jami'ah",
       slug: 'struktur-takmir',
-      subtitle: 'Susunan Pengurus Badan Takmir & Kemakmuran Masjid Al Jami’ah IAIN Manado',
+      subtitle:
+        'Susunan Pengurus Badan Takmir & Kemakmuran Masjid Al Jami’ah IAIN Manado',
       content: `<p>Pengelolaan Masjid Al Jami'ah IAIN Manado dijalankan secara kolektif oleh Badan Takmir Masjid yang terdiri dari unsur pimpinan, dosen, tenaga kependidikan, serta perwakilan mahasiswa (Remaja Masjid Kampus).</p>
 <h2>Bidang-Bidang Pelayanan Takmir</h2>
 <ul>
@@ -635,7 +361,8 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
       id: 'page-sop',
       title: 'SOP Peminjaman Fasilitas & Adab di Masjid Kampus',
       slug: 'sop-peminjaman',
-      subtitle: 'Panduan Penggunaan Aula, Pelataran, dan Inventaris Masjid Al Jami’ah',
+      subtitle:
+        'Panduan Penggunaan Aula, Pelataran, dan Inventaris Masjid Al Jami’ah',
       content: `<p>Untuk menjaga kekhusyukan ibadah sekaligus mendukung kelancaran kegiatan akademik kemahasiswaan, setiap peminjam fasilitas di Masjid Al Jami'ah IAIN Manado wajib mengikuti prosedur berikut:</p>
 <h2>Prosedur Pengajuan</h2>
 <ol>
@@ -755,7 +482,8 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     },
     {
       id: 'qt-2',
-      arabicText: 'مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ',
+      arabicText:
+        'مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ',
       translation:
         'Barang siapa menempuh suatu jalan untuk menuntut ilmu, maka Allah akan memudahkan baginya jalan menuju surga.',
       source: 'HR. Muslim No. 2699',
@@ -763,7 +491,8 @@ export const INITIAL_MOSQUE_DATA: MosqueDatabase = {
     },
     {
       id: 'qt-3',
-      arabicText: 'سَوُّوا صُفُوفَكُمْ فَإِنَّ تَسْوِيَةَ الصُّفُوفِ مِنْ إِقَامَةِ الصَّلَاةِ',
+      arabicText:
+        'سَوُّوا صُفُوفَكُمْ فَإِنَّ تَسْوِيَةَ الصُّفُوفِ مِنْ إِقَامَةِ الصَّلَاةِ',
       translation:
         'Luruskanlah shaf-shaf kalian, karena sesungguhnya meluruskan shaf termasuk kesempurnaan mendirikan sholat.',
       source: 'HR. Bukhari No. 723 & Muslim No. 433',
@@ -800,19 +529,46 @@ export function readMosqueDb(): MosqueDatabase {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
     if (!fs.existsSync(DB_FILE_PATH)) {
-      fs.writeFileSync(DB_FILE_PATH, JSON.stringify(INITIAL_MOSQUE_DATA, null, 2), 'utf-8');
+      fs.writeFileSync(
+        DB_FILE_PATH,
+        JSON.stringify(INITIAL_MOSQUE_DATA, null, 2),
+        'utf-8'
+      );
       return INITIAL_MOSQUE_DATA;
     }
     const raw = fs.readFileSync(DB_FILE_PATH, 'utf-8');
     const parsed = JSON.parse(raw) as Partial<MosqueDatabase>;
+
+    // Strip any legacy sample/dummy records even if present in an older JSON file
+    const cleanedTransactions = (parsed.transactions || []).filter(
+      (t) => !LEGACY_DUMMY_TRX_IDS.has(t.id)
+    );
+    const cleanedEvents = (parsed.events || []).filter(
+      (e) => !LEGACY_DUMMY_EVENT_IDS.has(e.id)
+    );
+    const cleanedNews = (parsed.news || []).filter(
+      (n) => !LEGACY_DUMMY_NEWS_IDS.has(n.id)
+    );
+    const cleanedProjects = (parsed.rehabSettings?.projects || []).filter(
+      (p) => !LEGACY_DUMMY_PROJECT_IDS.has(p.id)
+    );
+
     const filteredMenus = (parsed.menus || INITIAL_MOSQUE_DATA.menus)
-      .filter((m) => m.href !== '/tv' && m.label.toLowerCase() !== 'mode tv masjid')
+      .filter(
+        (m) => m.href !== '/tv' && m.label.toLowerCase() !== 'mode tv masjid'
+      )
       .map((m) => {
         if (m.id === 'menu-5' || m.label.toLowerCase() === 'layanan') {
           const existingChildren = m.children || [];
-          const hasRehab = existingChildren.some((c) => c.href === '/rehabilitasi');
-          const hasMualaf = existingChildren.some((c) => c.href === '/mualaf-center');
-          const hasGeneral = existingChildren.some((c) => c.href === '/#layanan');
+          const hasRehab = existingChildren.some(
+            (c) => c.href === '/rehabilitasi'
+          );
+          const hasMualaf = existingChildren.some(
+            (c) => c.href === '/mualaf-center'
+          );
+          const hasGeneral = existingChildren.some(
+            (c) => c.href === '/#layanan'
+          );
           const nextChildren = [...existingChildren];
 
           if (!hasGeneral) {
@@ -843,15 +599,31 @@ export function readMosqueDb(): MosqueDatabase {
         }
         return m;
       });
+
+    const parsedJumat = parsed.prayerSettings?.jumatOfficer;
+    const cleanedJumatOfficer =
+      parsedJumat &&
+      !parsedJumat.date.includes('Data Contoh') &&
+      !parsedJumat.khatib.includes('Diatur via Admin')
+        ? parsedJumat
+        : INITIAL_MOSQUE_DATA.prayerSettings.jumatOfficer;
+
+    const rawAccountNumber = parsed.donationInfo?.accountNumber || '-';
+    const cleanedAccountNumber = rawAccountNumber.includes('DIATUR DI ADMIN')
+      ? '-'
+      : rawAccountNumber;
+
     return {
       ...INITIAL_MOSQUE_DATA,
       ...parsed,
+      transactions: cleanedTransactions,
+      events: cleanedEvents,
+      news: cleanedNews,
       menus: filteredMenus,
       rehabSettings: {
         ...INITIAL_MOSQUE_DATA.rehabSettings,
         ...(parsed.rehabSettings || {}),
-        projects:
-          parsed.rehabSettings?.projects ?? INITIAL_MOSQUE_DATA.rehabSettings.projects,
+        projects: cleanedProjects,
       },
       mualafCenter: {
         ...INITIAL_MOSQUE_DATA.mualafCenter,
@@ -865,7 +637,8 @@ export function readMosqueDb(): MosqueDatabase {
           parsed.mualafCenter?.programs ??
           INITIAL_MOSQUE_DATA.mualafCenter.programs,
         mentors:
-          parsed.mualafCenter?.mentors ?? INITIAL_MOSQUE_DATA.mualafCenter.mentors,
+          parsed.mualafCenter?.mentors ??
+          INITIAL_MOSQUE_DATA.mualafCenter.mentors,
         submissions: parsed.mualafCenter?.submissions ?? [],
       },
       mosqueProfile: {
@@ -875,6 +648,8 @@ export function readMosqueDb(): MosqueDatabase {
       donationInfo: {
         ...INITIAL_MOSQUE_DATA.donationInfo,
         ...(parsed.donationInfo || {}),
+        accountNumber: cleanedAccountNumber,
+        isSampleDataNotice: false,
         treasurerPin: parsed.donationInfo?.treasurerPin || '123456',
         treasurerName:
           parsed.donationInfo?.treasurerName || 'Bendahara Takmir Masjid',
@@ -886,6 +661,7 @@ export function readMosqueDb(): MosqueDatabase {
       prayerSettings: {
         ...INITIAL_MOSQUE_DATA.prayerSettings,
         ...(parsed.prayerSettings || {}),
+        jumatOfficer: cleanedJumatOfficer,
         adzanDurationMinutes: {
           ...INITIAL_MOSQUE_DATA.prayerSettings.adzanDurationMinutes!,
           ...(parsed.prayerSettings?.adzanDurationMinutes || {}),

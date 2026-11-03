@@ -39,7 +39,9 @@
       "id": "slide-2",
       "title": "Kajian Rutin Ba’da Maghrib & Halaqah Mahasiswa",
       "subtitle": "Mengintegrasikan tradisi keilmuan turats, tafsir Al-Qur’an, dan wawasan keislaman moderat bagi mahasiswa dan masyarakat umum.",
+      "mediaType": "IMAGE",
       "imageUrl": "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1920&q=85",
+      "videoUrl": "",
       "ctaText": "Cek Agenda Kegiatan Hari Ini",
       "ctaLink": "#kegiatan",
       "order": 2,
@@ -49,7 +51,9 @@
       "id": "slide-3",
       "title": "Transparansi Kas & Layanan Terpadu Masjid Kampus",
       "subtitle": "Pengelolaan infaq operasional, pembangunan, serta layanan peminjaman fasilitas masjid yang terbuka dan dapat diakses secara daring.",
+      "mediaType": "IMAGE",
       "imageUrl": "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1920&q=85",
+      "videoUrl": "",
       "ctaText": "Lihat Laporan Kas Masjid",
       "ctaLink": "#keuangan",
       "order": 3,
@@ -77,6 +81,13 @@
       "Maghrib": 0,
       "Isya": 0
     },
+    "adzanDurationMinutes": {
+      "Subuh": 4,
+      "Dzuhur": 4,
+      "Ashar": 4,
+      "Maghrib": 4,
+      "Isya": 4
+    },
     "iqomahMinutes": {
       "Subuh": 15,
       "Dzuhur": 10,
@@ -93,136 +104,25 @@
     },
     "adzanDurationSeconds": 180,
     "jumatOfficer": {
-      "date": "Jumat Pekan Ini (Data Contoh Awal, Ubah di Admin)",
-      "khatib": "[Nama Khatib Jumat - Diatur via Admin]",
-      "khatibTopic": "Membangun Etika Akademik Berlandaskan Akhlakul Karimah",
-      "imam": "[Nama Imam Jumat - Diatur via Admin]",
-      "muadzin": "[Nama Muadzin - Diatur via Admin]",
-      "bilal": "[Nama Bilal - Diatur via Admin]"
+      "date": "Setiap Hari Jumat",
+      "khatib": "-",
+      "khatibTopic": "-",
+      "imam": "-",
+      "muadzin": "-",
+      "bilal": "-"
     }
   },
-  "events": [
-    {
-      "id": "evt-1",
-      "title": "Kajian Tafsir Ayat-Ayat Keilmuan & Adab Penuntut Ilmu",
-      "speaker": "Dosen Tafsir Fakultas Ushuluddin, Adab dan Dakwah",
-      "date": "2026-10-23",
-      "dayLabel": "Hari Ini (Ba’da Maghrib)",
-      "time": "18:15 - 19:05 WITA",
-      "location": "Ruang Utama Lantai 1 Masjid Al Jami'ah",
-      "category": "Kajian Rutin",
-      "description": "Kajian terbuka bagi mahasiswa, dosen, dan masyarakat sekitar kampus membahas adab menuntut ilmu dalam Al-Qur’an.",
-      "isToday": true
-    },
-    {
-      "id": "evt-2",
-      "title": "Tahsin Al-Qur’an & Pembinaan Qira’ah Mahasiswa",
-      "speaker": "Tim Pembina Ma’had Al-Jami’ah IAIN Manado",
-      "date": "2026-10-23",
-      "dayLabel": "Hari Ini (Ba’da Ashar)",
-      "time": "15:30 - 17:00 WITA",
-      "location": "Serambi Timur Masjid Al Jami'ah",
-      "category": "Tahsin & Tahfidz",
-      "description": "Perbaikan makharijul huruf dan tajwid secara berkelompok untuk mahasiswa semester awal dan umum.",
-      "isToday": true
-    },
-    {
-      "id": "evt-3",
-      "title": "Kajian Fiqih Kontemporer & Muamalah Kampus",
-      "speaker": "Tim Pengajar Fakultas Syariah IAIN Manado",
-      "date": "RUTIN",
-      "dayLabel": "Setiap Kamis Malam",
-      "time": "18:15 - 19:10 WITA",
-      "location": "Ruang Utama Masjid Al Jami'ah",
-      "category": "Kajian Rutin",
-      "description": "Membahas persoalan fiqih keseharian dan transaksi digital dari sudut pandang empat mazhab.",
-      "isToday": false
-    },
-    {
-      "id": "evt-4",
-      "title": "Diskusi Keislaman & Bedah Buku Perpustakaan Masjid",
-      "speaker": "Unit Kegiatan Mahasiswa & Remaja Masjid Al Jami’ah",
-      "date": "RUTIN",
-      "dayLabel": "Setiap Sabtu Pagi",
-      "time": "09:00 - 11:30 WITA",
-      "location": "Aula Diskusi Lantai Dasar Masjid Al Jami'ah",
-      "category": "Kegiatan Kampus",
-      "description": "Forum diskusi literasi Islam bagi mahasiswa lintas fakultas di lingkungan IAIN Manado.",
-      "isToday": false
-    }
-  ],
-  "transactions": [
-    {
-      "id": "trx-1",
-      "date": "2026-10-02",
-      "description": "Saldo Awal Kas Operasional Oktober (Data Contoh Awal)",
-      "category": "OPERASIONAL",
-      "type": "IN",
-      "amount": 14500000,
-      "recordedBy": "Bendahara Takmir"
-    },
-    {
-      "id": "trx-2",
-      "date": "2026-10-09",
-      "description": "Penerimaan Kotak Infaq Sholat Jumat Pekan I & II (Data Contoh)",
-      "category": "OPERASIONAL",
-      "type": "IN",
-      "amount": 6850000,
-      "recordedBy": "Bendahara Takmir"
-    },
-    {
-      "id": "trx-3",
-      "date": "2026-10-12",
-      "description": "Pemeliharaan Kebersihan, Air Wudhu, dan Perlengkapan Sanctum (Data Contoh)",
-      "category": "OPERASIONAL",
-      "type": "OUT",
-      "amount": 3200000,
-      "recordedBy": "Bendahara Takmir"
-    },
-    {
-      "id": "trx-4",
-      "date": "2026-10-16",
-      "description": "Infaq Khusus Peremajaan Tata Suara & Karpet Shaf (Data Contoh)",
-      "category": "PEMBANGUNAN",
-      "type": "IN",
-      "amount": 22000000,
-      "recordedBy": "Bendahara Takmir"
-    },
-    {
-      "id": "trx-5",
-      "date": "2026-10-19",
-      "description": "Pengadaan 4 Unit Mikrofon Wireless & Kabel Audio Aula (Data Contoh)",
-      "category": "PEMBANGUNAN",
-      "type": "OUT",
-      "amount": 5400000,
-      "recordedBy": "Bendahara Takmir"
-    },
-    {
-      "id": "trx-6",
-      "date": "2026-10-20",
-      "description": "Penerimaan ZISWAF & Donasi Beasiswa Mahasiswa Dhuafa (Data Contoh)",
-      "category": "SOSIAL_ZISWAF",
-      "type": "IN",
-      "amount": 9500000,
-      "recordedBy": "Bendahara Takmir"
-    },
-    {
-      "id": "trx-7",
-      "date": "2026-10-22",
-      "description": "Penyaluran Bantuan Penunjang Studi Mahasiswa & Konsumsi Kajian (Data Contoh)",
-      "category": "SOSIAL_ZISWAF",
-      "type": "OUT",
-      "amount": 2750000,
-      "recordedBy": "Bendahara Takmir"
-    }
-  ],
+  "events": [],
+  "transactions": [],
   "donationInfo": {
     "bankName": "Bank Syariah Indonesia (BSI)",
-    "accountNumber": "[NOMOR REKENING DIATUR DI ADMIN]",
+    "accountNumber": "-",
     "accountHolder": "UPZ / Takmir Masjid Al Jami'ah IAIN Manado",
     "qrisImageUrl": "",
     "confirmationWhatsapp": "628114300000",
-    "isSampleDataNotice": true
+    "isSampleDataNotice": false,
+    "treasurerPin": "123456",
+    "treasurerName": "Bendahara Takmir Masjid"
   },
   "services": [
     {
@@ -284,50 +184,93 @@
     }
   ],
   "serviceSubmissions": [],
-  "news": [
-    {
-      "id": "news-1",
-      "title": "Takmir Masjid Al Jami'ah IAIN Manado Luncurkan Layanan Informasi Terpadu & Layar Digital",
-      "slug": "peluncuran-layanan-informasi-terpadu-masjid-al-jamiah-iain-manado",
-      "excerpt": "Pengurus Takmir Masjid Al Jami’ah menghadirkan sistem informasi berbasis web dan layar Smart TV untuk memudahkan akses jadwal sholat, agenda kajian, serta transparansi kas masjid.",
-      "content": "<p><strong>MANADO</strong> - Pengurus Takmir Masjid Al Jami'ah IAIN Manado terus meningkatkan kualitas pelayanan ibadah dan informasi bagi seluruh jamaah, baik dari kalangan mahasiswa, dosen, tenaga kependidikan, maupun masyarakat sekitar kawasan Malendeng, Kota Manado.</p>\n<h2>Integrasi Website Publik dan Layar Informasi TV Masjid</h2>\n<p>Melalui pembaruan portal digital ini, jamaah kini dapat mengakses jadwal waktu sholat lima waktu wilayah Kota Manado (WITA), memantau jadwal kajian rutin harian, serta mengajukan peminjaman fasilitas aula diskusi masjid secara daring.</p>\n<blockquote>\"Masjid kampus bukan sekadar tempat sujud, tetapi juga laboratorium akhlak dan pusat peradaban akademik. Keterbukaan informasi jadwal kajian dan laporan kas masjid adalah bagian dari ikhtiar memakmurkan rumah Allah,\" ujar Pengurus Takmir Masjid Al Jami'ah.</blockquote>\n<h3>Kemudahan Akses Layanan Mahasiswa</h3>\n<p>Unit Kegiatan Mahasiswa (UKM), Himpunan Mahasiswa Jurusan (HMJ), serta fakultas yang hendak menyelenggarakan kegiatan keislaman di lingkungan masjid kini dapat langsung mengisi formulir pengajuan daring pada menu Layanan Masjid dan berkoordinasi langsung dengan pengurus bidang kerumahtanggaan.</p>",
-      "category": "Pengumuman Takmir",
-      "coverImageUrl": "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1200&q=80",
-      "author": "Humas Takmir Masjid Al Jami'ah",
-      "publishedAt": "2026-10-23",
-      "status": "PUBLISHED",
-      "seoTitle": "Peluncuran Portal Digital & Layar TV Masjid Al Jami'ah IAIN Manado",
-      "seoDescription": "Portal resmi Masjid Al Jami'ah IAIN Manado menyediakan jadwal sholat Manado WITA, agenda kajian kampus, transparansi keuangan masjid, dan layanan mahasiswa."
-    },
-    {
-      "id": "news-2",
-      "title": "Semarak Halaqah Tahsin & Kajian Tafsir Sore bagi Mahasiswa Baru IAIN Manado",
-      "slug": "semarak-halaqah-tahsin-dan-kajian-tafsir-mahasiswa-iain-manado",
-      "excerpt": "Program pembinaan bacaan Al-Qur’an dan halaqah keilmuan rutin setiap sore di serambi Masjid Al Jami’ah terbuka bagi seluruh mahasiswa lintas fakultas.",
-      "content": "<p><strong>MANADO</strong> - Serambi Masjid Al Jami'ah IAIN Manado tampak semarak setiap selesai pelaksanaan sholat Ashar dan Maghrib berjamaah. Puluhan mahasiswa berkumpul dalam lingkaran halaqah untuk mengikuti pembinaan tahsin Al-Qur'an dan kajian kitab kuning.</p>\n<h2>Terbuka untuk Seluruh Fakultas</h2>\n<p>Program ini dirancang agar mahasiswa dari seluruh fakultas di IAIN Manado memiliki ruang belajar tambahan yang kondusif di luar ruang kelas perkuliahan formal.</p>\n<ul>\n<li>Kelas Tahsin Dasar: Fokus pada pembenahan makharijul huruf dan sifatul huruf.</li>\n<li>Kelas Tahsin Lanjutan: Fokus pada kelancaran tilawah dan hukum tajwid terapan.</li>\n<li>Kajian Ba'da Maghrib: Pembahasan tafsir tematik, hadits arbain, dan fiqih ibadah.</li>\n</ul>\n<p>Bagi mahasiswa yang ingin bergabung, pendaftaran dapat dilakukan langsung di meja sekretariat remaja masjid setiap selesai waktu sholat Ashar atau melalui halaman Layanan Masjid di website ini.</p>",
-      "category": "Kegiatan Masjid",
-      "coverImageUrl": "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1200&q=80",
-      "author": "Bidang Keilmuan & Dakwah",
-      "publishedAt": "2026-10-20",
-      "status": "PUBLISHED",
-      "seoTitle": "Halaqah Tahsin & Kajian Tafsir Mahasiswa di Masjid Al Jami'ah IAIN Manado",
-      "seoDescription": "Informasi jadwal halaqah tahsin Al-Qur'an dan kajian rutin mahasiswa di Masjid Al Jami'ah IAIN Manado setiap ba'da Ashar dan Maghrib."
-    },
-    {
-      "id": "news-3",
-      "title": "Adab Menuntut Ilmu dan Memakmurkan Masjid Kampus dalam Perspektif Al-Qur’an",
-      "slug": "adab-menuntut-ilmu-dan-memakmurkan-masjid-kampus",
-      "excerpt": "Ringkasan materi kajian pekanan mengenai pentingnya menyelaraskan kecerdasan intelektual akademik dengan ketundukan spiritual di rumah ibadah.",
-      "content": "<p><strong>MANADO</strong> - Dalam tradisi keilmuan Islam klasik hingga perguruan tinggi Islam modern, masjid selalu memegang peranan sentral sebagai jantung aktivitas intelektual dan spiritual.</p>\n<h2>Menjaga Keikhlasan Niat Belajar</h2>\n<p>Para ulama mengingatkan bahwa keberkahan ilmu sangat erat kaitannya dengan adab seorang penuntut ilmu terhadap gurunya, kitabnya, dan tempat ia menimba ilmu. Di lingkungan kampus IAIN Manado, Masjid Al Jami'ah hadir sebagai pengingat bahwa setiap disiplin ilmu yang dipelajari bermuara pada pengabdian kepada Allah SWT dan kemaslahatan sesama manusia.</p>\n<blockquote>\"Sesungguhnya yang memakmurkan masjid-masjid Allah hanyalah orang-orang yang beriman kepada Allah dan hari kemudian, serta tetap mendirikan sholat, menunaikan zakat dan tidak takut kepada siapa pun selain kepada Allah.\" (QS. At-Taubah: 18)</blockquote>",
-      "category": "Khutbah & Kajian",
-      "coverImageUrl": "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80",
-      "author": "Redaksi Kajian Al Jami’ah",
-      "publishedAt": "2026-10-16",
-      "status": "PUBLISHED",
-      "seoTitle": "Adab Menuntut Ilmu & Memakmurkan Masjid Al Jami'ah IAIN Manado",
-      "seoDescription": "Artikel kajian tentang adab menuntut ilmu dan peran strategis Masjid Al Jami'ah di lingkungan kampus IAIN Manado."
-    }
-  ],
+  "rehabSettings": {
+    "pageTitle": "Progres Rehabilitasi & Pengembangan Fasilitas Masjid",
+    "pageSubtitle": "Laporan berkala tahapan pekerjaan fisik, rencana penambahan fasilitas baru, serta transparansi kebutuhan material dan dana pembangunan Masjid Al Jami’ah IAIN Manado.",
+    "syncWithDevelopmentFund": true,
+    "picName": "Panitia Rehabilitasi & Bidang Ri’ayah Takmir",
+    "picWhatsapp": "628114300000",
+    "projects": []
+  },
+  "mualafCenter": {
+    "pageTitle": "Mualaf Center Masjid Al Jami'ah IAIN Manado",
+    "pageSubtitle": "Pusat Pelayanan Konsultasi Keislaman, Prosesi Ikrar Syahadat, dan Pembinaan Berkelanjutan bagi Mualaf di Lingkungan Kampus IAIN Manado & Sulawesi Utara.",
+    "welcomeMessage": "Segala puji bagi Allah SWT atas limpahan hidayah-Nya. Mualaf Center Masjid Al Jami’ah IAIN Manado hadir untuk mendampingi saudara-saudari yang ingin mengenal Islam lebih dekat, mengucapkan dua kalimat syahadat secara resmi, serta mendapatkan bimbingan ibadah dasar secara ramah, kekeluargaan, dan tanpa dipungut biaya.",
+    "requirements": [
+      "Niat tulus ikhlas dari hati sendiri tanpa adanya paksaan dari pihak mana pun",
+      "Membawa fotokopi identitas diri (KTP / Kartu Mahasiswa / Paspor) sebanyak 2 lembar",
+      "Menyiapkan pasfoto terbaru ukuran 3x4 sebanyak 3 lembar (untuk Piagam Syahadat)",
+      "Menghadirkan 2 (dua) orang saksi (dapat dibantu disediakan oleh Pengurus Takmir jika belum memiliki saksi)",
+      "Menandatangani Surat Pernyataan Memeluk Agama Islam di atas materai yang disiapkan oleh Sekretariat Mualaf Center"
+    ],
+    "steps": [
+      {
+        "id": "mstep-1",
+        "stepNumber": 1,
+        "title": "Konsultasi & Pendampingan Awal",
+        "description": "Calon mualaf dapat berdiskusi secara privat dan nyaman dengan tim pembina (tersedia pembimbing Ustadz maupun Ustadzah) mengenai dasar-dasar aqidah Islam."
+      },
+      {
+        "id": "mstep-2",
+        "stepNumber": 2,
+        "title": "Verifikasi Berkas & Penjadwalan",
+        "description": "Pengurus sekretariat membantu kelengkapan administrasi dan menyepakati waktu pelaksanaan ikrar syahadat di Masjid Al Jami’ah."
+      },
+      {
+        "id": "mstep-3",
+        "stepNumber": 3,
+        "title": "Prosesi Ikrar Dua Kalimat Syahadat",
+        "description": "Pelaksanaan ikrar syahadat yang dibimbing langsung oleh Imam/Ulama Takmir Masjid Al Jami’ah IAIN Manado dengan disaksikan oleh para saksi."
+      },
+      {
+        "id": "mstep-4",
+        "stepNumber": 4,
+        "title": "Penyerahan Sertifikat & Pembinaan Rutin",
+        "description": "Penerbitan Surat Keterangan / Piagam Ikrar Syahadat resmi, pemberian paket peralatan ibadah, serta pendampingan belajar sholat dan Al-Qur’an."
+      }
+    ],
+    "programs": [
+      {
+        "id": "mprog-1",
+        "title": "Bimbingan Thaharah (Bersuci) & Tata Cara Sholat Fardhu",
+        "schedule": "Setiap Pekan (Waktu Fleksibel Sesuai Kesepakatan)",
+        "mentor": "Tim Pembina Ibadah Mualaf Center",
+        "description": "Pendampingan praktik wudhu, tayammum, mandi wajib, serta gerakan dan bacaan sholat lima waktu secara bertahap hingga mandiri."
+      },
+      {
+        "id": "mprog-2",
+        "title": "Kelas Belajar Membaca Al-Qur’an (Iqra & Tahsin Dasar)",
+        "schedule": "Setiap Selasa & Jumat Sore (Atau Kelas Privat)",
+        "mentor": "Tim Pengajar Tahsin & Ustadzah Pembina",
+        "description": "Belajar mengenal huruf hijaiyah dari dasar (Iqra) hingga mampu membaca surat-surat pendek Al-Qur’an dengan makhraj yang benar."
+      },
+      {
+        "id": "mprog-3",
+        "title": "Kajian Dasar Aqidah, Akhlak & Kekeluargaan Islam",
+        "schedule": "2 Minggu Sekali / Pendampingan Berkelanjutan",
+        "mentor": "Dosen Pembina Takmir IAIN Manado",
+        "description": "Penguatan keimanan, pengenalan rukun iman dan rukun Islam, serta ruang konsultasi kekeluargaan bagi para mualaf."
+      }
+    ],
+    "mentors": [
+      {
+        "id": "mmen-1",
+        "name": "Tim Ulama & Dosen Pembina Putra Takmir Al Jami’ah",
+        "role": "Pembimbing Ikrar Syahadat, Aqidah & Fiqih Ibadah (Putra)",
+        "whatsapp": "628114300000"
+      },
+      {
+        "id": "mmen-2",
+        "name": "Tim Dosen & Ustadzah Pembina Muslimah IAIN Manado",
+        "role": "Pembimbing Khusus Calon Mualaf & Muslimah (Putri)",
+        "whatsapp": "628114300000"
+      }
+    ],
+    "hotlineName": "Sekretariat Mualaf Center Al Jami’ah",
+    "hotlineWhatsapp": "628114300000",
+    "submissions": []
+  },
+  "news": [],
   "customPages": [
     {
       "id": "page-profil",
