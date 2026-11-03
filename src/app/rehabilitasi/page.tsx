@@ -6,6 +6,12 @@ import { formatRupiah } from '@/lib/prayer-times';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import {
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+  AnimatedProgressBar,
+} from '@/components/ScrollReveal';
+import {
   ArrowLeft,
   Hammer,
   CheckCircle2,
@@ -61,7 +67,7 @@ export default async function RehabilitasiPage() {
       <main id="main-content" className="flex-1 bg-[#FAF7F2] text-[#1E1B18]">
         {/* TOP HERO BANNER */}
         <header className="bg-[#1E1B18] text-[#FAF7F2] pt-28 pb-14 px-4 sm:px-6 lg:px-8 border-b-4 border-[#A84A2E] dark-surface">
-          <div className="max-w-7xl mx-auto">
+          <ScrollReveal className="max-w-7xl mx-auto" y={20}>
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#E8CFA0] hover:underline mb-4 min-h-[36px]"
@@ -87,14 +93,17 @@ export default async function RehabilitasiPage() {
             <p className="text-sm sm:text-lg text-[#F2ECE1] max-w-3xl leading-relaxed">
               {rehab.pageSubtitle}
             </p>
-          </div>
+          </ScrollReveal>
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-14">
           {/* 1. RINGKASAN POSISI DANA KAS PEMBANGUNAN & STATUS PROYEK */}
           <section aria-label="Ringkasan Status Pembangunan dan Dana">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              <div className="bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-5 border border-[#1E1B18] flex flex-col justify-between dark-surface">
+            <ScrollStaggerGroup
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
+              staggerDelay={0.08}
+            >
+              <ScrollStaggerItem hoverLift className="bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-5 border border-[#1E1B18] flex flex-col justify-between dark-surface">
                 <span className="text-xs font-bold text-[#E8CFA0] flex items-center gap-1.5">
                   <Wallet className="w-4 h-4" aria-hidden="true" />
                   <span>SALDO KAS PEMBANGUNAN</span>
@@ -113,9 +122,9 @@ export default async function RehabilitasiPage() {
                 >
                   Lihat Rincian Mutasi Kas &rarr;
                 </Link>
-              </div>
+              </ScrollStaggerItem>
 
-              <div className="bg-[#F2ECE1] rounded-xl p-5 border border-[#DFD5C5] flex flex-col justify-between">
+              <ScrollStaggerItem hoverLift className="bg-[#F2ECE1] rounded-xl p-5 border border-[#DFD5C5] flex flex-col justify-between">
                 <span className="text-xs font-bold text-[#A84A2E]">
                   PEKERJAAN SEDANG BERJALAN
                 </span>
@@ -127,9 +136,9 @@ export default async function RehabilitasiPage() {
                     Fokus pengerjaan fisik saat ini di lapangan
                   </span>
                 </div>
-              </div>
+              </ScrollStaggerItem>
 
-              <div className="bg-[#F2ECE1] rounded-xl p-5 border border-[#DFD5C5] flex flex-col justify-between">
+              <ScrollStaggerItem hoverLift className="bg-[#F2ECE1] rounded-xl p-5 border border-[#DFD5C5] flex flex-col justify-between">
                 <span className="text-xs font-bold text-[#524740]">
                   RENCANA FASILITAS BARU
                 </span>
@@ -141,9 +150,9 @@ export default async function RehabilitasiPage() {
                     Tahap pengembangan fasilitas berikutnya
                   </span>
                 </div>
-              </div>
+              </ScrollStaggerItem>
 
-              <div className="bg-[#F2ECE1] rounded-xl p-5 border border-[#DFD5C5] flex flex-col justify-between">
+              <ScrollStaggerItem hoverLift className="bg-[#F2ECE1] rounded-xl p-5 border border-[#DFD5C5] flex flex-col justify-between">
                 <span className="text-xs font-bold text-[#3D4D33]">
                   TAHAPAN PROYEK SELESAI
                 </span>
@@ -155,13 +164,13 @@ export default async function RehabilitasiPage() {
                     Rekam jejak rehabilitasi &amp; fasilitas tuntas
                   </span>
                 </div>
-              </div>
-            </div>
+              </ScrollStaggerItem>
+            </ScrollStaggerGroup>
           </section>
 
           {/* 2. DAFTAR PROYEK YANG SEDANG BERJALAN */}
           <section className="space-y-8" aria-labelledby="active-rehab-heading">
-            <div className="border-b-2 border-[#DFD5C5] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <ScrollReveal className="border-b-2 border-[#DFD5C5] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
               <div>
                 <span className="text-xs font-bold tracking-wider uppercase text-[#A84A2E] block mb-1">
                   FOKUS UTAMA SAAT INI
@@ -176,21 +185,22 @@ export default async function RehabilitasiPage() {
               <span className="text-xs text-[#524740]">
                 Penanggung Jawab: <strong>{rehab.picName}</strong>
               </span>
-            </div>
+            </ScrollReveal>
 
             {activeProjects.length === 0 ? (
-              <div className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-8 text-center">
+              <ScrollReveal className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-8 text-center">
                 <p className="text-base font-semibold text-[#1E1B18] mb-1">
                   Tidak ada pekerjaan fisik yang sedang berjalan saat ini.
                 </p>
                 <p className="text-xs sm:text-sm text-[#524740]">
                   Silakan lihat rencana pengembangan fasilitas baru atau riwayat pekerjaan yang telah selesai di bawah.
                 </p>
-              </div>
+              </ScrollReveal>
             ) : (
               activeProjects.map((project) => (
-                <article
+                <ScrollReveal
                   key={project.id}
+                  as="article"
                   className="bg-[#F2ECE1] border-2 border-[#1E1B18] rounded-2xl p-6 sm:p-8 space-y-8"
                 >
                   {/* Top Project Header & Progress Bar */}
@@ -243,11 +253,9 @@ export default async function RehabilitasiPage() {
                         aria-valuemin={0}
                         aria-valuemax={100}
                       >
-                        <div
-                          className="h-full bg-[#A84A2E] rounded-full transition-all duration-500"
-                          style={{
-                            width: `${Math.min(100, Math.max(0, project.overallProgress))}%`,
-                          }}
+                        <AnimatedProgressBar
+                          percent={project.overallProgress}
+                          className="h-full bg-[#A84A2E] rounded-full"
                         />
                       </div>
 
@@ -277,12 +285,15 @@ export default async function RehabilitasiPage() {
                           Belum ada rincian tahapan untuk proyek ini.
                         </p>
                       ) : (
-                        <div className="relative pl-6 border-l-2 border-[#A84A2E]/40 space-y-6">
+                        <ScrollStaggerGroup
+                          className="relative pl-6 border-l-2 border-[#A84A2E]/40 space-y-6"
+                          staggerDelay={0.12}
+                        >
                           {project.stages.map((stg) => {
                             const isDone = stg.status === 'SELESAI';
                             const isRunning = stg.status === 'BERJALAN';
                             return (
-                              <div key={stg.id} className="relative">
+                              <ScrollStaggerItem key={stg.id} className="relative">
                                 <span
                                   aria-hidden="true"
                                   className={`absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 ${
@@ -333,10 +344,10 @@ export default async function RehabilitasiPage() {
                                     {stg.description}
                                   </p>
                                 </div>
-                              </div>
+                              </ScrollStaggerItem>
                             );
                           })}
-                        </div>
+                        </ScrollStaggerGroup>
                       )}
                     </div>
 
@@ -404,10 +415,15 @@ export default async function RehabilitasiPage() {
                         </h4>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <ScrollStaggerGroup
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                        staggerDelay={0.08}
+                      >
                         {project.gallery.map((photo) => (
-                          <figure
+                          <ScrollStaggerItem
                             key={photo.id}
+                            as="figure"
+                            hoverLift
                             className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl overflow-hidden flex flex-col justify-between"
                           >
                             <div className="relative h-52 bg-[#1E1B18]">
@@ -434,12 +450,12 @@ export default async function RehabilitasiPage() {
                                 Diperbarui: {photo.date}
                               </span>
                             </figcaption>
-                          </figure>
+                          </ScrollStaggerItem>
                         ))}
-                      </div>
+                      </ScrollStaggerGroup>
                     </div>
                   )}
-                </article>
+                </ScrollReveal>
               ))
             )}
           </section>
@@ -447,7 +463,7 @@ export default async function RehabilitasiPage() {
           {/* 3. RENCANA PENGEMBANGAN FASILITAS BARU BERIKUTNYA */}
           {plannedProjects.length > 0 && (
             <section className="space-y-6" aria-labelledby="planned-rehab-heading">
-              <div className="border-b border-[#DFD5C5] pb-3">
+              <ScrollReveal className="border-b border-[#DFD5C5] pb-3">
                 <span className="text-xs font-bold tracking-wider uppercase text-[#524740] block mb-1">
                   AGENDA PENGEMBANGAN BERIKUTNYA
                 </span>
@@ -457,12 +473,16 @@ export default async function RehabilitasiPage() {
                 >
                   Rencana Penambahan &amp; Pembangunan Fasilitas Baru Masjid
                 </h2>
-              </div>
+              </ScrollReveal>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ScrollStaggerGroup
+                className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                staggerDelay={0.1}
+              >
                 {plannedProjects.map((proj) => (
-                  <div
+                  <ScrollStaggerItem
                     key={proj.id}
+                    hoverLift
                     className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 flex flex-col justify-between space-y-4"
                   >
                     <div className="space-y-3">
@@ -507,16 +527,16 @@ export default async function RehabilitasiPage() {
                         </strong>
                       </div>
                     )}
-                  </div>
+                  </ScrollStaggerItem>
                 ))}
-              </div>
+              </ScrollStaggerGroup>
             </section>
           )}
 
           {/* 4. ARSIP RIWAYAT REHABILITASI & FASILITAS YANG TELAH SELESAI */}
           {completedProjects.length > 0 && (
             <section className="space-y-6" aria-labelledby="completed-rehab-heading">
-              <div className="border-b border-[#DFD5C5] pb-3">
+              <ScrollReveal className="border-b border-[#DFD5C5] pb-3">
                 <span className="text-xs font-bold tracking-wider uppercase text-[#3D4D33] block mb-1">
                   REKAM JEJAK AKUNTABILITAS TAKMIR
                 </span>
@@ -526,12 +546,16 @@ export default async function RehabilitasiPage() {
                 >
                   Riwayat Rehabilitasi &amp; Pembangunan Fasilitas yang Telah Selesai
                 </h2>
-              </div>
+              </ScrollReveal>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ScrollStaggerGroup
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                staggerDelay={0.1}
+              >
                 {completedProjects.map((proj) => (
-                  <div
+                  <ScrollStaggerItem
                     key={proj.id}
+                    hoverLift
                     className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-6 space-y-3"
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -551,14 +575,17 @@ export default async function RehabilitasiPage() {
                     <p className="text-xs sm:text-sm text-[#524740]">
                       {proj.summary}
                     </p>
-                  </div>
+                  </ScrollStaggerItem>
                 ))}
-              </div>
+              </ScrollStaggerGroup>
             </section>
           )}
 
           {/* 5. KOTAK SALURAN INFAQ & WAKAF PEMBANGUNAN MASJID */}
-          <section className="bg-[#1E1B18] text-[#FAF7F2] rounded-2xl p-6 sm:p-10 border-2 border-[#E8CFA0]/40 dark-surface">
+          <ScrollReveal
+            as="section"
+            className="bg-[#1E1B18] text-[#FAF7F2] rounded-2xl p-6 sm:p-10 border-2 border-[#E8CFA0]/40 dark-surface"
+          >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8 space-y-4">
                 <span className="inline-block px-3 py-1 rounded bg-[#A84A2E] text-white text-xs font-bold">
@@ -612,7 +639,7 @@ export default async function RehabilitasiPage() {
                 </span>
               </div>
             </div>
-          </section>
+          </ScrollReveal>
         </div>
       </main>
 

@@ -4,6 +4,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { MosqueEvent } from '@/types/mosque';
 import { Calendar, Clock, MapPin, User } from 'lucide-react';
+import {
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+} from '@/components/ScrollReveal';
 
 interface EventsSectionProps {
   events: MosqueEvent[];
@@ -30,7 +35,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Asymmetric Editorial Header & Filter Controls */}
-          <div className="lg:col-span-4 lg:sticky lg:top-28">
+          <ScrollReveal className="lg:col-span-4 lg:sticky lg:top-28">
             <h2
               id="heading-kegiatan"
               style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)' }}
@@ -129,10 +134,10 @@ export default function EventsSection({ events }: EventsSectionProps) {
                 Ajukan Jadwal Penggunaan Ruang
               </Link>
             </div>
-          </div>
+          </ScrollReveal>
 
-          {/* Right Column: Chronological Vertical Timeline (Clean, No Card Box or Outlines) */}
-          <div className="lg:col-span-8">
+          {/* Right Column: Chronological Vertical Timeline */}
+          <ScrollReveal delay={0.12} className="lg:col-span-8">
             {filteredEvents.length === 0 ? (
               <div className="py-8 text-center">
                 <Calendar className="w-10 h-10 text-[#A84A2E] mx-auto mb-3" aria-hidden="true" />
@@ -153,16 +158,17 @@ export default function EventsSection({ events }: EventsSectionProps) {
                 </div>
               </div>
             ) : (
-              <ol
-                aria-label="Alur Waktu Kegiatan Masjid"
+              <ScrollStaggerGroup
+                staggerDelay={0.1}
                 className="relative space-y-8"
               >
                 {filteredEvents.map((evt, index) => {
                   const isLast = index === filteredEvents.length - 1;
 
                   return (
-                    <li
+                    <ScrollStaggerItem
                       key={evt.id}
+                      hoverLift
                       className="relative grid grid-cols-1 sm:grid-cols-[175px_36px_1fr] gap-0 sm:gap-2 items-start"
                     >
                       {/* Left Column of Timeline (Desktop/Tablet): Time & Day Label */}
@@ -190,13 +196,9 @@ export default function EventsSection({ events }: EventsSectionProps) {
                         className="hidden sm:flex flex-col items-center h-full relative"
                         aria-hidden="true"
                       >
-                        {/* Vertical Connector Line */}
                         {!isLast && (
-                          <div
-                            className="w-0.5 bg-[#1E1B18]/25 absolute top-4 bottom-[-36px] left-1/2 -translate-x-1/2"
-                          />
+                          <div className="w-0.5 bg-[#1E1B18]/25 absolute top-4 bottom-[-36px] left-1/2 -translate-x-1/2" />
                         )}
-                        {/* Timeline Node Circle */}
                         <div
                           className={`relative z-10 mt-1.5 w-4 h-4 rounded-full border-2 ${
                             evt.isToday
@@ -206,7 +208,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
                         />
                       </div>
 
-                      {/* Right Column: Clean Editorial Event Details (No Box, No Outline, No Dividers) */}
+                      {/* Right Column: Clean Editorial Event Details */}
                       <div className="relative pl-6 sm:pl-2">
                         {/* Mobile Vertical Line & Node */}
                         <div
@@ -262,7 +264,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
                             {evt.description}
                           </p>
 
-                          {/* Speaker & Location (Clean, No Divider Line) */}
+                          {/* Speaker & Location */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1E1B18]">
                             <div className="flex items-start gap-1.5">
                               <User
@@ -287,12 +289,12 @@ export default function EventsSection({ events }: EventsSectionProps) {
                           </div>
                         </article>
                       </div>
-                    </li>
+                    </ScrollStaggerItem>
                   );
                 })}
-              </ol>
+              </ScrollStaggerGroup>
             )}
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

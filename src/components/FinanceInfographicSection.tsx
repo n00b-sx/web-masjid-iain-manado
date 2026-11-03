@@ -17,6 +17,12 @@ import {
   X,
   Info,
 } from 'lucide-react';
+import {
+  AnimatedProgressBar,
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+} from '@/components/ScrollReveal';
 
 interface FinanceInfographicSectionProps {
   transactions: FinanceTransaction[];
@@ -115,7 +121,7 @@ export default function FinanceInfographicSection({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header + Primary Action */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+        <ScrollReveal className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
           <div className="max-w-2xl">
             <h2
               id="heading-keuangan"
@@ -139,9 +145,9 @@ export default function FinanceInfographicSection({
               <span>Salurkan Infaq / Lihat QRIS</span>
             </button>
           </div>
-        </div>
+        </ScrollReveal>
 
-        {/* Honest Sample Data Notice when initial seed records are active (R-17, R-38) */}
+        {/* Honest Sample Data Notice when initial seed records are active */}
         {donationInfo.isSampleDataNotice && (
           <div className="mb-8 p-4 rounded-lg bg-[#F2ECE1] border border-[#1E1B18]/25 flex items-start gap-3 text-xs sm:text-sm text-[#1E1B18]">
             <Info className="w-5 h-5 text-[#A84A2E] shrink-0 mt-0.5" aria-hidden="true" />
@@ -154,7 +160,7 @@ export default function FinanceInfographicSection({
         {/* 2-Column Desktop Layout with 3 : 1 Ratio (lg:col-span-9 vs lg:col-span-3) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           {/* LEFT COLUMN (3 Parts / 75% Width): Total Balance + Embedded Transaction Ledger + Summary Totals */}
-          <div className="lg:col-span-9 bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-5 sm:p-8 flex flex-col justify-between border border-[#1E1B18] dark-surface">
+          <ScrollReveal className="lg:col-span-9 bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-5 sm:p-8 flex flex-col justify-between border border-[#1E1B18] dark-surface">
             {/* Top: Consolidated Balance Header */}
             <div className="pb-5 border-b border-white/15">
               <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#E8CFA0] mb-1.5">
@@ -298,10 +304,13 @@ export default function FinanceInfographicSection({
                 </span>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* RIGHT COLUMN (1 Part / 25% Width): Comparative Chart per Fund Category */}
-          <div className="lg:col-span-3 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 sm:p-6 flex flex-col justify-between">
+          <ScrollReveal
+            delay={0.14}
+            className="lg:col-span-3 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 sm:p-6 flex flex-col justify-between"
+          >
             <div>
               <h3 className="font-serif-heading text-base sm:text-lg font-bold text-[#1E1B18] leading-snug mb-1.5">
                 Perbandingan Pemasukan &amp; Pengeluaran Tiap Pos Kas
@@ -311,14 +320,21 @@ export default function FinanceInfographicSection({
               </p>
             </div>
 
-            <div className="flex flex-col gap-3.5 my-auto">
+            <ScrollStaggerGroup className="flex flex-col gap-3.5 my-auto">
               {categoryBreakdown.map((item) => {
-                const inPct = Math.round((item.inAmount / maxCategoryValue) * 100);
-                const outPct = Math.round((item.outAmount / maxCategoryValue) * 100);
+                const inPct =
+                  item.inAmount > 0
+                    ? Math.max(4, Math.round((item.inAmount / maxCategoryValue) * 100))
+                    : 0;
+                const outPct =
+                  item.outAmount > 0
+                    ? Math.max(4, Math.round((item.outAmount / maxCategoryValue) * 100))
+                    : 0;
 
                 return (
-                  <div
+                  <ScrollStaggerItem
                     key={item.category}
+                    hoverLift
                     className="bg-[#FAF7F2] p-3.5 rounded-lg border border-[#DFD5C5]"
                   >
                     <div className="mb-2">
@@ -335,7 +351,7 @@ export default function FinanceInfographicSection({
                       </div>
                     </div>
 
-                    {/* Visual Bars with High-Contrast Borders and Labels */}
+                    {/* Animated Progress Bars on Scroll */}
                     <div className="space-y-2 pt-2 border-t border-[#DFD5C5]/70">
                       <div>
                         <div className="flex justify-between text-[11px] font-semibold text-[#3D4D33] mb-1">
@@ -343,14 +359,10 @@ export default function FinanceInfographicSection({
                           <span>{formatRupiah(item.inAmount)}</span>
                         </div>
                         <div className="w-full h-2.5 bg-[#F2ECE1] rounded-sm overflow-hidden border border-[#1E1B18]/20">
-                          <div
-                            style={{ width: `${Math.max(4, inPct)}%` }}
+                          <AnimatedProgressBar
+                            percent={inPct}
                             className="h-full bg-[#3D4D33]"
-                            role="progressbar"
-                            aria-label={`Pemasukan ${item.title}`}
-                            aria-valuenow={inPct}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
+                            ariaLabel={`Pemasukan ${item.title}`}
                           />
                         </div>
                       </div>
@@ -361,23 +373,19 @@ export default function FinanceInfographicSection({
                           <span>{formatRupiah(item.outAmount)}</span>
                         </div>
                         <div className="w-full h-2.5 bg-[#F2ECE1] rounded-sm overflow-hidden border border-[#1E1B18]/20">
-                          <div
-                            style={{ width: `${item.outAmount > 0 ? Math.max(4, outPct) : 0}%` }}
+                          <AnimatedProgressBar
+                            percent={outPct}
                             className="h-full bg-[#A84A2E]"
-                            role="progressbar"
-                            aria-label={`Pengeluaran ${item.title}`}
-                            aria-valuenow={outPct}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
+                            ariaLabel={`Pengeluaran ${item.title}`}
                           />
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </ScrollStaggerItem>
                 );
               })}
-            </div>
-          </div>
+            </ScrollStaggerGroup>
+          </ScrollReveal>
         </div>
       </div>
 

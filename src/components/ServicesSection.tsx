@@ -15,6 +15,11 @@ import {
   X,
   AlertCircle,
 } from 'lucide-react';
+import {
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+} from '@/components/ScrollReveal';
 
 interface ServicesSectionProps {
   services: MosqueService[];
@@ -128,7 +133,7 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
       className="py-14 sm:py-20 bg-[#F2ECE1] border-t border-[#DFD5C5]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mb-10">
+        <ScrollReveal className="max-w-3xl mb-10">
           <h2
             id="heading-layanan"
             style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)' }}
@@ -139,22 +144,22 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
           <p className="text-sm sm:text-base text-[#524740]">
             Ajukan peminjaman aula diskusi, konsultasi keislaman, penyaluran ZISWAF, atau pemanfaatan perpustakaan masjid secara daring maupun melalui WhatsApp pengurus.
           </p>
-        </div>
+        </ScrollReveal>
 
         {activeServices.length === 0 ? (
-          <div className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-8 text-center">
+          <ScrollReveal className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-8 text-center">
             <p className="text-base font-bold text-[#1E1B18] mb-1">
               Daftar Layanan Belum Tersedia
             </p>
             <p className="text-sm text-[#524740]">
               Admin Takmir dapat mengaktifkan layanan masjid melalui Panel Admin.
             </p>
-          </div>
+          </ScrollReveal>
         ) : (
           <div className="space-y-6">
-            {/* Flagship Service (Hierarchical Emphasis - R-14) */}
+            {/* Flagship Service */}
             {primaryService && (
-              <div className="bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-6 sm:p-8 lg:p-10 border border-[#1E1B18] grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <ScrollReveal className="bg-[#1E1B18] text-[#FAF7F2] rounded-xl p-6 sm:p-8 lg:p-10 border border-[#1E1B18] grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                 <div className="lg:col-span-8">
                   <div className="inline-flex items-center gap-2 text-xs font-bold text-[#E8CFA0] mb-3">
                     {getServiceIcon(primaryService.iconName)}
@@ -207,15 +212,16 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
                     <span>Hubungi Pengurus via WhatsApp</span>
                   </a>
                 </div>
-              </div>
+              </ScrollReveal>
             )}
 
-            {/* Supporting Services Grid */}
+            {/* Supporting Services Grid with Stagger Cascade & Hover Lift */}
             {secondaryServices.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <ScrollStaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {secondaryServices.map((srv) => (
-                  <article
+                  <ScrollStaggerItem
                     key={srv.id}
+                    hoverLift
                     className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-6 flex flex-col justify-between hover:border-[#1E1B18] transition-colors"
                   >
                     <div>
@@ -269,9 +275,9 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
                         <span>Chat WhatsApp Pengurus</span>
                       </a>
                     </div>
-                  </article>
+                  </ScrollStaggerItem>
                 ))}
-              </div>
+              </ScrollStaggerGroup>
             )}
           </div>
         )}

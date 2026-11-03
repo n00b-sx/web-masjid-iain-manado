@@ -6,6 +6,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MualafInteractiveClient from '@/components/MualafInteractiveClient';
 import {
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+} from '@/components/ScrollReveal';
+import {
   ArrowLeft,
   HeartHandshake,
   CheckCircle2,
@@ -41,7 +46,7 @@ export default async function MualafCenterPage() {
       <main id="main-content" className="flex-1 bg-[#FAF7F2] text-[#1E1B18]">
         {/* TOP HERO HEADER */}
         <header className="bg-[#1E1B18] text-[#FAF7F2] pt-28 pb-14 px-4 sm:px-6 lg:px-8 border-b-4 border-[#A84A2E] dark-surface">
-          <div className="max-w-7xl mx-auto">
+          <ScrollReveal className="max-w-7xl mx-auto" y={20}>
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#E8CFA0] hover:underline mb-4 min-h-[36px]"
@@ -67,12 +72,15 @@ export default async function MualafCenterPage() {
             <p className="text-sm sm:text-lg text-[#F2ECE1] max-w-3xl leading-relaxed">
               {mc.pageSubtitle}
             </p>
-          </div>
+          </ScrollReveal>
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-14">
           {/* 1. PESAN PENGANTAR & KALIMAT SYAHADAT */}
-          <section className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-2xl p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <ScrollReveal
+            as="section"
+            className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-2xl p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+          >
             <div className="lg:col-span-7 space-y-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#A84A2E] block">
                 SAMBUTAN PERSAUDARAAN
@@ -100,11 +108,11 @@ export default async function MualafCenterPage() {
                 &ldquo;Aku bersaksi bahwa tidak ada Tuhan yang berhak disembah selain Allah, dan aku bersaksi bahwa Nabi Muhammad adalah utusan Allah.&rdquo;
               </p>
             </div>
-          </section>
+          </ScrollReveal>
 
           {/* 2. ALUR 4 LANGKAH PROSESI IKRAR SYAHADAT */}
           <section className="space-y-6" aria-labelledby="mualaf-steps-heading">
-            <div className="border-b border-[#DFD5C5] pb-3">
+            <ScrollReveal className="border-b border-[#DFD5C5] pb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#A84A2E] block mb-1">
                 PROSEDUR PELAYANAN
               </span>
@@ -114,12 +122,16 @@ export default async function MualafCenterPage() {
               >
                 Alur Pendampingan &amp; Prosesi Ikrar Syahadat
               </h2>
-            </div>
+            </ScrollReveal>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <ScrollStaggerGroup
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+              staggerDelay={0.1}
+            >
               {mc.steps.map((step) => (
-                <div
+                <ScrollStaggerItem
                   key={step.id}
+                  hoverLift
                   className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 flex flex-col justify-between space-y-3"
                 >
                   <div className="space-y-2.5">
@@ -133,9 +145,9 @@ export default async function MualafCenterPage() {
                       {step.description}
                     </p>
                   </div>
-                </div>
+                </ScrollStaggerItem>
               ))}
-            </div>
+            </ScrollStaggerGroup>
           </section>
 
           {/* 3. DUA KOLOM: SYARAT BERKAS & PROGRAM PEMBINAAN + TIM PEMBINA */}
@@ -143,7 +155,10 @@ export default async function MualafCenterPage() {
             {/* Left Column: Requirements, Programs, and Mentors */}
             <div className="lg:col-span-6 space-y-8">
               {/* Persyaratan Administrasi */}
-              <section className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+              <ScrollReveal
+                as="section"
+                className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4"
+              >
                 <div className="flex items-center gap-2 text-xs font-bold text-[#A84A2E]">
                   <FileCheck2 className="w-4 h-4" aria-hidden="true" />
                   <span>PERSYARATAN ADMINISTRASI SYAHADAT</span>
@@ -164,10 +179,14 @@ export default async function MualafCenterPage() {
                     </li>
                   ))}
                 </ul>
-              </section>
+              </ScrollReveal>
 
               {/* Program Pembinaan Pasca-Syahadat */}
-              <section className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+              <ScrollReveal
+                as="section"
+                className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4"
+                delay={0.05}
+              >
                 <div className="flex items-center gap-2 text-xs font-bold text-[#A84A2E]">
                   <BookOpen className="w-4 h-4" aria-hidden="true" />
                   <span>KURIKULUM PENDAMPINGAN</span>
@@ -177,10 +196,11 @@ export default async function MualafCenterPage() {
                   Program Pembinaan Rutin Pasca-Syahadat
                 </h3>
 
-                <div className="space-y-3">
+                <ScrollStaggerGroup className="space-y-3" staggerDelay={0.08}>
                   {mc.programs.map((prog) => (
-                    <div
+                    <ScrollStaggerItem
                       key={prog.id}
+                      hoverLift
                       className="bg-[#FAF7F2] border border-[#DFD5C5] rounded-xl p-4 space-y-1.5"
                     >
                       <span className="inline-block px-2.5 py-0.5 rounded bg-[#1E1B18] text-[#E8CFA0] text-[11px] font-bold">
@@ -195,14 +215,18 @@ export default async function MualafCenterPage() {
                       <p className="text-xs font-semibold text-[#A84A2E] pt-1">
                         Pembimbing: {prog.mentor}
                       </p>
-                    </div>
+                    </ScrollStaggerItem>
                   ))}
-                </div>
-              </section>
+                </ScrollStaggerGroup>
+              </ScrollReveal>
 
               {/* Tim Pembina */}
               {mc.mentors.length > 0 && (
-                <section className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4">
+                <ScrollReveal
+                  as="section"
+                  className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-6 space-y-4"
+                  delay={0.1}
+                >
                   <div className="flex items-center gap-2 text-xs font-bold text-[#A84A2E]">
                     <Users className="w-4 h-4" aria-hidden="true" />
                     <span>TIM PEMBIMBING PUTRA &amp; PUTRI</span>
@@ -243,17 +267,17 @@ export default async function MualafCenterPage() {
                       </div>
                     ))}
                   </div>
-                </section>
+                </ScrollReveal>
               )}
             </div>
 
             {/* Right Column: Interactive Consultation & Registration Form */}
-            <div className="lg:col-span-6 lg:sticky lg:top-24">
+            <ScrollReveal className="lg:col-span-6 lg:sticky lg:top-24" delay={0.08}>
               <MualafInteractiveClient
                 hotlineName={mc.hotlineName}
                 hotlineWhatsapp={mc.hotlineWhatsapp}
               />
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </main>

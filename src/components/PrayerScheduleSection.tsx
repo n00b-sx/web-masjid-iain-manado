@@ -8,6 +8,11 @@ import {
 } from '@/types/mosque';
 import { getNextPrayerInfo, PRAYER_LIST } from '@/lib/prayer-times';
 import { Clock, Compass, UserCheck } from 'lucide-react';
+import {
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+} from '@/components/ScrollReveal';
 
 interface PrayerScheduleSectionProps {
   times: ManualPrayerTimes;
@@ -56,7 +61,7 @@ export default function PrayerScheduleSection({
       aria-labelledby="heading-jadwal-sholat"
       className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14"
     >
-      <div className="bg-[#FAF7F2] border-2 border-[#1E1B18] rounded-xl shadow-md overflow-hidden">
+      <ScrollReveal className="bg-[#FAF7F2] border-2 border-[#1E1B18] rounded-xl shadow-md overflow-hidden">
         {/* Top Bar: Location, Live WITA Clock, Next Prayer Countdown */}
         <div className="bg-[#1E1B18] text-[#FAF7F2] px-5 py-5 sm:px-8 sm:py-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
@@ -91,8 +96,8 @@ export default function PrayerScheduleSection({
           </div>
         </div>
 
-        {/* 6 Prayer Time Columns (5 Obligatory + Syuruq) */}
-        <div className="p-5 sm:p-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 bg-[#FAF7F2]">
+        {/* 6 Prayer Time Columns (5 Obligatory + Syuruq) with Stagger Cascade */}
+        <ScrollStaggerGroup className="p-5 sm:p-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 bg-[#FAF7F2]">
           {PRAYER_LIST.map((name) => {
             const isNext = nextInfo.nextPrayer === name;
             const timeVal = times[name];
@@ -102,8 +107,9 @@ export default function PrayerScheduleSection({
                 : null;
 
             return (
-              <div
+              <ScrollStaggerItem
                 key={name}
+                hoverLift
                 className={`rounded-lg p-4 border transition-colors flex flex-col justify-between ${
                   isNext
                     ? 'bg-[#A84A2E] text-white border-[#1E1B18] shadow-sm'
@@ -156,10 +162,10 @@ export default function PrayerScheduleSection({
                     <span>Terbit Matahari</span>
                   )}
                 </div>
-              </div>
+              </ScrollStaggerItem>
             );
           })}
-        </div>
+        </ScrollStaggerGroup>
 
         {/* Bottom Panel: Petugas Sholat Jumat */}
         <div className="bg-[#F2ECE1] border-t border-[#DFD5C5] px-5 py-4 sm:px-8 sm:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -198,7 +204,7 @@ export default function PrayerScheduleSection({
             </div>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

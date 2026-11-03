@@ -4,6 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { NewsArticle } from '@/types/mosque';
 import { Calendar, User, Newspaper } from 'lucide-react';
+import {
+  ScrollReveal,
+  ScrollStaggerGroup,
+  ScrollStaggerItem,
+} from '@/components/ScrollReveal';
 
 interface NewsSectionProps {
   articles: NewsArticle[];
@@ -24,7 +29,7 @@ export default function NewsSection({ articles }: NewsSectionProps) {
       className="py-14 sm:py-20 bg-[#FAF7F2] border-t border-[#DFD5C5]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <ScrollReveal className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
             <h2
               id="heading-berita"
@@ -44,10 +49,10 @@ export default function NewsSection({ articles }: NewsSectionProps) {
           >
             Lihat Indeks Arsip Berita
           </Link>
-        </div>
+        </ScrollReveal>
 
         {published.length === 0 ? (
-          <div className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-10 text-center">
+          <ScrollReveal className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-10 text-center">
             <Newspaper className="w-10 h-10 text-[#A84A2E] mx-auto mb-3" aria-hidden="true" />
             <h3 className="font-serif-heading text-lg font-bold text-[#1E1B18] mb-2">
               Belum Ada Berita yang Dipublikasikan
@@ -55,12 +60,12 @@ export default function NewsSection({ articles }: NewsSectionProps) {
             <p className="text-sm text-[#524740]">
               Warta kegiatan, pengumuman resmi, dan artikel kajian terbaru akan ditampilkan di bagian ini.
             </p>
-          </div>
+          </ScrollReveal>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Featured Lead Story (Left 7 Columns) */}
             {featuredArticle && (
-              <article className="lg:col-span-7 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl overflow-hidden flex flex-col justify-between">
+              <ScrollReveal className="lg:col-span-7 bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl overflow-hidden flex flex-col justify-between">
                 <div>
                   <Link
                     href={`/berita/${featuredArticle.slug}`}
@@ -109,14 +114,15 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                     </Link>
                   </div>
                 </div>
-              </article>
+              </ScrollReveal>
             )}
 
             {/* Right Editorial Stack (Right 5 Columns) */}
-            <div className="lg:col-span-5 flex flex-col gap-5">
+            <ScrollStaggerGroup className="lg:col-span-5 flex flex-col gap-5">
               {sideArticles.map((art) => (
-                <article
+                <ScrollStaggerItem
                   key={art.id}
+                  hoverLift
                   className="bg-[#F2ECE1] border border-[#DFD5C5] rounded-xl p-5 flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4 hover:border-[#1E1B18] transition-colors"
                 >
                   <Link
@@ -156,9 +162,9 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                       Baca Artikel Lengkap
                     </Link>
                   </div>
-                </article>
+                </ScrollStaggerItem>
               ))}
-            </div>
+            </ScrollStaggerGroup>
           </div>
         )}
       </div>
