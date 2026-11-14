@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="180dp"
+    android:viewportWidth="320"
+    android:viewportHeight="180">
+    <!-- Background -->
+    <path
+        android:fillColor="#1E1B18"
+        android:pathData="M0,0h320v180h-320z" />
+    <!-- Subtle Inner Gold Frame -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#E8CFA0"
+        android:strokeWidth="2"
+        android:pathData="M12,12h296v156h-296z" />
+    <!-- Terracotta Accent Footer -->
+    <path
+        android:fillColor="#A84A2E"
+        android:pathData="M12,154h296v14h-296z" />
+    <!-- Mosque Dome Emblem Centered -->
+    <path
+        android:fillColor="#E8CFA0"
+        android:pathData="M160,38 C134,52 122,70 122,88 L198,88 C198,70 186,52 160,38 Z" />
+    <path
+        android:fillColor="#E8CFA0"
+        android:pathData="M158,26h4v14h-4z" />
+    <!-- Twin Minarets -->
+    <path
+        android:fillColor="#E8CFA0"
+        android:pathData="M104,52h8v74h-8z M208,52h8v74h-8z" />
+    <path
+        android:fillColor="#A84A2E"
+        android:pathData="M108,42 L102,52 L114,52 Z M212,42 L206,52 L218,52 Z" />
+    <!-- Mosque Hall -->
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M118,92h84v34h-84z" />
+    <!-- Triple Arches -->
+    <path
+        android:fillColor="#1E1B18"
+        android:pathData="M151,126 L151,107 C151,100 169,100 169,107 L169,126 Z" />
+    <path
+        android:fillColor="#1E1B18"
+        android:pathData="M129,126 L129,112 C129,107 141,107 141,112 L141,126 Z" />
+    <path
+        android:fillColor="#1E1B18"
+        android:pathData="M179,126 L179,112 C179,107 191,107 191,112 L191,126 Z" />
+    <!-- Pedestal Line -->
+    <path
+        android:fillColor="#A84A2E"
+        android:pathData="M96,128h128v6h-128z" />
+</vector>

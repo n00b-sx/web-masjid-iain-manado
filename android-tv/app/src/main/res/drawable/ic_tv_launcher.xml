@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Dark Espresso Mosque Background -->
+    <path
+        android:fillColor="#1E1B18"
+        android:pathData="M0,0h108v108h-108z" />
+    <!-- Terracotta Bottom Accent Band -->
+    <path
+        android:fillColor="#A84A2E"
+        android:pathData="M14,80h80v8h-80z" />
+    <!-- Warm Gold Mosque Dome -->
+    <path
+        android:fillColor="#E8CFA0"
+        android:pathData="M54,24 C38,34 30,46 30,58 L78,58 C78,46 70,34 54,24 Z" />
+    <!-- Dome Finial Spire -->
+    <path
+        android:fillColor="#E8CFA0"
+        android:pathData="M52.5,16h3v10h-3z" />
+    <!-- Mosque Main Hall Pillars -->
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M28,60h52v18h-52z" />
+    <!-- Archway Door -->
+    <path
+        android:fillColor="#1E1B18"
+        android:pathData="M47,78 L47,68 C47,64 61,64 61,68 L61,78 Z" />
+    <!-- Left & Right Minarets -->
+    <path
+        android:fillColor="#E8CFA0"
+        android:pathData="M18,36h6v42h-6z M84,36h6v42h-6z" />
+</vector>
